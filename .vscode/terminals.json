@@ -1,0 +1,110 @@
+{
+  "autorun": false,
+  "terminals": [    
+    {
+      "name": "Run React Native Packager",
+      "description": "Run React Native Packager",
+      "cwd": "[workspaceFolder]",
+      "command": "yarn react-native start",
+      "focus": true
+    },
+    {
+      "name": "Run iOS - All sizes (Development)",
+      "description": "Run iOS - All sizes (Development)",
+      "cwd": "[workspaceFolder]",
+      "commands": [
+        "yarn react-native run-ios --simulator='iPhone SE'",
+        "yarn react-native run-ios --simulator='iPhone 8 Plus'",
+        "yarn react-native run-ios --simulator='iPhone 11 Pro Max'"
+      ],
+      "focus": true
+    },    
+    {
+      "name": "Run iOS - iPhone SE (Development)",
+      "description": "Run iOS - iPhone SE (Development)",
+      "cwd": "[workspaceFolder]",
+      "command": "yarn react-native run-ios --simulator='iPhone SE'",
+      "focus": true
+    },
+    {
+      "name": "Run iOS - iPhone SE (Release)",
+      "description": "Run iOS - iPhone SE (Release)",
+      "cwd": "[workspaceFolder]",
+      "command": "yarn react-native run-ios --configuration Release --simulator='iPhone SE'",
+      "focus": true
+    },
+    {
+      "name": "Run iOS - On Device (Development)",
+      "description": "Run iOS - On Device (Development)",
+      "cwd": "[workspaceFolder]",
+      "command": "yarn react-native run-ios --device",
+      "focus": true
+    },     
+    {
+      "name": "Run iOS - On Device (Release)",
+      "description": "Run iOS - On Device (Release)",
+      "cwd": "[workspaceFolder]",
+      "command": "yarn react-native run-ios --device --configuration Release",
+      "focus": true
+    },
+    {
+      "name": "Open android Emulator (Nexus 5 API 28)",
+      "description": "Open android Emulator (Nexus 5 API 28)",
+      "cwd": "[workspaceFolder]",
+      "command": "emulator -avd Nexus_5_API_28",
+      "focus": true
+    },    
+    {
+      "name": "Run Android (Development)",
+      "description": "Run Android (Development)",
+      "cwd": "[workspaceFolder]",
+      "command": "yarn react-native run-android --variant=DevDebug",
+      "focus": true
+    },   
+    {
+      "name": "Run Android (Release)",
+      "description": "Run Android (Release)",
+      "cwd": "[workspaceFolder]",
+      "commands": ["yarn react-native run-android --variant=prodRelease"],
+      "focus": true
+    },    
+    {
+      "name": "Android - Show Dev Menu",
+      "description": "Android - Show Dev Menu",
+      "cwd": "[workspaceFolder]",
+      "commands":[
+        "source ~/.bash_profile",
+        "adb shell input keyevent KEYCODE_MENU"
+      ], 
+      "focus": true
+    },
+    {
+      "name": "Build Android (Release)",
+      "description": "Build Android (Release)",
+      "cwd": "[workspaceFolder]",
+      "commands": [
+        "cd android",
+        "./gradlew clean && ./gradlew assembleRelease"
+      ],
+      "focus": true
+    },    
+    {
+      "name": "Complete Clean",
+      "description": "Complete Clean",
+      "cwd": "[workspaceFolder]",
+      "commands": [        
+        "rm -rf ios/build",
+        "rm -rf android/build",
+        "watchman watch-del-all",
+        "rm -rf $TMPDIR/react-*",
+        "rm -rf $TMPDIR/metro-",
+        "brew update",
+        "brew upgrade",
+        "rm -rf node_modules",
+        "yarn cache clean",
+        "yarn install"
+      ],
+      "focus": true
+    }
+  ]
+}
