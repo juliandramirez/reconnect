@@ -58,14 +58,14 @@
       "name": "Run Android (Development)",
       "description": "Run Android (Development)",
       "cwd": "[workspaceFolder]",
-      "command": "yarn react-native run-android --variant=DevDebug",
+      "command": "yarn react-native run-android --variant=debug",
       "focus": true
     },   
     {
       "name": "Run Android (Release)",
       "description": "Run Android (Release)",
       "cwd": "[workspaceFolder]",
-      "commands": ["yarn react-native run-android --variant=prodRelease"],
+      "commands": ["yarn react-native run-android --variant=release"],
       "focus": true
     },    
     {
