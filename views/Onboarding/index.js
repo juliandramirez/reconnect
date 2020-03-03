@@ -1,7 +1,7 @@
 import React from 'react';
 import {ScrollView, View, Text, Button, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
+import AuthManager from '../../services/auth'
 const Onboarding = ({navigation}) => {
   return (
     <View style={styles.view}>
@@ -18,7 +18,7 @@ const Onboarding = ({navigation}) => {
       <Button
         style={styles.login}
         title="Login"
-        onPress={() => navigation.navigate('Timeline')}
+        onPress={() => {navigation.navigate('Timeline'); AuthManager.getUser()}}
       />
     </View>
   );
