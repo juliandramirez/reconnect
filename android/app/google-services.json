@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "863509680097",
+    "firebase_url": "https://reconnect-eddf2.firebaseio.com",
+    "project_id": "reconnect-eddf2",
+    "storage_bucket": "reconnect-eddf2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863509680097:android:6e723fbf1d6baf98eccca0",
+        "android_client_info": {
+          "package_name": "com.reconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863509680097-3kpq3b0ma6d4vh1oces42m1v0dtd1fri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO88GYbHXZnC0MD-mulcEggQFIxdxhpxE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863509680097-3kpq3b0ma6d4vh1oces42m1v0dtd1fri.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "863509680097-prgsldqq6edvr305mtj1dvaudc87a0li.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hf0.reconnect"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
