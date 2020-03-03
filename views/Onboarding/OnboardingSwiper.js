@@ -64,8 +64,9 @@ const OnboardingSwiper = ({tab, swiped}) => {
           Select one person you want to start re:connecting with
         </Text>
         <Text style={styles.tagline}>
-          This will help us find people who have already created journals with
-          you
+          You can add more people later but it's important for you to do this
+          with one person at a time... we want deep connections and for you to
+          feel comfortable sharing your life with them
         </Text>
         <TouchableOpacity>
           <View style={styles.add}>

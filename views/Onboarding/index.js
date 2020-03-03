@@ -10,7 +10,6 @@ import {
 import useOnboarding from './index.hooks';
 import OnboardingSwiper from './OnboardingSwiper';
 
-import {ScrollView, View, Text, Button, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AuthManager from '../../services/auth';
 const Onboarding = ({navigation}) => {
