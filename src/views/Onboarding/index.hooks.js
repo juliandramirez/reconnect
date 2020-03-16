@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
+import JournalsManager from './../../services/journals'
+
 const useOnboarding = nextPage => {
   const [tab, setTab] = useState(0);
   const [buttonText, setButtonText] = useState('Get Started');
@@ -24,7 +26,10 @@ const useOnboarding = nextPage => {
   }, [tab]);
 
   const onPress = () => {
-    console.log('tab', tab);
+
+    JournalsManager.getJournalPage('', '123')
+
+    //console.log('tab', tab);
     if (tab < 3) {
       setTab(tab + 1);
     } else {

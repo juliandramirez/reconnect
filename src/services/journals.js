@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import auth from '@react-native-firebase/auth';
+import AuthManager from './auth'
 
 
 const JournalsManager = {};
@@ -67,8 +67,70 @@ JournalsManager.addPost = (contentType, content, tag, date, journalIdList, perce
 
 /** requires user to be signed in **/
 JournalsManager.createJournal = async (requesteePhoneNumber) => {
-    const userId = auth().currentUser.uid;
+    const user = await AuthManager.getUser();
 
+    const ref = firestore().collection('journals').add({
+        requester: user.phone,
+        requestee: requesteePhoneNumber,
+        posts: []
+    });
+}
+
+JournalsManager.getJournals = async () => {
+    const user = await AuthManager.getUser();
+
+    firestore().collection('journals')
+        .where('requester', '==', user.phone)
+}
+
+JournalsManager.getJournalPage = async (date, requestee) => {
+    const user = await AuthManager.getUser();
+
+    const journalRef = firestore().collection('journals');    
+        // .where('requester', '==', user.phone)
+        // .where('requestee', '==', requestee)
+
+    const queryResult = await journalRef.get()
+    for (let doc of queryResult.docs)
+    {
+        const journalRef = doc.ref
+        const journalId = doc.id
+        const journalData = doc.data()
+
+        const postsRef = journalRef.collection('posts')
+        const postsQueryResult = await postsRef.get()
+
+        for (let post of postsQueryResult.docs) {
+            console.log("POST FOUND:" + JSON.stringify(post.data()))
+        }
+
+        postsRef.onSnapshot({
+            error: (e) => console.error(e),
+            next: (query) => {
+
+                const posts = query.docs.map((document) => { return {
+                        ...document.data(),
+                        key: document.id
+                    }
+                });
+
+                console.log(posts)
+            },
+          })
+    }
+
+    
+
+    // get ref 'journals'
+    // where requester == myPhone
+    // orderBy == posts/timestamp
+    // startAt post.Timestamp start of day
+    // endAt post.Timestamp end of day
+
+    return [
+        {            
+        }
+    ]
 }
 
 

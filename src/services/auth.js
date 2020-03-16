@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -13,13 +15,6 @@ AuthManager.getUser = async () => {
     
     const ref = firestore().collection('users').doc(user.uid);
     const profile = await ref.get();
-
-
-    console.log({
-        id: user.uid,
-        name: user.displayName,
-        phone: profile.data().phone
-    })
 
     return {
         id: user.uid,
@@ -59,5 +54,14 @@ AuthManager.signIn = async (name, phone) => {
     }
 }
 
-
 export default AuthManager;
+
+const AuthContext = React.createContext(null)
+
+export const AuthProvider = ({ user, children }) => {
+    return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
+}
+
+export function useAuthStore(){
+    return React.useContext(AuthContext)
+}
