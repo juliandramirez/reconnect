@@ -5,8 +5,9 @@ import {View, Text, StyleSheet, TextInput} from 'react-native';
 import Timeline from 'react-native-timeline-flatlist'
 import Octicons from 'react-native-vector-icons/Octicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {Image} from 'react-native-elements';
+import {Image, Button} from 'react-native-elements';
 
 
 const DateSwiper = () => {
@@ -52,54 +53,89 @@ const DateSwiper = () => {
   ]
 
   return ( 
-    <View style={{flex: 1, backgroundColor: '#fffafc'}}>   
+    <>
+      {/* DATE NAVIGATOR */}
+      <View style={{ flexDirection: 'column' }}>
 
-        <View style={{
-            flexDirection:'row', 
-            justifyContent: 'space-around', 
-                                                           
-        }}>
+        <View style={{ 
+                flexDirection: 'row',
+                alignItems: 'center',
+                
+            }}>
 
-            <Text style={{flex: 1, 
-                textAlign: 'center', 
-                fontWeight: 'bold', 
-                fontFamily: 'Cochin', 
-                letterSpacing: 1, 
-                fontSize: 13,
-                paddingTop: 20,
-            paddingBottom: 10,                
+            <View style={{flexGrow:1}}>
+                <Button containerStyle={{}} type='clear' icon={
+                    <Ionicons name='ios-arrow-back' size={24}/>
+                }/>
+            </View>
+
+            <Text style={{
+                    fontFamily: 'Cochin',
+                    fontSize: 16,
+                    letterSpacing: 0.5,                            
+                    fontWeight: 'bold'
                 }}>
-                YOUR DAY
+                Wed, 30 September 2019
             </Text>
-            <View style={{backgroundColor: '#333333', width: 1}}></View>
-            <Text style={{flex: 1, 
-                textAlign: 'center', 
-                fontWeight: 'bold', 
-                fontFamily: 'Cochin', 
-                letterSpacing: 1, 
-                fontSize: 13,
-                paddingTop: 20,
-            paddingBottom: 10,                
-                }}>
-                LAURA'S DAY
-            </Text>
-        </View>   
 
-        <View style={{
-            flex: 1, 
-            flexDirection:'row', 
-            justifyContent: 'space-evenly', 
-          }}>        
-          <View style={{flex:1, marginRight: '3%'}}>
-            <DailyTimeline data={data1} direction='left' />
-          </View>
-          <View style={{backgroundColor: '#333333', width: 1}}></View>
-
-          <View style={{flex:1, marginLeft: '3%'}}>
-            <DailyTimeline data={data2} direction='right' />
-          </View>
+            <View style={{flexGrow:1}}>
+                <Button containerStyle={{}} type='clear' icon={
+                    <Ionicons name='ios-arrow-forward' size={24}/>
+                }/>
+            </View>                    
         </View>
-    </View>   
+      </View>
+
+      {/* DUAL TIMELINE */}
+      <View style={{flex: 1}}>   
+
+          <View style={{
+              flexDirection:'row', 
+              justifyContent: 'space-around', 
+                                                            
+          }}>
+
+              <Text style={{flex: 1, 
+                  textAlign: 'center', 
+                  fontWeight: 'bold', 
+                  fontFamily: 'Cochin', 
+                  letterSpacing: 1, 
+                  fontSize: 13,
+                  paddingTop: 8,
+                  paddingBottom: 10,                
+                  }}>
+                  YOUR DAY
+              </Text>
+              <View style={{backgroundColor: '#333333', width: 1}}></View>
+              <Text style={{flex: 1, 
+                  textAlign: 'center', 
+                  fontWeight: 'bold', 
+                  fontFamily: 'Cochin', 
+                  letterSpacing: 1, 
+                  fontSize: 13,
+                  paddingTop: 8,
+                  paddingBottom: 10,                
+                  }}>
+                  LAURA'S DAY
+              </Text>
+          </View>   
+
+          <View style={{
+              flex: 1, 
+              flexDirection:'row', 
+              justifyContent: 'space-evenly', 
+            }}>        
+            <View style={{flex:1, marginRight: '3%'}}>
+              <DailyTimeline data={data1} direction='left' />
+            </View>
+            <View style={{backgroundColor: '#333333', width: 1}}></View>
+
+            <View style={{flex:1, marginLeft: '3%'}}>
+              <DailyTimeline data={data2} direction='right' />
+            </View>
+          </View>
+      </View>   
+    </>
   );
 };
 

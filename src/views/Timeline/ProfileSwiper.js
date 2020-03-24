@@ -4,6 +4,8 @@ import { Avatar, Badge } from 'react-native-elements'
 import { Button } from 'react-native-elements'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import Theme from 'Reconnect/src/theme/Theme'
+
 
 const DATA = [
   {
@@ -22,7 +24,7 @@ const DATA = [
     profile: 'GF',
     id: '1',
     color: '#ffe5ee',
-    width: 2
+    width: 1
   },  
   {
     profile: 'BFF',
@@ -36,15 +38,15 @@ const Profile = ({profile, id, color, width}) => {
     return (
         <View>
             <Avatar rounded
-                size={ id === '1' ? 70 : 50 }
+                size={ id === '1' ? 50 : 50 }
                 title={profile} 
                 titleStyle={{
-                    fontSize: 16,
+                    fontSize: 14,
                     color: '#444444',
                     fontWeight: 'bold'
                 }}
                 containerStyle={{
-                    marginLeft: 12, 
+                    marginLeft: 10, 
                     borderWidth: width,
                     borderColor: 'black',                                       
                     backgroundColor: 'white'
@@ -74,7 +76,7 @@ const ProfileSwiper = () => {
         <View style={{
             flexDirection: 'row', 
             alignItems: 'center',
-            borderColor: 'black',
+            borderColor: Theme.colors.contentSeparator,
             borderBottomWidth: 1,
             }}>        
 

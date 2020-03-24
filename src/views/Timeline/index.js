@@ -3,60 +3,36 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Button } from 'react-native-elements'
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { createStackNavigator } from '@react-navigation/stack'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import Entypo from 'react-native-vector-icons/Entypo'
+
+import Theme from 'Reconnect/src/theme/Theme'
 
 import ProfileSwiper from './ProfileSwiper'
 import DayContent from './DayContent'
+import PostList from './PostList'
+import NewPost from './NewPost'
 
 
-const Container = () => {
+const Stack = createStackNavigator()
+const NavigationContainer = () => (
+    <Stack.Navigator>
+        <Stack.Screen name="Main" component={Container} options={{headerShown: false}}/> 
+        <Stack.Screen name="NewPost" component={NewPost} />
+    </Stack.Navigator>
+)
+
+const Container = ({ navigation }) => {
     return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1, backgroundColor: Theme.colors.appBackground }}>
 
             {/* PROFILES */}
             <ProfileSwiper />
-            
-            {/* DATE NAVIGATOR */}
-            <View style={{ flexDirection: 'column' }}>
-
-                <View style={{ 
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        backgroundColor: '#ffe5ee'                        
-                    }}>
-
-                    <View style={{flexGrow:1}}>
-                        <Button type='clear' icon={
-                            <Ionicons name='ios-arrow-back' size={28}/>
-                        }/>
-                    </View>
-
-                    <Text style={{
-                            fontFamily: 'Cochin',
-                            fontSize: 18,
-                            letterSpacing: 0.5,                            
-                            fontWeight: 'bold'
-                        }}>
-                        Wed, 30 September 2019
-                    </Text>
-
-                    <View style={{flexGrow:1}}>
-                        <Button type='clear' icon={
-                            <Ionicons name='ios-arrow-forward' size={28}/>
-                        }/>
-                    </View>                    
-                </View>
-            </View>
 
 
             {/* TIMELINE */}
-            <DayContent />
+            <PostList navigation={navigation}/>
 
             {/* BOTTOM BAR */}
             <View style={{
@@ -68,20 +44,18 @@ const Container = () => {
                 alignItems: 'center'
             }}>
                 <View style={{flex:1, flexGrow:1}}>
-                    <Button type='clear' icon={
-                        <MaterialCommunityIcons name='calendar-search' size={30}/>
-                    }/>
+
                 </View>
                 
                 <View style={{flex:1, flexGrow:1}}>
                     <Button type='clear' icon={
-                        <Ionicons name='ios-add-circle-outline' size={34}/>
-                    }/>
+                        <SimpleLineIcons name='pencil' size={32}/>
+                    } onPress={() => navigation.navigate('NewPost')}/>
                 </View>
                 
-                <View style={{flex:1, flexGrow:1}}>
-                    <Button type='clear' icon={
-                        <Ionicons name='ios-log-out' size={30}/>
+                <View style={{flex:1, flexGrow:1, alignItems: 'flex-end'}}>
+                    <Button type='clear' style={{ marginRight: 12 }} icon={
+                        <AntDesign name='logout' size={26}/>
                     }/>
                 </View>
             </View>
@@ -89,4 +63,4 @@ const Container = () => {
     );
 };
 
-export default Container;
+export default NavigationContainer;

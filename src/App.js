@@ -1,18 +1,18 @@
-/**
- * @flow
- */
+
 
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, SafeAreaView } from 'react-native'
-
+import { StyleSheet, SafeAreaView, StatusBar } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+
+import Theme from 'Reconnect/src/theme/Theme'
+import AuthManager, { AuthProvider } from 'Reconnect/src/services/auth'
 
 import Loading from './Loading'
 import Onboarding from './views/Onboarding'
 import Timeline from './views/Timeline'
 
-import AuthManager, { AuthProvider } from './services/auth'
+
 
 
 const Stack = createStackNavigator()
@@ -31,8 +31,9 @@ const App = () => {
     }
 
     return (
-        <AuthProvider user={user}>
-            <SafeAreaView style={{flex: 1}}>
+        <AuthProvider user={user}>            
+            <SafeAreaView style={{flex: 1, backgroundColor: Theme.colors.appBackground}}>
+                <StatusBar hidden={false} />
                 <NavigationContainer>
                 {
                     initializing ? 
