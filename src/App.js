@@ -1,4 +1,6 @@
-
+/**
+ * @flow
+ */
 
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native'
@@ -7,22 +9,24 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import Theme from 'Reconnect/src/theme/Theme'
 import AuthManager, { AuthProvider } from 'Reconnect/src/services/auth'
+import type { User } from 'Reconnect/src/services/auth'
 
 import Loading from './Loading'
 import Onboarding from './views/Onboarding'
-import Timeline from './views/Timeline'
-
-
+import Content from './views/Content'
 
 
 const Stack = createStackNavigator()
 const App = () => {
 
-    const [user, setUser] = useState(null)
-    const [initializing, setInitializing] = useState(true)
+    /* Local state */
+    const [user, setUser] = useState<?User>(null)
+    const [initializing, setInitializing] = useState<boolean>(true)
 
+    /* Effects */
     useEffect(_init, [])
 
+    /* Functions */
     function _init() {
         AuthManager.getUser().then(user => {
             setUser(user)
@@ -30,10 +34,11 @@ const App = () => {
         })
     }
 
+    /* Render */
     return (
         <AuthProvider user={user}>            
             <SafeAreaView style={{flex: 1, backgroundColor: Theme.colors.appBackground}}>
-                <StatusBar hidden={false} />
+                <StatusBar hidden={false} barStyle='dark-content'/>
                 <NavigationContainer>
                 {
                     initializing ? 
@@ -42,9 +47,9 @@ const App = () => {
                         <Stack.Navigator screenOptions={{ headerShown: false }}>
                         {
                             user == null ? (
-                                <Stack.Screen name="Onboarding" component={Timeline} />
+                                <Stack.Screen name="Onboarding" component={ Content } />
                             ) : (
-                                <Stack.Screen name="Timeline" component={Timeline} />
+                                <Stack.Screen name="Timeline" component={ Content } />
                             )
                         }                        
                         </Stack.Navigator>                            
@@ -53,7 +58,7 @@ const App = () => {
                 </NavigationContainer>
             </SafeAreaView>
         </AuthProvider>
-    );
-};
+    )
+}
 
-export default App;
+export default App

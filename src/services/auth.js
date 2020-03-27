@@ -1,20 +1,30 @@
-import * as React from 'react';
+/**
+ * @flow
+ */
 
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import * as React from 'react'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 
-const AuthManager = {};
+const AuthManager = {}
 
-AuthManager.getUser = async () => {
-    const user = auth().currentUser;     
+export type User = {|
+    id: string,
+    name: string,
+    phone: string,
+|}
+
+AuthManager.getUser = async (): Promise<?User> => {
+
+    const user = auth().currentUser    
 
     if (user === null) {
-        return null;
+        return null
     }
     
     const ref = firestore().collection('users').doc(user.uid);
-    const profile = await ref.get();
+    const profile = await ref.get()
 
     return {
         id: user.uid,
@@ -25,17 +35,17 @@ AuthManager.getUser = async () => {
 
 
 AuthManager.signOut = async () => {
-    await auth().signOut();
+    await auth().signOut()
 }
 
-AuthManager.signIn = async (name, phone) => {
+AuthManager.signIn = async (name: string, phone: string) : Promise<?User> => {
     try {
-        const account = await auth().signInAnonymously();
-        const user = account.user;
+        const account = await auth().signInAnonymously()
+        const user = account.user
 
         await user.updateProfile({displayName: name})
 
-        const ref = firestore().collection('users').doc(user.uid);
+        const ref = firestore().collection('users').doc(user.uid)
         await ref.set({
             phone: phone
         })
@@ -48,17 +58,17 @@ AuthManager.signIn = async (name, phone) => {
     } catch (e) {
         switch (e.code) {
             default:
-                console.error(e);
-                break;
+                console.error(e)
+                break
         }
     }
 }
 
-export default AuthManager;
+export default AuthManager
 
-const AuthContext = React.createContext(null)
+const AuthContext = React.createContext<?User>(null)
 
-export const AuthProvider = ({ user, children }) => {
+export const AuthProvider = ({ user, children } : { user: ?User, children: React.Node }) => {
     return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
 }
 

@@ -34,6 +34,36 @@ const DATA = [
   },  
 ];
 
+
+const PeopleList = () => {
+    return (
+        <View style={{
+            flexDirection: 'row', 
+            alignItems: 'center',
+            borderColor: Theme.colors.contentSeparator,
+            borderBottomWidth: 1,
+            }}>        
+
+            <FlatList horizontal
+                data={DATA}
+                renderItem={({item}) => <Profile {...item} />}
+                keyExtractor={item => item.id}
+
+                contentContainerStyle={{
+                    alignItems: 'center',
+                    borderBottomColor: '#dedede',
+                    borderBottomWidth: 1, 
+                    flexGrow: 1
+                }}
+                style={{                    
+                    height: 80, 
+                    maxHeight: 80
+                }}
+            />
+        </View>
+    )
+}
+
 const Profile = ({profile, id, color, width}) => {
     return (
         <View>
@@ -68,37 +98,7 @@ const Profile = ({profile, id, color, width}) => {
               />
             )}
         </View>
-    );
+    )
 }
 
-const ProfileSwiper = () => {
-    return (
-        <View style={{
-            flexDirection: 'row', 
-            alignItems: 'center',
-            borderColor: Theme.colors.contentSeparator,
-            borderBottomWidth: 1,
-            }}>        
-
-            <FlatList horizontal
-                data={DATA}
-                renderItem={({item}) => <Profile {...item} />}
-                keyExtractor={item => item.id}
-
-                contentContainerStyle={{
-                    alignItems: 'center',
-                    borderBottomColor: '#dedede',
-                    borderBottomWidth: 1, 
-                    flexGrow: 1
-                }}
-                style={{                    
-                    height: 80, 
-                    maxHeight: 80
-                }}
-            />
-        </View>
-    );
-};
-
-
-export default ProfileSwiper;
+export default PeopleList
