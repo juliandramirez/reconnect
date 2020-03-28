@@ -11,7 +11,9 @@ export type Post = {
 }
 
 export type Attachment = {
-    id: string
+    id: string,
+    type: 'image' | 'video',
+    url: string
 }
 
 export type Person = {

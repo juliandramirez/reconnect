@@ -38,7 +38,7 @@ const App = () => {
     return (
         <AuthProvider user={user}>            
             <SafeAreaView style={{flex: 1, backgroundColor: Theme.colors.appBackground}}>
-                <StatusBar hidden={false} barStyle='dark-content'/>
+                <StatusBar hidden={false} barStyle='dark-content' animated={false}/>
                 <NavigationContainer>
                 {
                     initializing ? 

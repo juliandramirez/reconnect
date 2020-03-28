@@ -11,6 +11,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import type { Post, Attachment } from 'Reconnect/src/services/content'
 import Theme from 'Reconnect/src/theme/Theme'
 
+import { AttachmentView, AttachmentDetailView } from './Attachment'
 import { NavigationRoutes } from './index'
 
 
@@ -189,16 +190,6 @@ const PostAttachments = ({ attachments } : { attachments: Array<Attachment> }) =
     )
 }
 
-const AttachmentView = ({ attachment: Attachment }) => {
-    return (
-        <Image resizeMode='cover' 
-            style={{
-                width: Dimensions.get('window').width * 0.25,  
-                aspectRatio: 1,
-            }}
-            source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/reconnect-eddf2.appspot.com/o/morning.jpeg?alt=media&token=7244e078-0ae3-4839-a363-07d0881ecf03' }}                                 
-        />
-    )
-}
+
 
 export default PostView

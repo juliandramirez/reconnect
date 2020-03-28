@@ -33,9 +33,11 @@ const Container = () => {
     
     function _init() {
         const text = 'This week I had to do the same thing we did when we were working together.\n\nI felt really good about it and it reminded me of how much you helped me back then!'
+        const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/reconnect-eddf2.appspot.com/o/breakfast.jpg?alt=media&token=31a56a22-cd51-4614-ae75-8ecb81bfa9b4'
+        const videoUrl = 'https://firebasestorage.googleapis.com/v0/b/reconnect-eddf2.appspot.com/o/DAVE%20Concert.MP4?alt=media&token=e1a7470b-13e9-485b-a1a8-a8e02f477012'
         const POSTS = [
-            {id: '2', text: text + text, content: [], attachments: [{id: '1'}, {id: '2'}, {id: '3'}, {id: '4'}]},
-            {id: '1', text: 'This week I had to do the same thing we did when we were working together', content: [], attachments: [{id: '1'}, {id: '2'}, {id: '3'}, {id: '4'}]},            
+            {id: '2', text: text + text, content: [], attachments: [{id: '1', type: 'video', url: videoUrl }, {id: '2', type: 'video', url: videoUrl}, {id: '3', type: 'image', url: imageUrl}, {id: '4', type: 'image', url: imageUrl}]},
+            {id: '1', text: 'This week I had to do the same thing we did when we were working together', content: [], attachments: []},            
         ]
 
         setPosts(POSTS)

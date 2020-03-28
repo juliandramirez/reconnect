@@ -10,13 +10,32 @@ import Theme from 'Reconnect/src/theme/Theme'
 import Container from './Container'
 import Post, { PostDetail } from './Post'
 import NewPost from './NewPost'
+import { AttachmentDetailView } from './Attachment'
 
 
 export const NavigationRoutes = {
     Main: 'Main',
     PostDetail: 'PostDetail',
+    AttachmentDetail: 'AttachmentDetail',
     NewPost: 'NewPost'
 }
+
+
+const RootStack = createStackNavigator()
+const RootStackScreen = () => (
+    <RootStack.Navigator mode="modal" screenOptions={{ headerShown: false }}>
+        <RootStack.Screen
+            name='Root'
+            component={ NavigationContainer }
+        />
+
+        <Stack.Screen 
+            name={ NavigationRoutes.AttachmentDetail } 
+            component={ AttachmentDetailView } 
+        />
+    </RootStack.Navigator>    
+)
+
 
 const Stack = createStackNavigator()
 const NavigationContainer = () => (
@@ -47,4 +66,4 @@ const NavigationContainer = () => (
     </Stack.Navigator>
 )
 
-export default NavigationContainer
+export default RootStackScreen
