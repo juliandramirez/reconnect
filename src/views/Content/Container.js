@@ -13,8 +13,8 @@ import Theme from 'Reconnect/src/theme/Theme'
 import type { Post, Person } from 'Reconnect/src/services/content'
 
 import PeopleList from './PeopleList'
-import PostView from './Post'
-import NewPost from './NewPost'
+import PostView from './Posts/ViewPost'
+import NewPost from './Posts/NewPost'
 import { NavigationRoutes } from './index'
 
 

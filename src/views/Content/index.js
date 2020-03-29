@@ -8,9 +8,9 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Theme from 'Reconnect/src/theme/Theme'
 
 import Container from './Container'
-import Post, { PostDetail } from './Post'
-import NewPost from './NewPost'
-import { AttachmentDetailView } from './Attachment'
+import Post, { PostDetail } from './Posts/ViewPost'
+import NewPost from './Posts/NewPost'
+import { AttachmentDetailView } from './Posts/Attachment'
 
 
 export const NavigationRoutes = {
@@ -62,7 +62,11 @@ const NavigationContainer = () => (
             options={{ headerTitle: 'Post detail' }}
         />
 
-        <Stack.Screen name={ NavigationRoutes.NewPost } component={ NewPost } />
+        <Stack.Screen 
+            name={ NavigationRoutes.NewPost } 
+            component={ NewPost } 
+            options={{ headerTitle: 'New Post' }}
+        />
     </Stack.Navigator>
 )
 

@@ -10,9 +10,10 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 
 import type { Post, Attachment } from 'Reconnect/src/services/content'
 import Theme from 'Reconnect/src/theme/Theme'
+import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 import { AttachmentView, AttachmentDetailView } from './Attachment'
-import { NavigationRoutes } from './index'
+import { PostEnvelope } from './Components'
 
 
 export const PostDetail = () => {
@@ -36,77 +37,44 @@ const PostView = ({ post, headerColor, fullscreenMode }
 
     /* Render */
     function _render() {
-        return (<>
-            {/* TOP IMAGE */}
-            <Image        
-                style={{
-                    width: Dimensions.get('window').width * 0.92,
-                    height: (Dimensions.get('window').width * 0.92) * (152.0/1262.0)
-                }}                
-                resizeMode='cover' 
-                defaultSource={ Theme.images.topPost }                
-                source={ Theme.images.topPost }                
-            />
-
-            {/* POST CONTENT */}
-            <View style={{ 
-                backgroundColor: 'white', 
-                height: fullscreenMode ? '96%' : undefined
-            }}>                               
-                <View style={{ 
-                    borderWidth: 2.25, 
-                    borderTopWidth: 0, 
-                    borderColor: Theme.colors.contentBorders,
-                    height: fullscreenMode ? '100%' : undefined
-                }}>
-
-                    {/* HEADER */}
-                    <View style={{flex: 0}}>
-                        <PostHeader post={post} color={headerColor} />
-                    </View>
-
-                    {/* TEXT */}
-                    {
-                        fullscreenMode ? 
-                            <View style={{ flex: 1 }}>
-                                <PostTextScrollable text={post.text}/> 
-                            </View>
-                        : 
-                            <View style={{flex: 0}}>
-                                <PostText text={post.text}/>
-                            </View>
-                    }
-
-                    {/* ATTACHMENTS */} 
-                    <View style={{flex: 0}}>
-                    { 
-                        post.attachments && post.attachments.length > 0 ? (
-                            <PostAttachments attachments={post.attachments} />
-                        ) : ( 
-                            <></> 
-                        )
-                    }
-                    </View>
+        return (
+            <PostEnvelope>
+                {/* HEADER */}
+                <View style={{flex: 0}}>
+                    <PostHeader post={post} color={headerColor} />
                 </View>
-            </View>
-        </>)
+
+                {/* TEXT */}
+                {
+                    fullscreenMode ? 
+                        <View style={{ flex: 1 }}>
+                            <PostTextScrollable text={post.text}/> 
+                        </View>
+                    : 
+                        <View style={{flex: 0}}>
+                            <PostText text={post.text}/>
+                        </View>
+                }
+
+                {/* ATTACHMENTS */} 
+                <View style={{flex: 0}}>
+                { 
+                    post.attachments && post.attachments.length > 0 ? (
+                        <PostAttachments attachments={post.attachments} />
+                    ) : ( 
+                        <></> 
+                    )
+                }
+                </View>
+            </PostEnvelope>
+        )
     }
 
-    return (        
-        <View style={{ marginTop: '8%', paddingHorizontal: '4%' }}>   
-        {
-            fullscreenMode ?      
-                <View style={{height: '100%'}}>          
-                    {_render()}
-                </View>
-            : (
-                <TouchableOpacity activeOpacity={1} onPress={_onPress}>        
-                    {_render()}
-                </TouchableOpacity>
-            )
-        }            
-        </View>        
-    )
+    return fullscreenMode ? _render() : (
+        <TouchableOpacity style={{flex: 1}} activeOpacity={1} onPress={_onPress}>        
+            {_render()}
+        </TouchableOpacity>  
+    ) 
 }
 
 
@@ -189,7 +157,5 @@ const PostAttachments = ({ attachments } : { attachments: Array<Attachment> }) =
         </View>
     )
 }
-
-
 
 export default PostView

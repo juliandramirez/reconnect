@@ -10,8 +10,7 @@ import Video from 'react-native-video'
 
 import type { Attachment } from 'Reconnect/src/services/content'
 import Theme from 'Reconnect/src/theme/Theme'
-
-import { NavigationRoutes } from './index'
+import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
 export const AttachmentView = ({ attachment } : { attachment: Attachment }) => {
@@ -27,8 +26,9 @@ export const AttachmentView = ({ attachment } : { attachment: Attachment }) => {
     /* Functions */
 
     function _onPress() {
-        navigation.navigate( NavigationRoutes.AttachmentDetail, 
-            { attachment: attachment } )
+        navigation.navigate( NavigationRoutes.AttachmentDetail, { 
+            attachment: attachment 
+        })
     }
 
     /* Render */
@@ -59,9 +59,7 @@ export const AttachmentDetailView = () => {
 
     /* Functions */
     function _dismiss() {
-        //if (attachment.type == 'image') {
-            navigation.goBack()
-        //}
+        navigation.goBack()
     }
 
     /* Render */
