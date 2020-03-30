@@ -25,22 +25,22 @@ export const PostDetail = () => {
 
     /* Render */
     return (
-        <PostEnvelope>
+        <>
             {/* HEADER */}
             <View style={{flex: 0}}>
                 <PostHeader post={post} color={headerColor} />
             </View>
 
             {/* TEXT */}
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: 'white' }}>
                 <PostTextScrollable text={post.text}/> 
             </View>
 
             {/* ATTACHMENTS */} 
             <View style={{flex: 0}}>
-                <PostAttachments attachments={post.attachments} />
+                <PostAttachments showClip={false} attachments={post.attachments} />
             </View>
-        </PostEnvelope>
+        </>
     )
 }
 
@@ -71,7 +71,7 @@ const PostView = ({ post, headerColor } : { post: Post, headerColor: string } ) 
 
                 {/* ATTACHMENTS */} 
                 <View style={{flex: 0}}>
-                    <PostAttachments attachments={post.attachments} />
+                    <PostAttachments showClip={true} attachments={post.attachments} />
                 </View>
             </PostEnvelope>
         </TouchableOpacity>  
@@ -91,11 +91,10 @@ const PostHeader = ({ post, color } : { post: Post, color: string }) => {
 
     return (
         <View style={{ 
-            marginHorizontal: '0.1%', 
-            marginTop: '3%', 
+            marginHorizontal: '0.1%',              
             paddingVertical: '4%', 
             paddingHorizontal: '5%', 
-            backgroundColor: color 
+            backgroundColor: color            
         }}>
             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>
                 {_renderDate()}
@@ -110,9 +109,9 @@ const PostHeader = ({ post, color } : { post: Post, color: string }) => {
 
 const PostTextScrollable = ({ text } : { text: string }) => {
     return (
-        <View style={{ margin: '5%', marginBottom: 0}}>
-            <ScrollView alwaysBounceVertical={false} style={{marginBottom: '5%'}}>
-                <Text style={{ fontSize: 13, fontFamily: 'the girl next door' }}>
+        <View style={{ margin: '5%', marginBottom: 0, flex: 1, }}>
+            <ScrollView alwaysBounceVertical={false} style={{marginBottom: '5%', flex: 1, }}>
+                <Text style={{ flex: 1, fontSize: 13, fontFamily: 'the girl next door' }}>
                     {text}
                 </Text>
             </ScrollView>
@@ -133,9 +132,9 @@ const PostText = ({ text } : { text: string }) => {
     )
 }
 
-const PostAttachments = ({ attachments } : { attachments: Array<Attachment> }) => {
+const PostAttachments = ({ showClip, attachments } : { showClip: boolean, attachments: Array<Attachment> }) => {
     return attachments.length === 0 ? <></> : (
-        <AttachmentEnvelope>                        
+        <AttachmentEnvelope showClip={showClip}>                        
             <FlatList horizontal 
                 style={{ height: Dimensions.get('window').width * 0.25 }}                            
                 showsHorizontalScrollIndicator={false}

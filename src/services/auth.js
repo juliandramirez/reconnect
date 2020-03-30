@@ -72,6 +72,6 @@ export const AuthProvider = ({ user, children } : { user: ?User, children: React
     return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
 }
 
-export function useAuthStore(){
+export function useAuthStore(): ?User {
     return React.useContext(AuthContext)
 }

@@ -2,14 +2,14 @@
  * @flow
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Image, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native'
 import { Dimensions } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Video from 'react-native-video'
 
 import type { Attachment } from 'Reconnect/src/services/content'
-import Theme from 'Reconnect/src/theme/Theme'
+import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
@@ -46,17 +46,26 @@ export const AttachmentThumbnail = ({ attachment } : { attachment: Attachment })
 export const AttachmentDetailView = () => {
 
     /* State */
-    const [loading, setLoading] = useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(true)    
 
     /* Hooks */
     const navigation = useNavigation()
     const route = useRoute()
+    const [skin, setSkin] = useSkin()
 
     /* Properties */
     const { attachment } = route.params
 
+    /* Effects */
+    useEffect(_init, [])
+
+    function _init() {
+        setSkin({...initialSkin, safeAreaBackground: 'black'})
+    }
+
     /* Functions */
     function _dismiss() {
+        setSkin(initialSkin)
         navigation.goBack()
     }
 

@@ -1,10 +1,14 @@
+/**
+ * @flow
+ */
+
 import React from 'react'
-import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { View, FlatList, TouchableOpacity } from 'react-native'
 import { Avatar, Badge } from 'react-native-elements'
-import { Button } from 'react-native-elements'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useNavigation } from '@react-navigation/native'
 
 import Theme from 'Reconnect/src/theme/Theme'
+import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
 const DATA = [
@@ -42,8 +46,8 @@ const PeopleList = () => {
             alignItems: 'center',
             borderColor: Theme.colors.contentSeparator,
             borderBottomWidth: 1,
-            }}>        
-
+            }}
+        >        
             <FlatList horizontal
                 data={DATA}
                 renderItem={({item}) => <Profile {...item} />}
@@ -65,8 +69,17 @@ const PeopleList = () => {
 }
 
 const Profile = ({profile, id, color, width}) => {
+
+    /* Hooks */
+    const navigation = useNavigation()
+
+    /* Functions */
+    function _newPerson() {
+        navigation.navigate( NavigationRoutes.AddPerson )
+    }
+
     return (
-        <View>
+        <TouchableOpacity onPress={_newPerson}>
             <Avatar rounded
                 size={ id === '1' ? 50 : 50 }
                 title={profile} 
@@ -97,7 +110,7 @@ const Profile = ({profile, id, color, width}) => {
                   }}
               />
             )}
-        </View>
+        </TouchableOpacity>
     )
 }
 

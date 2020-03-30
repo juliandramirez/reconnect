@@ -85,12 +85,23 @@ const AddAttachments = () => {
                             type='clear'                            
                             titleStyle={{ color: 'black', letterSpacing: 0.5, fontWeight: '400' }}
                             
-                            onPress={() => {Keyboard.dismiss(); ImagePicker.showImagePicker({}, (response) => {console.log('Response = ', response);})}}
+                            onPress={() => {
+                                ImagePicker.showImagePicker({
+                                    takePhotoButtonTitle: 'Take Photo or Video',
+                                    tintColor: 'black',
+                                    mediaType: 'mixed',
+                                    quality: 0.8,
+                                    allowsEditing: false,
+                                    noData: true
+                                }, (response) => {
+
+                                })
+                            }}
                         />
                     </View>
 
                     <View style={{ flex: 1 }}>
-                        <Button
+                        <Button disabled
                             title='CLEAR MEDIA' 
                             type='clear'                            
                             titleStyle={{ color: '#E57369', letterSpacing: 0.5, fontWeight: '400' }}

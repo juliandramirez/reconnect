@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Theme from 'Reconnect/src/theme/Theme'
 
 import Container from './Container'
+import AddPerson from './People/AddPerson'
 import Post, { PostDetail } from './Posts/ViewPost'
 import NewPost from './Posts/NewPost'
 import { AttachmentDetailView } from './Posts/Attachment'
@@ -17,7 +18,8 @@ export const NavigationRoutes = {
     Main: 'Main',
     PostDetail: 'PostDetail',
     AttachmentDetail: 'AttachmentDetail',
-    NewPost: 'NewPost'
+    NewPost: 'NewPost',
+    AddPerson: 'AddPerson'
 }
 
 
@@ -26,7 +28,12 @@ const RootStackScreen = () => (
     <RootStack.Navigator mode="modal" screenOptions={{ headerShown: false }}>
         <RootStack.Screen
             name='Root'
-            component={ NavigationContainer }
+            component={ PostsContainer }
+        />
+
+        <Stack.Screen 
+            name={ NavigationRoutes.AddPerson } 
+            component={ AddPerson } 
         />
 
         <Stack.Screen 
@@ -36,9 +43,8 @@ const RootStackScreen = () => (
     </RootStack.Navigator>    
 )
 
-
 const Stack = createStackNavigator()
-const NavigationContainer = () => (
+const PostsContainer = () => (
     <Stack.Navigator screenOptions={{ 
         headerTintColor: 'black',
         headerBackTitleVisible: false,

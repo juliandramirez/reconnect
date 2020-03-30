@@ -7,8 +7,8 @@ import { StyleSheet, SafeAreaView, StatusBar } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import Theme from 'Reconnect/src/theme/Theme'
-import AuthManager, { AuthProvider } from 'Reconnect/src/services/auth'
+import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
+import AuthManager, { AuthProvider, useAuthStore } from 'Reconnect/src/services/auth'
 import type { User } from 'Reconnect/src/services/auth'
 
 import Loading from './Loading'
@@ -19,7 +19,7 @@ import Content from './views/Content'
 const Stack = createStackNavigator()
 const App = () => {
 
-    /* Local state */
+    /* State */
     const [user, setUser] = useState<?User>(null)
     const [initializing, setInitializing] = useState<boolean>(true)
 
@@ -35,29 +35,36 @@ const App = () => {
     }
 
     /* Render */
-    return (
-        <AuthProvider user={user}>            
-            <SafeAreaView style={{flex: 1, backgroundColor: Theme.colors.appBackground}}>
-                <StatusBar hidden={false} barStyle='dark-content' animated={false}/>
-                <NavigationContainer>
-                {
-                    initializing ? 
-                        <Loading /> 
-                    : (
-                        <Stack.Navigator screenOptions={{ headerShown: false }}>
-                        {
-                            user == null ? (
-                                <Stack.Screen name="Onboarding" component={ Content } />
-                            ) : (
-                                <Stack.Screen name="Timeline" component={ Content } />
-                            )
-                        }                        
-                        </Stack.Navigator>                            
-                    )
-                }
-                </NavigationContainer>
-            </SafeAreaView>
+    return initializing ? <Loading /> : (
+        <AuthProvider user={user}>   
+            <SkinProvider>
+                <MainUI />
+            </SkinProvider>                    
         </AuthProvider>
+    )
+}
+
+const MainUI = () => {
+    /* Hooks */
+    const [skin, _] = useSkin()
+    const user = useAuthStore()
+
+    /* Render */
+    return (
+        <SafeAreaView style={{flex: 1, backgroundColor: skin.safeAreaBackground}}>
+            <StatusBar hidden={false} barStyle='dark-content' backgroundColor={skin.safeAreaBackground} animated={false}/>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                {
+                    user == null ? (
+                        <Stack.Screen name="Onboarding" component={ Content } />
+                    ) : (
+                        <Stack.Screen name="Timeline" component={ Content } />
+                    )
+                }                        
+                </Stack.Navigator>
+            </NavigationContainer>
+        </SafeAreaView>        
     )
 }
 

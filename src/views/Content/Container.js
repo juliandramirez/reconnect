@@ -12,7 +12,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Theme from 'Reconnect/src/theme/Theme'
 import type { Post, Person } from 'Reconnect/src/services/content'
 
-import PeopleList from './PeopleList'
+import PeopleList from './People/PeopleList'
 import PostView from './Posts/ViewPost'
 import NewPost from './Posts/NewPost'
 import { NavigationRoutes } from './index'
