@@ -92,8 +92,8 @@ const Profile = ({profile, id, color, width}) => {
                   value={id}
                   containerStyle={{ 
                       position: 'absolute', 
-                      top: -4, 
-                      right: -4 
+                      top: 0, 
+                      right: 0 
                   }}
               />
             )}

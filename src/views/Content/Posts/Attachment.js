@@ -13,7 +13,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
-export const AttachmentView = ({ attachment } : { attachment: Attachment }) => {
+export const AttachmentThumbnail = ({ attachment } : { attachment: Attachment }) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -26,9 +26,7 @@ export const AttachmentView = ({ attachment } : { attachment: Attachment }) => {
     /* Functions */
 
     function _onPress() {
-        navigation.navigate( NavigationRoutes.AttachmentDetail, { 
-            attachment: attachment 
-        })
+        navigation.navigate( NavigationRoutes.AttachmentDetail, { attachment })
     }
 
     /* Render */
@@ -69,8 +67,8 @@ export const AttachmentDetailView = () => {
                 <Image 
                     resizeMode='contain'
                     style={{
-                        width: '95%',
-                        height: '95%',
+                        width: '100%',
+                        height: '100%',
                     }}
                     source={{uri: attachment.url}}
                 />
@@ -87,6 +85,7 @@ export const AttachmentDetailView = () => {
                         controls={false}
                         onReadyForDisplay={() => setLoading(false)}
                         onError={() => { alert('Invalid video'); _dismiss() }}
+                        onEnd={_dismiss}
                     />
                     <ActivityIndicator 
                         color='white' 
@@ -108,8 +107,9 @@ export const AttachmentDetailView = () => {
                 style={{ 
                     flex: 1, 
                     backgroundColor: 'black'                    
-                }}>            
-                <View style={{ flex: 1, alignItems: 'center'}}>
+                }}
+            >            
+                <View style={{ flex: 1, alignItems: 'center' }}>
                     {_renderComponent()}
                 </View>
             </TouchableOpacity>

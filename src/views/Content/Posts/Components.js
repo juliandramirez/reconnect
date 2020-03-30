@@ -5,6 +5,7 @@
 import * as React from 'react'
 import { View, Image } from 'react-native'
 import { Dimensions } from 'react-native'
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
 
 import Theme from 'Reconnect/src/theme/Theme'
 
@@ -39,4 +40,16 @@ export const PostEnvelope = ({ children } : { children: React.Node }) => (
             </View>
         </View>            
     </View>                    
+)
+
+export const AttachmentEnvelope = ({ children } : { children: React.Node }) => (
+    <View style={{                         
+        borderColor: Theme.colors.contentBorders, 
+        borderTopWidth: 2, 
+        paddingHorizontal: '5%', 
+        paddingVertical: 20
+    }}>                        
+        {children}        
+        <EvilIcons name='paperclip' size={56} style={{color: Theme.colors.contentBorders, position: 'absolute', right: '-2%', bottom: '-5%'}}/>
+    </View>    
 )

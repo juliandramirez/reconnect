@@ -5,26 +5,46 @@
 import React from 'react'
 import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { Dimensions } from 'react-native'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 
 import type { Post, Attachment } from 'Reconnect/src/services/content'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
-import { AttachmentView, AttachmentDetailView } from './Attachment'
-import { PostEnvelope } from './Components'
+import { AttachmentThumbnail, AttachmentDetailView } from './Attachment'
+import { PostEnvelope, AttachmentEnvelope } from './Components'
 
 
 export const PostDetail = () => {
+
+    /* Hooks */
     const route = useRoute()
+
+    /* Properties */
     const { post, headerColor } = route.params
 
-    return <PostView post={post} headerColor={headerColor} fullscreenMode={true} />
+    /* Render */
+    return (
+        <PostEnvelope>
+            {/* HEADER */}
+            <View style={{flex: 0}}>
+                <PostHeader post={post} color={headerColor} />
+            </View>
+
+            {/* TEXT */}
+            <View style={{ flex: 1 }}>
+                <PostTextScrollable text={post.text}/> 
+            </View>
+
+            {/* ATTACHMENTS */} 
+            <View style={{flex: 0}}>
+                <PostAttachments attachments={post.attachments} />
+            </View>
+        </PostEnvelope>
+    )
 }
 
-const PostView = ({ post, headerColor, fullscreenMode } 
-    : { post: Post, headerColor: string, fullscreenMode: boolean } ) => {
+const PostView = ({ post, headerColor } : { post: Post, headerColor: string } ) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -32,12 +52,12 @@ const PostView = ({ post, headerColor, fullscreenMode }
     /* Functions */
     function _onPress() {          
         navigation.navigate( NavigationRoutes.PostDetail, 
-                { post: post, headerColor: headerColor } )
+                { post, headerColor } )
     }
 
-    /* Render */
-    function _render() {
-        return (
+    /* Render */    
+    return (
+        <TouchableOpacity style={{flex: 1}} activeOpacity={1} onPress={_onPress}>        
             <PostEnvelope>
                 {/* HEADER */}
                 <View style={{flex: 0}}>
@@ -45,34 +65,15 @@ const PostView = ({ post, headerColor, fullscreenMode }
                 </View>
 
                 {/* TEXT */}
-                {
-                    fullscreenMode ? 
-                        <View style={{ flex: 1 }}>
-                            <PostTextScrollable text={post.text}/> 
-                        </View>
-                    : 
-                        <View style={{flex: 0}}>
-                            <PostText text={post.text}/>
-                        </View>
-                }
+                <View style={{flex: 0}}>
+                    <PostText text={post.text}/>
+                </View>
 
                 {/* ATTACHMENTS */} 
                 <View style={{flex: 0}}>
-                { 
-                    post.attachments && post.attachments.length > 0 ? (
-                        <PostAttachments attachments={post.attachments} />
-                    ) : ( 
-                        <></> 
-                    )
-                }
+                    <PostAttachments attachments={post.attachments} />
                 </View>
             </PostEnvelope>
-        )
-    }
-
-    return fullscreenMode ? _render() : (
-        <TouchableOpacity style={{flex: 1}} activeOpacity={1} onPress={_onPress}>        
-            {_render()}
         </TouchableOpacity>  
     ) 
 }
@@ -122,11 +123,9 @@ const PostTextScrollable = ({ text } : { text: string }) => {
 const PostText = ({ text } : { text: string }) => {
     return (
         <View style={{ margin: '5%'}}>
-
             <Text numberOfLines={6} style={{ fontSize: 13, fontFamily: 'the girl next door' }}>                            
                 {text}
             </Text>
-
             <Text style={{ textAlign:'left', color: 'black', fontWeight: 'bold', fontSize: 12, letterSpacing: 0.5, marginTop: '5%' }}>
                 READ POST
             </Text>
@@ -135,13 +134,8 @@ const PostText = ({ text } : { text: string }) => {
 }
 
 const PostAttachments = ({ attachments } : { attachments: Array<Attachment> }) => {
-    return (
-        <View style={{                         
-            borderColor: Theme.colors.contentBorders, 
-            borderTopWidth: 2, 
-            paddingHorizontal: '5%', 
-            paddingVertical: 20
-        }}>                        
+    return attachments.length === 0 ? <></> : (
+        <AttachmentEnvelope>                        
             <FlatList horizontal 
                 style={{ height: Dimensions.get('window').width * 0.25 }}                            
                 showsHorizontalScrollIndicator={false}
@@ -150,11 +144,9 @@ const PostAttachments = ({ attachments } : { attachments: Array<Attachment> }) =
                 )}
                 data={ attachments }                        
                 keyExtractor={ attachment => attachment.id }
-                renderItem={ ({ item }) => (<AttachmentView attachment={item}/>)}
+                renderItem={ ({ item }) => (<AttachmentThumbnail attachment={item}/>)}
             />
-            
-            <EvilIcons name='paperclip' size={56} style={{color: Theme.colors.contentBorders, position: 'absolute', right: '-2%', bottom: '-5%'}}/>
-        </View>
+        </AttachmentEnvelope>
     )
 }
 

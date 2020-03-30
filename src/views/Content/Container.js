@@ -52,19 +52,23 @@ const Container = () => {
     return (
         <View style={{ flex: 1, backgroundColor: Theme.colors.appBackground }}>
 
-            <PeopleList onPersonSelect={_onPersonSelect}/>
+            <View style={{ flex: 0 }}>
+                <PeopleList onPersonSelect={_onPersonSelect}/>
+            </View>
 
             <View style={{ flex: 1 }}>
                 <FlatList                
                     data={posts}
                     renderItem={ ({item}) => 
-                        <PostView post={item} fullscreenMode={false} headerColor='#ffe5ee'/> 
+                        <PostView post={item} headerColor='#ffe5ee'/> 
                     }
                     keyExtractor={ item => item.id }
                 />
             </View>
 
-            <BottomBar />
+            <View style={{ flex: 0 }}>
+                <BottomBar />
+            </View>
 
         </View>
     )
