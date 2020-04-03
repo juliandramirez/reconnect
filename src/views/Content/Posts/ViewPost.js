@@ -2,33 +2,56 @@
  * @flow
  */
 
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { Dimensions } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { HeaderBackButton } from '@react-navigation/stack'
+import EStyleSheet from 'react-native-extended-stylesheet'
 
 import type { Post, Attachment } from 'Reconnect/src/services/content'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
+import { wait } from 'Reconnect/src/lib/utils'
+import { useModalBackground } from 'Reconnect/src/lib/utils'
 
 import { AttachmentThumbnail, AttachmentDetailView } from './Attachment'
 import { PostEnvelope, AttachmentEnvelope } from './Components'
 
 
+const PostDetailStyles = EStyleSheet.create({
+    headerContainer: {
+        height: '66 rem',                        
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        borderTopWidth: 1,
+        borderColor: Theme.colors.contentBorders
+    }
+})
 export const PostDetail = () => {
 
     /* Hooks */
+    const navigation = useNavigation()
     const route = useRoute()
 
-    /* Properties */
+    /* Properties */    
     const { post, headerColor } = route.params
 
     /* Render */
     return (
-        <>
+        <>            
             {/* HEADER */}
-            <View style={{flex: 0}}>
-                <PostHeader post={post} color={headerColor} />
+            <View style={{ flex: 0, flexDirection: 'row', 
+                ...PostDetailStyles.headerContainer,   
+                backgroundColor: headerColor,               
+            }}>
+                
+                <View style={{position: 'absolute', width: '100%'}}>
+                    <PostHeader post={post} color={headerColor}/>
+                </View>
+                
+                <HeaderBackButton 
+                    labelVisible={false} tintColor='black' onPress={navigation.goBack} />
             </View>
 
             {/* TEXT */}
@@ -79,6 +102,14 @@ const PostView = ({ post, headerColor } : { post: Post, headerColor: string } ) 
 }
 
 
+const PostHeaderStyles = EStyleSheet.create({
+    headerContainer: {
+        paddingVertical: '8 rem',
+    },
+    headerText: {
+        fontSize: '14 rem'
+    }
+})
 const PostHeader = ({ post, color } : { post: Post, color: string }) => {
 
     function _renderDate() {
@@ -86,21 +117,21 @@ const PostHeader = ({ post, color } : { post: Post, color: string }) => {
     }
 
     function _renderHeaderSubtitle() {
-        return 'From GF @ 7:30'
+        return 'From GF @ 7:30 pm'
     }
 
     return (
         <View style={{ 
-            marginHorizontal: '0.1%',              
-            paddingVertical: '4%', 
+            ...PostHeaderStyles.headerContainer,
+            marginHorizontal: '0.1%',                           
             paddingHorizontal: '5%', 
             backgroundColor: color            
         }}>
-            <Text style={{ fontSize: 15, fontWeight: 'bold' }}>
+            <Text style={{ ...PostHeaderStyles.headerText, textTransform: 'uppercase', fontWeight: 'bold', textAlign: 'center', color: 'black' }}>
                 {_renderDate()}
             </Text>
 
-            <Text style={{ fontSize: 15, paddingTop: '2%' }}>
+            <Text style={{ ...PostHeaderStyles.headerText, paddingTop: 2, textAlign: 'center' }}>
                 {_renderHeaderSubtitle()}
             </Text>
         </View>
@@ -108,14 +139,15 @@ const PostHeader = ({ post, color } : { post: Post, color: string }) => {
 }
 
 const PostTextScrollable = ({ text } : { text: string }) => {
+    
     return (
-        <View style={{ margin: '5%', marginBottom: 0, flex: 1, }}>
-            <ScrollView alwaysBounceVertical={false} style={{marginBottom: '5%', flex: 1, }}>
+        <ScrollView alwaysBounceVertical={false} style={{marginBottom: '5%', flex: 1, }}>
+            <View style={{ margin: '5%', flex: 1, }}>            
                 <Text style={{ flex: 1, fontSize: 13, fontFamily: 'the girl next door' }}>
                     {text}
-                </Text>
-            </ScrollView>
-        </View>
+                </Text>            
+            </View> 
+        </ScrollView>
     )
 }
 
@@ -133,6 +165,19 @@ const PostText = ({ text } : { text: string }) => {
 }
 
 const PostAttachments = ({ showClip, attachments } : { showClip: boolean, attachments: Array<Attachment> }) => {
+
+    // $FlowExpectedError: Always intialized before use
+    const scrollView = useRef<FlatList>()
+
+    function _initialScroll() {
+        if (attachments.length > 3) {
+            scrollView.current.scrollToIndex({
+                 index: 0.55,
+                 animated: true
+            })
+        }
+    }
+
     return attachments.length === 0 ? <></> : (
         <AttachmentEnvelope showClip={showClip}>                        
             <FlatList horizontal 
@@ -144,6 +189,12 @@ const PostAttachments = ({ showClip, attachments } : { showClip: boolean, attach
                 data={ attachments }                        
                 keyExtractor={ attachment => attachment.id }
                 renderItem={ ({ item }) => (<AttachmentThumbnail attachment={item}/>)}
+                
+                ref={ref => scrollView.current = ref}
+                onLayout={_initialScroll}
+                onScrollToIndexFailed={() => {
+                    wait(500).then(_initialScroll)
+                }}
             />
         </AttachmentEnvelope>
     )

@@ -6,7 +6,10 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, SafeAreaView, StatusBar } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import EStyleSheet from 'react-native-extended-stylesheet'
+import { Dimensions } from 'react-native'
 
+import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
 import AuthManager, { AuthProvider, useAuthStore } from 'Reconnect/src/services/auth'
 import type { User } from 'Reconnect/src/services/auth'
@@ -28,10 +31,25 @@ const App = () => {
 
     /* Functions */
     function _init() {
-        AuthManager.getUser().then(user => {
+        initializeStyles()
+        .then(AuthManager.getUser)
+        .then((user: ?User) => {
             setUser(user)
-            setInitializing(false)            
         })
+        .finally(() => {
+            setInitializing(false)
+        })
+    }
+
+    function initializeStyles() {
+        const { width } = Dimensions.get('window')
+    
+        EStyleSheet.build({
+            $rem: width / REM_SCALE
+        })
+    
+        // promise is resolved when styles are built...
+        return new Promise<void>(resolve => EStyleSheet.subscribe('build', resolve))
     }
 
     /* Render */

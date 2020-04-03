@@ -3,13 +3,15 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { View, Image, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native'
+import { View, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native'
+import { Image } from 'react-native-elements'
 import { Dimensions } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Video from 'react-native-video'
 
 import type { Attachment } from 'Reconnect/src/services/content'
-import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
+import { useModalBackground } from 'Reconnect/src/lib/utils'
+import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
@@ -37,7 +39,8 @@ export const AttachmentThumbnail = ({ attachment } : { attachment: Attachment })
                     width: Dimensions.get('window').width * 0.25,  
                     height: Dimensions.get('window').width * 0.25,
                 }}
-                source={source}                                 
+                source={source}
+                PlaceholderContent={<ActivityIndicator color='white'/>}                               
             />
         </TouchableOpacity>
     )
@@ -51,21 +54,14 @@ export const AttachmentDetailView = () => {
     /* Hooks */
     const navigation = useNavigation()
     const route = useRoute()
-    const [skin, setSkin] = useSkin()
+    const dismissModalBackground = useModalBackground('black')
 
     /* Properties */
     const { attachment } = route.params
 
-    /* Effects */
-    useEffect(_init, [])
-
-    function _init() {
-        setSkin({...initialSkin, safeAreaBackground: 'black'})
-    }
-
     /* Functions */
     function _dismiss() {
-        setSkin(initialSkin)
+        dismissModalBackground()
         navigation.goBack()
     }
 
@@ -89,6 +85,7 @@ export const AttachmentDetailView = () => {
                         style={{
                             width: '100%',
                             height: '100%',
+                            left: 0,
                         }}
                         source={{uri: attachment.url}}
                         controls={false}
@@ -100,7 +97,7 @@ export const AttachmentDetailView = () => {
                         color='white' 
                         size='large' 
                         animating={loading} 
-                        style={{position: 'absolute', top: '50%'}}                            
+                        style={{position: 'absolute', top: '50%', left: '45%'}}                            
                     />
                 </>
             )
@@ -118,7 +115,7 @@ export const AttachmentDetailView = () => {
                     backgroundColor: 'black'                    
                 }}
             >            
-                <View style={{ flex: 1, alignItems: 'center' }}>
+                <View style={{ flex: 1, alignItems: 'flex-start' }}>
                     {_renderComponent()}
                 </View>
             </TouchableOpacity>

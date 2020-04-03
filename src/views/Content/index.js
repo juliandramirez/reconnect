@@ -60,12 +60,13 @@ const PostsContainer = () => (
         <Stack.Screen 
             name={ NavigationRoutes.Main } 
             component={ Container } 
-            options={{ headerShown: false }}/> 
+            options={{ headerShown: false }}                
+        /> 
 
         <Stack.Screen 
             name={ NavigationRoutes.PostDetail } 
             component={ PostDetail }             
-            options={{ headerTitle: 'Post detail' }}
+            options={{ headerShown: false }} 
         />
 
         <Stack.Screen 

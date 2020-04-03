@@ -2,12 +2,13 @@
  * @flow
  */
 
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import { View, Image, TextInput, Platform, Dimensions, Text, Keyboard } from 'react-native'
 import { Button } from 'react-native-elements'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import ImagePicker from 'react-native-image-picker'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { useNavigation } from '@react-navigation/native'
 
 import Theme from 'Reconnect/src/theme/Theme'
 import { KeyboardShown } from 'Reconnect/src/lib/utils'
@@ -16,6 +17,17 @@ import { PostEnvelope } from './Components'
 
 
 const NewPostView = () => {
+    /* Hooks */
+    const navigation = useNavigation()
+
+    /* Effects */
+    useLayoutEffect( () => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Button title='Save' type='clear' titleStyle={{color: 'black'}} />
+            ),
+        })
+    }, [navigation] )
 
     /* Render */
     return (  
@@ -88,6 +100,7 @@ const AddAttachments = () => {
                             onPress={() => {
                                 ImagePicker.showImagePicker({
                                     takePhotoButtonTitle: 'Take Photo or Video',
+                                    title: '',
                                     tintColor: 'black',
                                     mediaType: 'mixed',
                                     quality: 0.8,

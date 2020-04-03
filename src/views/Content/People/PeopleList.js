@@ -19,23 +19,23 @@ const DATA = [
     width: 0.5
   },
   {
-    profile: 'Dad',
-    id: '3',
-    color: '#c2f2d0',
-    width: 0
-  },
-  {
     profile: 'GF',
     id: '1',
     color: '#ffe5ee',
     width: 1
+  },  
+  /*{
+    profile: 'Dad',
+    id: '3',
+    color: '#c2f2d0',
+    width: 0
   },  
   {
     profile: 'BFF',
     id: '2',
     color: '#fdf5c9',
     width: 0
-  },  
+  },*/  
 ];
 
 
