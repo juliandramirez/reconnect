@@ -57,10 +57,10 @@ const Container = () => {
             </View>
 
             <View style={{ flex: 1 }}>
-                <FlatList                
+                <FlatList
                     data={posts}
                     renderItem={ ({item}) => 
-                        <PostView post={item} headerColor='#ffe5ee'/> 
+                        <PostView post={item} headerColor={Theme.colors.spaceColors[5]}/> 
                     }
                     keyExtractor={ item => item.id }
                 />

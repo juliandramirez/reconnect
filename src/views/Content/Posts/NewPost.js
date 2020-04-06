@@ -70,7 +70,7 @@ const NewPostView = () => {
                 
             </>
 
-            { Platform.OS === 'ios' ? <KeyboardSpacer/> : <></>}            
+            <KeyboardSpacer/>
         </>     
     )
 }

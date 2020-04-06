@@ -19,7 +19,7 @@ const DATA = [
     width: 0.5
   },
   {
-    profile: 'GF',
+    profile: 'Big Bro.',
     id: '1',
     color: '#ffe5ee',
     width: 1
@@ -46,13 +46,14 @@ const PeopleList = () => {
             alignItems: 'center',
             borderColor: Theme.colors.contentSeparator,
             borderBottomWidth: 1,
+            paddingHorizontal: 10
             }}
         >        
             <FlatList horizontal
                 data={DATA}
                 renderItem={({item}) => <Profile {...item} />}
                 keyExtractor={item => item.id}
-
+                ItemSeparatorComponent={() => <View style={{width: 10}} />}
                 contentContainerStyle={{
                     alignItems: 'center',
                     borderBottomColor: '#dedede',
@@ -68,7 +69,7 @@ const PeopleList = () => {
     )
 }
 
-const Profile = ({profile, id, color, width}) => {
+export const Profile = ({profile, id, color, width}) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -89,7 +90,6 @@ const Profile = ({profile, id, color, width}) => {
                     fontWeight: 'bold'
                 }}
                 containerStyle={{
-                    marginLeft: 10, 
                     borderWidth: width,
                     borderColor: 'black',                                       
                     backgroundColor: 'white'

@@ -9,6 +9,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 
 import Container from './Container'
 import AddPerson from './People/AddPerson'
+import PersonAdded from './People/PersonAdded'
 import Post, { PostDetail } from './Posts/ViewPost'
 import NewPost from './Posts/NewPost'
 import { AttachmentDetailView } from './Posts/Attachment'
@@ -19,7 +20,8 @@ export const NavigationRoutes = {
     PostDetail: 'PostDetail',
     AttachmentDetail: 'AttachmentDetail',
     NewPost: 'NewPost',
-    AddPerson: 'AddPerson'
+    AddPerson: 'AddPerson',
+    PersonAdded: 'PersonAdded'
 }
 
 
@@ -34,6 +36,11 @@ const RootStackScreen = () => (
         <Stack.Screen 
             name={ NavigationRoutes.AddPerson } 
             component={ AddPerson } 
+        />
+
+        <Stack.Screen 
+            name={ NavigationRoutes.PersonAdded } 
+            component={ PersonAdded } 
         />
 
         <Stack.Screen 
