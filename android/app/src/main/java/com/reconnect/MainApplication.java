@@ -1,7 +1,12 @@
 package com.reconnect;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.brentvatne.react.ReactVideoPackage;
@@ -46,6 +51,7 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this); // Remove this line if you don't want Flipper enabled
+      createFCMNotificationChannel(this);
   }
 
   /**
@@ -73,4 +79,26 @@ public class MainApplication extends Application implements ReactApplication {
       }
     }
   }
+
+  private void createFCMNotificationChannel(Context context) {
+      // Create the NotificationChannel, but only on API 26+ because
+      // the NotificationChannel class is new and not in the support library
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          String channelId = "remote_posts";
+          try {
+              channelId = context.getPackageManager()
+                      .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA)
+                      .metaData
+                      .getString("com.google.firebase.messaging.default_notification_channel_id");
+          } catch (Exception e ){}
+
+          int importance = NotificationManager.IMPORTANCE_HIGH;
+          NotificationChannel channel = new NotificationChannel(channelId, "New Posts", importance);
+          channel.setDescription("Notifications for new posts");
+          // Register the channel with the system; you can't change the importance
+          // or other notification behaviors after this
+          NotificationManager notificationManager = getSystemService(NotificationManager.class);
+          notificationManager.createNotificationChannel(channel);
+      }
+  }  
 }

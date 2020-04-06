@@ -69,14 +69,19 @@ const PeopleList = () => {
     )
 }
 
-export const Profile = ({profile, id, color, width}) => {
+export const Profile = ({profile, id, color, width} : Object ) => {
 
     /* Hooks */
     const navigation = useNavigation()
 
     /* Functions */
     function _newPerson() {
-        navigation.navigate( NavigationRoutes.AddPerson )
+        if (id == 'ADD') {
+            navigation.navigate( NavigationRoutes.AddPerson )
+        } else {
+            navigation.navigate( NavigationRoutes.PersonAdded )
+        }
+        
     }
 
     return (
