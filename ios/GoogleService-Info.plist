@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>863509680097-prgsldqq6edvr305mtj1dvaudc87a0li.apps.googleusercontent.com</string>
+	<string>863509680097-8n4q0lr1n2robfp1fgjpltrqrkqcgkva.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.863509680097-prgsldqq6edvr305mtj1dvaudc87a0li</string>
+	<string>com.googleusercontent.apps.863509680097-8n4q0lr1n2robfp1fgjpltrqrkqcgkva</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBKXpv9bNZqbcZk8PMu1zdohpPvJpB1pPE</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.hf0.reconnect</string>
+	<string>com.connect.reconnect</string>
 	<key>PROJECT_ID</key>
 	<string>reconnect-eddf2</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:863509680097:ios:413af5d964a3063feccca0</string>
+	<string>1:863509680097:ios:35dda4d1dcd8b26aeccca0</string>
 	<key>DATABASE_URL</key>
 	<string>https://reconnect-eddf2.firebaseio.com</string>
 </dict>

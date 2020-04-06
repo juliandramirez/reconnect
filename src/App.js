@@ -3,11 +3,11 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, SafeAreaView, StatusBar } from 'react-native'
+import { StyleSheet, SafeAreaView, StatusBar, Dimensions } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import EStyleSheet from 'react-native-extended-stylesheet'
-import { Dimensions } from 'react-native'
+import messaging from '@react-native-firebase/messaging'
 
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
@@ -31,7 +31,9 @@ const App = () => {
 
     /* Functions */
     function _init() {
-        initializeStyles()
+        Promise.all([
+            initializeStyles(), 
+            messaging().registerDeviceForRemoteMessages()])
         .then(AuthManager.getUser)
         .then((user: ?User) => {
             setUser(user)
