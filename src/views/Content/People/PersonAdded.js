@@ -35,8 +35,6 @@ const PersonAdded = () => {
                 setPermission(settings)
             }
         })()
-
-        PushNotification.configure({onNotification: (i) => console.log('fdsfdsf')})
     }, [])
 
     /* Render */
@@ -67,6 +65,8 @@ const PersonAdded = () => {
             <Button title='SHARE' onPress={() => { 
                 Share.share({ message: '1. Download app here: http://google.com\n2. Use invitation code AWNSD' })
             }}/>
+
+            <Button title='...' onPress={navigation.goBack}/>
         </View>
     )
 }

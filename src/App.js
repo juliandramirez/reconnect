@@ -7,8 +7,9 @@ import { StyleSheet, SafeAreaView, StatusBar, Dimensions } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import EStyleSheet from 'react-native-extended-stylesheet'
-import messaging from '@react-native-firebase/messaging'
+import FlashMessage from 'react-native-flash-message'
 
+import NotificationsManager from 'Reconnect/src/lib/notifications'
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
 import AuthManager, { AuthProvider, useAuthStore } from 'Reconnect/src/services/auth'
@@ -33,7 +34,7 @@ const App = () => {
     function _init() {
         Promise.all([
             initializeStyles(), 
-            messaging().registerDeviceForRemoteMessages()])
+            NotificationsManager.init()])
         .then(AuthManager.getUser)
         .then((user: ?User) => {
             setUser(user)
@@ -84,6 +85,7 @@ const MainUI = () => {
                 }                        
                 </Stack.Navigator>
             </NavigationContainer>
+            <FlashMessage position="top" />
         </SafeAreaView>        
     )
 }

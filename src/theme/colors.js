@@ -12,7 +12,10 @@ const colors = {
         '#FFDF94',
         '#E7F4CD',        
         '#BBEECE',        
-    ]
+    ],
+    successNotification: '#161B25',
+    errorNotification: '#802814',
+    textNotification: 'white',    
 }
 
 export default colors

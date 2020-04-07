@@ -10,7 +10,11 @@ const palette = EStyleSheet.create({
         height: '40 rem',  
         backgroundColor: 'black',
         borderRadius: 5, 
-    }
+    },
+    h6: {
+        fontSize: '16 rem',
+        fontWeight: 'normal'
+    },    
 })
 
 export default palette

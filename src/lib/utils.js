@@ -5,12 +5,37 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { Keyboard, Platform } from 'react-native'
+import { showMessage, hideMessage } from 'react-native-flash-message'
 
 import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
 
 
 export function wait(milliseconds: number) {
     return new Promise<void>(resolve => setTimeout(resolve, milliseconds))
+}
+
+/* MARK: - UI Utils */
+
+export function hideNotification() {
+    hideMessage()
+}
+
+export function showSuccessNotification(text: string) {
+    showMessage({
+        message: text,
+        icon: 'success',
+        backgroundColor: Theme.colors.successNotification,
+        titleStyle: { ...Theme.palette.h6, color: Theme.colors.textNotification },
+    })
+}
+
+export function showErrorNotification(text: string) {
+    showMessage({
+        message: text,
+        icon: 'danger',
+        backgroundColor: Theme.colors.errorNotification,
+        titleStyle: { ...Theme.palette.h6, color: Theme.colors.textNotification },        
+    })
 }
 
 export function useModalBackground(backgroundColor: string): Function {
