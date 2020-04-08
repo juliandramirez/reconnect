@@ -79,7 +79,7 @@ export const Profile = ({profile, id, color, width} : Object ) => {
         if (id == 'ADD') {
             navigation.navigate( NavigationRoutes.AddPerson )
         } else {
-            navigation.navigate( NavigationRoutes.PersonAdded )
+            navigation.navigate( NavigationRoutes.PersonAdded, { space: null } )
         }
         
     }

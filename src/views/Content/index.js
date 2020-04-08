@@ -8,8 +8,8 @@ import { createStackNavigator } from '@react-navigation/stack'
 import Theme from 'Reconnect/src/theme/Theme'
 
 import Container from './Container'
-import AddPerson from './People/AddPerson'
-import PersonAdded from './People/PersonAdded'
+import AddSpace from './Spaces/Add'
+import AddSpaceSuccess from './Spaces/Add/Success'
 import Post, { PostDetail } from './Posts/ViewPost'
 import NewPost from './Posts/NewPost'
 import { AttachmentDetailView } from './Posts/Attachment'
@@ -35,12 +35,12 @@ const RootStackScreen = () => (
 
         <Stack.Screen 
             name={ NavigationRoutes.AddPerson } 
-            component={ AddPerson } 
+            component={ AddSpace } 
         />
 
         <Stack.Screen 
             name={ NavigationRoutes.PersonAdded } 
-            component={ PersonAdded } 
+            component={ AddSpaceSuccess } 
         />
 
         <Stack.Screen 

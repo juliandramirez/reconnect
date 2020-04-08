@@ -3,6 +3,7 @@
  */
 
 import { wait } from 'Reconnect/src/lib/utils'
+import NotificationsManager from 'Reconnect/src/services/notifications'
 
 /* MARK: - Types */
 
@@ -11,21 +12,20 @@ export const ReminderValues = {
     EveryMorning: 'Every morning',
     EveryNight: 'Every night',
     EveryWeek: 'Every week',
-    EveryOtherWeek: 'Every other week',
     EveryMonth: 'Every month',
 }
 export type ReminderValue = $Keys<typeof ReminderValues>
 
 export type SpaceConfiguration = {|
-    shortName: ?string,
+    shortName?: ?string,
     color: string,
-    reminderValue: ReminderValue
+    reminderValue: ReminderValue    
 |}
 
 export type Space = {
     id: string,
     invitationCode: string,
-    configuration: SpaceConfiguration
+    configuration?: ?SpaceConfiguration
 }
 
 export type Post = {
@@ -50,27 +50,48 @@ const ContentManager = {}
 
 ContentManager.getSpaceWithInvitationCode = async (code: string) : Promise<?Space> => {
     await wait(600)
-    return null
+    
+    if (code.toLowerCase() == 'valid') {
+        return {
+            id: 'pre-id',
+            invitationCode: code,
+            configuration: null
+        }
+    } else {
+        return null
+    }
 }
 
 ContentManager.createSpace = async (configuration : SpaceConfiguration) : Promise<Space> => {
     await wait(600)
 
-    return {
+    // create space
+    const space = {
         id: 'id',
         invitationCode: 'CODE',
         configuration: configuration
     }
+
+    // configure local notifications
+    NotificationsManager.configureLocalNotification(space)
+
+    return space
 }
 
 ContentManager.attachToSpace = async (space: Space, configuration: SpaceConfiguration) : Promise<Space> => {
     await wait(600)
     
-    return {
+// add user configuration to existing space
+    const updatedSpace = {
         id: space.id,
         invitationCode: space.invitationCode,
         configuration: configuration
     } 
+
+// configure local notifications
+    NotificationsManager.configureLocalNotification(space)
+
+    return updatedSpace
 }
 
 export default ContentManager

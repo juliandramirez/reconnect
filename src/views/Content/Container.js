@@ -12,7 +12,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Theme from 'Reconnect/src/theme/Theme'
 import type { Post, Person } from 'Reconnect/src/services/content'
 
-import PeopleList from './People/PeopleList'
+import SpaceList from './Spaces/List'
 import PostView from './Posts/ViewPost'
 import NewPost from './Posts/NewPost'
 import { NavigationRoutes } from './index'
@@ -53,7 +53,7 @@ const Container = () => {
         <View style={{ flex: 1, backgroundColor: Theme.colors.appBackground }}>
 
             <View style={{ flex: 0 }}>
-                <PeopleList onPersonSelect={_onPersonSelect}/>
+                <SpaceList onPersonSelect={_onPersonSelect}/>
             </View>
 
             <View style={{ flex: 1 }}>

@@ -9,7 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import FlashMessage from 'react-native-flash-message'
 
-import NotificationsManager from 'Reconnect/src/lib/notifications'
+import NotificationsManager from 'Reconnect/src/services/notifications'
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
 import AuthManager, { AuthProvider, useAuthStore } from 'Reconnect/src/services/auth'

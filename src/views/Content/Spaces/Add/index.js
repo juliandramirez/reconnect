@@ -38,7 +38,7 @@ const styles = EStyleSheet.create({
         },
 })
 
-const AddPerson = () => { 
+const AddSpace = () => { 
     const COLOR = 'snow'
 
     /* Hooks */
@@ -68,7 +68,7 @@ const AddPerson = () => {
         }
 
         _cancel()
-        navigation.navigate( NavigationRoutes.PersonAdded )
+        navigation.navigate( NavigationRoutes.PersonAdded, { space: spaceRef.current } )
     }
 
     function _cancel() {
@@ -98,4 +98,4 @@ const AddPerson = () => {
     )
 }
 
-export default AddPerson
+export default AddSpace

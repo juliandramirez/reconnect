@@ -8,13 +8,13 @@ import { Button, Input } from 'react-native-elements'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import RNPickerSelect from 'react-native-picker-select'
 
-import NotificationsManager from 'Reconnect/src/lib/notifications'
-import type { NotificationPermissions } from 'Reconnect/src/lib/notifications'
+import NotificationsManager from 'Reconnect/src/services/notifications'
+import type { NotificationPermissions } from 'Reconnect/src/services/notifications'
 import { ReminderValues } from 'Reconnect/src/services/content'
 import type { ReminderValue } from 'Reconnect/src/services/content'
 import Theme from 'Reconnect/src/theme/Theme'
 
-import { Profile } from './../PeopleList'
+import { Profile } from './../List'
 
 
 const styles = EStyleSheet.create({
@@ -72,7 +72,11 @@ const styles = EStyleSheet.create({
         fieldText: {
             fontSize: '14 rem',
             color: 'grey',
-        }
+        },
+        button: {                                
+            marginTop: 1,   
+            marginBottom: '1 rem'      
+        }        
 })
 
 const Page2 = ({ submit, cancel } : 
