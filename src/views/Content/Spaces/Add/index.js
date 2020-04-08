@@ -8,12 +8,11 @@ import { useNavigation } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
 import NotificationsManager from 'Reconnect/src/services/notifications'
-import type { NotificationPermissions } from 'Reconnect/src/services/notifications'
-import { showSuccessNotification } from 'Reconnect/src/lib/utils'
+import { showSuccessMessage } from 'Reconnect/src/lib/utils'
 import { useModalBackground } from 'Reconnect/src/lib/utils'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
-import ContentManager from 'Reconnect/src/services/content'
-import type { Space, ReminderValue } from 'Reconnect/src/services/content'
+import SpacesManager from 'Reconnect/src/services/spaces'
+import type { Space, SpaceConfiguration } from 'Reconnect/src/services/spaces'
 import Theme from 'Reconnect/src/theme/Theme'
 
 import Page1 from './Page1'
@@ -56,16 +55,14 @@ const AddSpace = () => {
         setPageNumber(2)
     }
     
-    async function _submitPage2(shortName: ?string, color: string, reminderValue: ReminderValue) {
+    async function _submitPage2(configuration: SpaceConfiguration) {
 
         let updatedSpace, isNewSpace
         if (spaceRef.current != null) {            
-            updatedSpace = await ContentManager.attachToSpace( spaceRef.current, {
-                shortName, color, reminderValue
-            })
+            updatedSpace = await SpacesManager.attachToSpace( spaceRef.current, configuration)
             isNewSpace = false
         } else {
-            updatedSpace = await ContentManager.createSpace({ shortName, color, reminderValue })
+            updatedSpace = await SpacesManager.createSpace(configuration)
             isNewSpace = true
         }
         
@@ -74,7 +71,7 @@ const AddSpace = () => {
         just a success notification is enough... */
         const notificationPermissions = await NotificationsManager.getPermissions()
         if (!isNewSpace && notificationPermissions === 'enabled') {
-            showSuccessNotification('Welcome to your shared space')
+            showSuccessMessage('Welcome to your shared space')
 
             modalDismiss()
             navigation.navigate( NavigationRoutes.Main, { spaceId: updatedSpace.id } )

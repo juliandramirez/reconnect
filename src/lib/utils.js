@@ -10,17 +10,23 @@ import { showMessage, hideMessage } from 'react-native-flash-message'
 import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
 
 
+/* MARK: - Helper functions */
+
+export function stringNotEmpty(str: ?string) {
+    return str != null && str !== undefined && str.trim() !== ''
+}
+
 export function wait(milliseconds: number) {
     return new Promise<void>(resolve => setTimeout(resolve, milliseconds))
 }
 
 /* MARK: - UI Utils */
 
-export function hideNotification() {
+export function hideFlashMessage() {
     hideMessage()
 }
 
-export function showSuccessNotification(text: string) {
+export function showSuccessMessage(text: string) {
     showMessage({
         message: text,
         // icon: 'success',
@@ -29,7 +35,7 @@ export function showSuccessNotification(text: string) {
     })
 }
 
-export function showErrorNotification(text: string) {
+export function showErrorMessage(text: string) {
     showMessage({
         message: text,
         // icon: 'danger',

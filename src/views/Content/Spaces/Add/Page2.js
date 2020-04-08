@@ -8,10 +8,9 @@ import { Button, Input } from 'react-native-elements'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import RNPickerSelect from 'react-native-picker-select'
 
-import NotificationsManager from 'Reconnect/src/services/notifications'
-import type { NotificationPermissions } from 'Reconnect/src/services/notifications'
-import { ReminderValues } from 'Reconnect/src/services/content'
-import type { ReminderValue } from 'Reconnect/src/services/content'
+import type { SpaceConfiguration } from 'Reconnect/src/services/spaces'
+import type { NotificationPermissions, ReminderValue } from 'Reconnect/src/services/notifications'
+import NotificationsManager, { ReminderValues } from 'Reconnect/src/services/notifications'
 import Theme from 'Reconnect/src/theme/Theme'
 
 import { Profile } from './../List'
@@ -80,7 +79,7 @@ const styles = EStyleSheet.create({
 })
 
 const Page2 = ({ submit, cancel } : 
-    { submit: (?string, string, ReminderValue) => any, cancel: () => void }) => {
+    { submit: (SpaceConfiguration) => any, cancel: () => void }) => {
 
     /* State */
     const [submitting, setSubmitting] = useState<boolean>(false)
@@ -92,7 +91,7 @@ const Page2 = ({ submit, cancel } :
     function _submit() {
         if (!submitting && reminderValue) {
             setSubmitting(true)
-            submit(shortName, color, reminderValue)
+            submit({ shortName, color, reminderValue })
         }        
     }
 

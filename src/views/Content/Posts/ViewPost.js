@@ -9,7 +9,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/stack'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
-import type { Post, Attachment } from 'Reconnect/src/services/content'
+import type { Post, Attachment } from 'Reconnect/src/services/posts'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 import { wait } from 'Reconnect/src/lib/utils'

@@ -81,7 +81,7 @@ export const Profile = ({profile, id, color, width} : Object ) => {
         } else {
             navigation.navigate( NavigationRoutes.SpaceAdded, { 
                 isNewSpace: true, 
-                notificationPermissions: 'enabled',
+                notificationPermissions: 'disabled',
                 space: {
                     id: 'id',
                     invitationCode: 'CODE',                

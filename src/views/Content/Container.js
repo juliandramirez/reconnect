@@ -10,7 +10,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 import Theme from 'Reconnect/src/theme/Theme'
-import type { Post, Person } from 'Reconnect/src/services/content'
+import type { Post } from 'Reconnect/src/services/posts'
 
 import SpaceList from './Spaces/List'
 import PostView from './Posts/ViewPost'
@@ -43,7 +43,7 @@ const Container = () => {
         setPosts(POSTS)
     }
 
-    function _onPersonSelect(person: Person) {
+    function _onPersonSelect(person: any) {
 
     }
 

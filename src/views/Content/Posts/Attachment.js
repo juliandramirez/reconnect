@@ -9,7 +9,7 @@ import { Dimensions } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Video from 'react-native-video'
 
-import type { Attachment } from 'Reconnect/src/services/content'
+import type { Attachment } from 'Reconnect/src/services/posts'
 import { useModalBackground } from 'Reconnect/src/lib/utils'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'

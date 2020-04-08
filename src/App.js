@@ -12,8 +12,7 @@ import FlashMessage from 'react-native-flash-message'
 import NotificationsManager from 'Reconnect/src/services/notifications'
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
-import AuthManager, { AuthProvider, useAuthStore } from 'Reconnect/src/services/auth'
-import type { User } from 'Reconnect/src/services/auth'
+import AuthManager from 'Reconnect/src/services/auth'
 
 import Loading from './Loading'
 import Onboarding from './views/Onboarding'
@@ -24,24 +23,17 @@ const Stack = createStackNavigator()
 const App = () => {
 
     /* State */
-    const [user, setUser] = useState<?User>(null)
     const [initializing, setInitializing] = useState<boolean>(true)
 
     /* Effects */
-    useEffect(_init, [])
+    useEffect(_init, [])    
+    useEffect(NotificationsManager.init, [])
 
-    /* Functions */
+    /* Functions */    
     function _init() {
-        Promise.all([
-            initializeStyles(), 
-            NotificationsManager.init()])
-        .then(AuthManager.getUser)
-        .then((user: ?User) => {
-            setUser(user)
-        })
-        .finally(() => {
+        initializeStyles().then(() => {
             setInitializing(false)
-        })
+        })        
     }
 
     function initializeStyles() {
@@ -56,35 +48,47 @@ const App = () => {
     }
 
     /* Render */
-    return initializing ? <Loading /> : (
-        <AuthProvider user={user}>   
-            <SkinProvider>
-                <MainUI />
-            </SkinProvider>                    
-        </AuthProvider>
+    return initializing ? <Loading /> : (   
+        <SkinProvider>
+            <MainUI />
+        </SkinProvider>                    
     )
 }
 
 const MainUI = () => {
     /* Hooks */
     const [skin, _] = useSkin()
-    const user = useAuthStore()
+
+    /* State */
+    const [isSignedIn, setIsSignedIn] = useState<?boolean>(null)
+
+    /* Effects */
+    useEffect(_authInit, [])
+
+    /* Functions */
+    function _authInit() {
+        const authListener = (userId: ?string) => {                        
+            setIsSignedIn(userId != null)        
+        }
+        return AuthManager.init(authListener)        
+    }
 
     /* Render */
-    return (
+    return isSignedIn === null ? <Loading /> : (
         <SafeAreaView style={{flex: 1, backgroundColor: skin.safeAreaBackground}}>
             <StatusBar hidden={false} barStyle='dark-content' backgroundColor={skin.safeAreaBackground} animated={false}/>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {
-                    user == null ? (
-                        <Stack.Screen name="Onboarding" component={ Content } />
+                    isSignedIn === true ? (
+                        <Stack.Screen name="Timeline" component={ Content } />                        
                     ) : (
-                        <Stack.Screen name="Timeline" component={ Content } />
+                        <Stack.Screen name="Onboarding" component={ Content } />
                     )
                 }                        
                 </Stack.Navigator>
             </NavigationContainer>
+            
             <FlashMessage position="top" />
         </SafeAreaView>        
     )

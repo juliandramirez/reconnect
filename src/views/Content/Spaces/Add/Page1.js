@@ -8,9 +8,9 @@ import { Button, Input } from 'react-native-elements'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
 import Theme from 'Reconnect/src/theme/Theme'
-import { showErrorNotification, showSuccessNotification, hideNotification } from 'Reconnect/src/lib/utils'
-import ContentManager from 'Reconnect/src/services/content'
-import type { Space } from 'Reconnect/src/services/content'
+import { showErrorMessage, hideFlashMessage } from 'Reconnect/src/lib/utils'
+import SpacesManager from 'Reconnect/src/services/spaces'
+import type { Space } from 'Reconnect/src/services/spaces'
 
 
 const styles = EStyleSheet.create({
@@ -74,14 +74,14 @@ const Page1 = ({ submit, cancel }
 
     async function _submit() {        
         if (!submitting && (invitationCode || newSpace)) {
-            hideNotification()
+            hideFlashMessage()
             
             if (invitationCode) {
                 setSubmitting(true)
 
-                const space = await ContentManager.getSpaceWithInvitationCode(invitationCode)
+                const space = await SpacesManager.getSpaceWithInvitationCode(invitationCode)
                 if (space == null) {
-                    showErrorNotification('Invalid invitation code')                    
+                    showErrorMessage('Invalid invitation code')                    
                     setSubmitting(false)
                 } else {
                     submit(space)

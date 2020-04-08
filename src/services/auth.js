@@ -2,76 +2,65 @@
  * @flow
  */
 
-import * as React from 'react'
+import React from 'react'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
+import Constants from 'Reconnect/src/Constants'
+
+import NotificationsManager from './notifications'
+
+
+/* MARK: - Constants */
+
+const COLLECTION_REF = Constants.storageRefs.users
+
+/* MARK: - Services */
 
 const AuthManager = {}
 
-export type User = {|
-    id: string,
-    name: string,
-    phone: string,
-|}
-
-AuthManager.getUser = async (): Promise<?User> => {
-
-    const user = auth().currentUser    
-
-    if (user === null) {
-        return null
+AuthManager.init = (authListener: Function) : Function => {
+    // transform firebase model to our model (just a user id for now)
+    const listener = (user) => {
+        authListener(user?.uid)
     }
-    
-    const ref = firestore().collection('users').doc(user.uid);
-    const profile = await ref.get()
 
-    return {
-        id: user.uid,
-        name: user.displayName,
-        phone: profile.data().phone
-    }
+    // returns unsubscribe function
+    return auth().onAuthStateChanged(listener)
 }
 
-
-AuthManager.signOut = async () => {
-    await auth().signOut()
+AuthManager.currentUserId = (): ?string => {
+    return auth().currentUser?.uid
 }
 
-AuthManager.signIn = async (name: string, phone: string) : Promise<?User> => {
+AuthManager.signIn = async () : Promise<string> => {
     try {
         const account = await auth().signInAnonymously()
         const user = account.user
+        
+        // update notification token after sign in
+        await NotificationsManager.updateNotificationToken()
 
-        await user.updateProfile({displayName: name})
-
-        const ref = firestore().collection('users').doc(user.uid)
-        await ref.set({
-            phone: phone
-        })
-
-        return {
-            id: user.uid,
-            phone: phone,
-            name: name
-        }
-    } catch (e) {
+        return user.uid
+    } catch (e) {        
         switch (e.code) {
             default:
                 console.error(e)
                 break
         }
+        throw e
+    }
+}
+
+AuthManager.updateCurrentUserNotificationToken = async (token: string) => {
+    const currentUserId = AuthManager.currentUserId()
+
+    if (currentUserId != null) {
+        const ref = firestore().collection(COLLECTION_REF).doc(currentUserId)
+        await ref.set({
+            notificationToken: token
+        })
     }
 }
 
 export default AuthManager
-
-const AuthContext = React.createContext<?User>(null)
-
-export const AuthProvider = ({ user, children } : { user: ?User, children: React.Node }) => {
-    return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>
-}
-
-export function useAuthStore(): ?User {
-    return React.useContext(AuthContext)
-}

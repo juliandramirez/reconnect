@@ -2,22 +2,73 @@
  * @flow
  */
 
-import { Alert, Linking } from 'react-native'
+import { Alert, Linking, AppState } from 'react-native'
 import messaging from '@react-native-firebase/messaging'
 import LocalNotification from 'react-native-push-notification'
 import AsyncStorage from '@react-native-community/async-storage'
 import moment from 'moment'
 
-import { ReminderValues } from 'Reconnect/src/services/content'
-import type { Space, ReminderValue } from 'Reconnect/src/services/content'
+import AuthManager from './auth'
 
 
+/* MARK: - Constants */
 
 const STORAGE_KEY_PREPEND = 'NOTIF-ID-'
+
+export const ReminderValues = {
+    NoNeed: 'I don\'t need reminders',
+    EveryMorning: 'Every morning',
+    EveryNight: 'Every night',
+    EveryWeek: 'Every week',
+    EveryMonth: 'Every month',
+}
+
+/* MARK: - Types */
+
+export type ReminderValue = $Keys<typeof ReminderValues>
+export type NotificationPermissions = 'disabled' | 'enabled' | 'pending'
+
+/* MARK: - Services */
+
 const NotificationsManager = {}
 
+NotificationsManager.init = (): Function => {
 
-NotificationsManager.init = async () => await messaging().registerDeviceForRemoteMessages()
+    // 1. subscribe to token changes (on foreground)...
+    const tokenRefreshUnsubscribe = messaging().onTokenRefresh( token => {
+        AuthManager.updateCurrentUserNotificationToken(token)
+    })
+
+    // 2. register for remote notifications (listener above is called)...
+    messaging().registerDeviceForRemoteMessages()
+
+    /* 3. update token when app goes to the foreground
+     *    firebase onTokenRefresh is not called in the background */
+    const changeAppStateListener = state => {
+        if (state === 'active') {
+            NotificationsManager.updateNotificationToken()
+        }
+    }
+    AppState.addEventListener('change', changeAppStateListener)
+
+    // return clean up function
+    return () => {
+        tokenRefreshUnsubscribe()
+        AppState.removeEventListener('change', changeAppStateListener)
+    }
+}
+
+NotificationsManager.sendRemoteNotification = async ({ userId, title, message, extra } 
+        : { userId: string, title: string, message: string, extra?: ?Object }) => {
+    // TODO: call Firebase remote function
+}
+
+NotificationsManager.updateNotificationToken = async () => {
+    const token = await messaging().getToken()
+    if (token !== null && token !== 'unregistered') {        
+        await AuthManager.updateCurrentUserNotificationToken(token)
+    }
+}
 
 NotificationsManager.getPermissions = async (): Promise<NotificationPermissions> => {
     const permissions = await messaging().hasPermission()
@@ -31,6 +82,7 @@ NotificationsManager.requestPermissions = async (): Promise<NotificationPermissi
 
 NotificationsManager.goToSettingsAlert = ({ message, cancelButtonText, onCancel = () => {} } : 
         { message: string, cancelButtonText: string, onCancel?: Function }) => {
+
     Alert.alert('Notifications disabled', message, [
             {
                 text: cancelButtonText,
@@ -49,8 +101,10 @@ NotificationsManager.goToSettingsAlert = ({ message, cancelButtonText, onCancel 
     )
 }
 
-NotificationsManager.configureLocalNotification = async (space: Space) => {    
-    const storageKey = `${STORAGE_KEY_PREPEND}${space.id}`
+NotificationsManager.configureLocalNotification = async ({ id, title, message, reminderValue } 
+        : { id: string, title: string, message: string, reminderValue: ReminderValue }) => {    
+
+    const storageKey = `${STORAGE_KEY_PREPEND}${id}`
 
   // cancel local notification if it existed before... 
     const previousNotificationId = await AsyncStorage.getItem(storageKey)
@@ -59,16 +113,12 @@ NotificationsManager.configureLocalNotification = async (space: Space) => {
         await AsyncStorage.removeItem(storageKey)     
     }
 
-    const reminderValue = space.configuration?.reminderValue
     if (reminderValue && reminderValue !== 'NoNeed') {
         const newNotificationId = Math.floor( Date.now() / 1000.0 ).toString(10)
-        // $FlowExpectedError: Condition checks for not null
-        const writeTo = space.configuration?.shortName ? `to ${space.configuration.shortName} ` : ''
-        const writeEvery = ReminderValues[reminderValue].toLowerCase()
 
         LocalNotification.localNotificationSchedule({
-            title: 'Time to reconnect', 
-            message: `Just reminding you that you wanted to write ${writeTo}${writeEvery}`,
+            title, 
+            message,
 
             /* Android Only Properties */
             importance: 'max',
@@ -132,6 +182,3 @@ function _toPermissionType(FCMPermission: number) {
 }
 
 export default NotificationsManager
-export type NotificationPermissions = 'disabled' | 'enabled' | 'pending'
-
-
