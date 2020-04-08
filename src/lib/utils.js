@@ -23,7 +23,7 @@ export function hideNotification() {
 export function showSuccessNotification(text: string) {
     showMessage({
         message: text,
-        icon: 'success',
+        // icon: 'success',
         backgroundColor: Theme.colors.successNotification,
         titleStyle: { ...Theme.palette.h6, color: Theme.colors.textNotification },
     })
@@ -32,7 +32,7 @@ export function showSuccessNotification(text: string) {
 export function showErrorNotification(text: string) {
     showMessage({
         message: text,
-        icon: 'danger',
+        // icon: 'danger',
         backgroundColor: Theme.colors.errorNotification,
         titleStyle: { ...Theme.palette.h6, color: Theme.colors.textNotification },        
     })

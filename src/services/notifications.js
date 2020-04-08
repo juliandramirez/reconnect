@@ -50,7 +50,7 @@ NotificationsManager.goToSettingsAlert = ({ message, cancelButtonText, onCancel 
 }
 
 NotificationsManager.configureLocalNotification = async (space: Space) => {    
-    const storageKey = '${STORAGE_KEY_PREPEND}${space.id}'
+    const storageKey = `${STORAGE_KEY_PREPEND}${space.id}`
 
   // cancel local notification if it existed before... 
     const previousNotificationId = await AsyncStorage.getItem(storageKey)
@@ -62,12 +62,13 @@ NotificationsManager.configureLocalNotification = async (space: Space) => {
     const reminderValue = space.configuration?.reminderValue
     if (reminderValue && reminderValue !== 'NoNeed') {
         const newNotificationId = Math.floor( Date.now() / 1000.0 ).toString(10)
-        const writeTo = space.configuration?.shortName ? 'to ${space.configuration.shortName} ' : ''
+        // $FlowExpectedError: Condition checks for not null
+        const writeTo = space.configuration?.shortName ? `to ${space.configuration.shortName} ` : ''
         const writeEvery = ReminderValues[reminderValue].toLowerCase()
 
         LocalNotification.localNotificationSchedule({
             title: 'Time to reconnect', 
-            message: 'Just reminding you that you wanted to write ${writeTo}${writeEvery}',
+            message: `Just reminding you that you wanted to write ${writeTo}${writeEvery}`,
 
             /* Android Only Properties */
             importance: 'max',

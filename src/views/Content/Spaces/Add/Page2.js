@@ -131,7 +131,7 @@ const Page2 = ({ submit, cancel } :
                 <View style={ styles.basicInfoContainer }>
 
                     <View style={ styles.basicInfoField }>
-                        <Text style={ styles.fieldText }>Short Name (optional)</Text>
+                        <Text style={ styles.fieldText }>Short Name for this space (optional)</Text>
                         <Input 
                             inputContainerStyle={{ marginHorizontal: -10 }}
                             placeholder="e.g. 'Dad', 'big Bro', 'BFF'"    

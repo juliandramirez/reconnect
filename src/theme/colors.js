@@ -5,7 +5,7 @@ const colors = {
     contentSeparator: '#B2B2B2',
     contentBorders: '#ABADAF',
     spaceColors: [
-        '#FCE1E3',        ,
+        '#FCE1E3',
         '#E0F9FE',
         '#E5E9FC',
         '#FFF7CB',
@@ -13,9 +13,12 @@ const colors = {
         '#E7F4CD',        
         '#BBEECE',        
     ],
-    successNotification: '#161B25',
+    successNotification: '#7BAE7E',
     errorNotification: '#802814',
-    textNotification: 'white',    
+    textNotification: 'white',   
+    addSpaceBackground: 'snow', 
+    titleColor: '#555555',
+    clearButtonTextColor: '#802814',
 }
 
 export default colors

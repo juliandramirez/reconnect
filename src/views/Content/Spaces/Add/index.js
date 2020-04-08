@@ -7,10 +7,14 @@ import { View, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
+import NotificationsManager from 'Reconnect/src/services/notifications'
+import type { NotificationPermissions } from 'Reconnect/src/services/notifications'
+import { showSuccessNotification } from 'Reconnect/src/lib/utils'
 import { useModalBackground } from 'Reconnect/src/lib/utils'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 import ContentManager from 'Reconnect/src/services/content'
 import type { Space, ReminderValue } from 'Reconnect/src/services/content'
+import Theme from 'Reconnect/src/theme/Theme'
 
 import Page1 from './Page1'
 import Page2 from './Page2'
@@ -22,16 +26,12 @@ const styles = EStyleSheet.create({
         paddingHorizontal: '20 rem',
         paddingBottom: '8 rem',        
         justifyContent: 'flex-end',
+        backgroundColor: Theme.colors.addSpaceBackground,
     },
         titleContainer: {
             flex: 1, 
             justifyContent: 'flex-end'
         },
-            title: {
-                fontSize: '28 rem',  
-                textTransform: 'capitalize',
-                color: '#555555',
-            },
         page: {
             flex: 0,
             height: '466 rem',            
@@ -39,11 +39,10 @@ const styles = EStyleSheet.create({
 })
 
 const AddSpace = () => { 
-    const COLOR = 'snow'
 
     /* Hooks */
     const navigation = useNavigation()
-    const modalDismiss = useModalBackground(COLOR)
+    const modalDismiss = useModalBackground(Theme.colors.addSpaceBackground)
 
     /* State */
     const [pageNumber, setPageNumber] = useState<number>(1)
@@ -59,16 +58,29 @@ const AddSpace = () => {
     
     async function _submitPage2(shortName: ?string, color: string, reminderValue: ReminderValue) {
 
-        if (spaceRef.current != null) {
-            await ContentManager.attachToSpace( spaceRef.current, {
+        let updatedSpace, isNewSpace
+        if (spaceRef.current != null) {            
+            updatedSpace = await ContentManager.attachToSpace( spaceRef.current, {
                 shortName, color, reminderValue
             })
+            isNewSpace = false
         } else {
-            await ContentManager.createSpace({ shortName, color, reminderValue })
+            updatedSpace = await ContentManager.createSpace({ shortName, color, reminderValue })
+            isNewSpace = true
         }
+        
+        /* if you don't need to send an invite code(the space already existed) 
+        and your notifications are already enabled, no need to show the success screen, 
+        just a success notification is enough... */
+        const notificationPermissions = await NotificationsManager.getPermissions()
+        if (!isNewSpace && notificationPermissions === 'enabled') {
+            showSuccessNotification('Welcome to your shared space')
 
-        _cancel()
-        navigation.navigate( NavigationRoutes.PersonAdded, { space: spaceRef.current } )
+            modalDismiss()
+            navigation.navigate( NavigationRoutes.Main, { spaceId: updatedSpace.id } )
+        } else {
+            navigation.navigate( NavigationRoutes.SpaceAdded, { space: updatedSpace, isNewSpace, notificationPermissions } )
+        }        
     }
 
     function _cancel() {
@@ -78,11 +90,11 @@ const AddSpace = () => {
 
     /* Render */
     return (
-        <View style={{ backgroundColor: COLOR, ...styles.container }}>
+        <View style={ styles.container }>
 
-            <View style={{ ...styles.titleContainer }}>
-                <Text style={styles.title}>
-                    {pageNumber === 1 ? 'Add a new space' : 'Personal touches'}
+            <View style={ styles.titleContainer }>
+                <Text style={ Theme.palette.title }>
+                    {pageNumber === 1 ? 'Add A New Space' : 'Personal Touches'}
                 </Text>
             </View>     
 

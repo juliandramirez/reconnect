@@ -3,7 +3,7 @@
  */
 
 export default {
-    appLink: 'http://google.com',
+    appUrl: 'http://google.com',
   
     // overwrite with explicitly passed values
     ...process.env

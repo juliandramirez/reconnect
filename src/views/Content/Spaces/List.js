@@ -77,9 +77,16 @@ export const Profile = ({profile, id, color, width} : Object ) => {
     /* Functions */
     function _newPerson() {
         if (id == 'ADD') {
-            navigation.navigate( NavigationRoutes.AddPerson )
+            navigation.navigate( NavigationRoutes.AddSpace )
         } else {
-            navigation.navigate( NavigationRoutes.PersonAdded, { space: null } )
+            navigation.navigate( NavigationRoutes.SpaceAdded, { 
+                isNewSpace: true, 
+                notificationPermissions: 'enabled',
+                space: {
+                    id: 'id',
+                    invitationCode: 'CODE',                
+                } 
+            })
         }
         
     }

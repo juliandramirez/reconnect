@@ -20,8 +20,8 @@ export const NavigationRoutes = {
     PostDetail: 'PostDetail',
     AttachmentDetail: 'AttachmentDetail',
     NewPost: 'NewPost',
-    AddPerson: 'AddPerson',
-    PersonAdded: 'PersonAdded'
+    AddSpace: 'AddSpace',
+    SpaceAdded: 'SpaceAdded'
 }
 
 
@@ -34,12 +34,12 @@ const RootStackScreen = () => (
         />
 
         <Stack.Screen 
-            name={ NavigationRoutes.AddPerson } 
+            name={ NavigationRoutes.AddSpace } 
             component={ AddSpace } 
         />
 
         <Stack.Screen 
-            name={ NavigationRoutes.PersonAdded } 
+            name={ NavigationRoutes.SpaceAdded } 
             component={ AddSpaceSuccess } 
         />
 
