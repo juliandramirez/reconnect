@@ -30,7 +30,7 @@ const App = () => {
     useEffect(NotificationsManager.init, [])
 
     /* Functions */    
-    function _init() {
+    function _init() {         
         initializeStyles().then(() => {
             setInitializing(false)
         })        
@@ -67,8 +67,8 @@ const MainUI = () => {
 
     /* Functions */
     function _authInit() {
-        const authListener = (userId: ?string) => {                        
-            setIsSignedIn(userId != null)        
+        const authListener = (userId: ?string) => {                                                    
+            setIsSignedIn(userId !== null && userId !== undefined)        
         }
         return AuthManager.init(authListener)        
     }

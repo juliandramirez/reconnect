@@ -9,6 +9,9 @@ import { showMessage, hideMessage } from 'react-native-flash-message'
 
 import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
 
+/* MARK: - Type Alias */
+
+export type StringMap = { [key: string]: string }
 
 /* MARK: - Helper functions */
 

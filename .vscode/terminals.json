@@ -9,6 +9,13 @@
       "focus": true
     },
     {
+      "name": "Deploy Firebase Functions",
+      "description": "Deploy Firebase Functions",
+      "cwd": "[workspaceFolder]",
+      "command": "firebase deploy --only functions",
+      "focus": true
+    },
+    {
       "name": "Run iOS - All sizes (Development)",
       "description": "Run iOS - All sizes (Development)",
       "cwd": "[workspaceFolder]",

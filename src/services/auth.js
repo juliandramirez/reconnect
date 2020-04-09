@@ -52,6 +52,17 @@ AuthManager.signIn = async () : Promise<string> => {
     }
 }
 
+AuthManager.signOut = async () => {
+    await auth().signOut()
+}
+
+AuthManager.getUserNotificationToken = async (userId: string): Promise<?string> => {    
+    const ref = firestore().collection(COLLECTION_REF).doc(userId)
+    const info = await ref.get()
+
+    return info.data().notificationToken
+}
+
 AuthManager.updateCurrentUserNotificationToken = async (token: string) => {
     const currentUserId = AuthManager.currentUserId()
 

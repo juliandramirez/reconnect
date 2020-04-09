@@ -10,6 +10,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 import Theme from 'Reconnect/src/theme/Theme'
+import NotificationsManager from 'Reconnect/src/services/notifications'
 import type { Post } from 'Reconnect/src/services/posts'
 
 import SpaceList from './Spaces/List'
@@ -24,7 +25,8 @@ const Container = () => {
     const [posts, setPosts] = useState<?Array<Post>>(null)
 
     /* Effects */
-    useEffect( _init, [] )
+    useEffect(_init, [])   
+    useEffect(_setUpRemoteNotificationListener, []) 
 
     /* Hooks */
     const navigation = useNavigation()
@@ -41,6 +43,12 @@ const Container = () => {
         ]
 
         setPosts(POSTS)
+    }
+
+    function _setUpRemoteNotificationListener() {
+        return NotificationsManager.subscribeToRemoteNotifications(data => {
+            console.log('Notification received!: ' + JSON.stringify(data ?? {}))
+        })
     }
 
     function _onPersonSelect(person: any) {

@@ -97,7 +97,7 @@ const Page2 = ({ submit, cancel } :
 
     async function _checkNotificationPermissions() {
         if (Platform.OS === 'ios' && 
-                reminderValue != null && reminderValue != 'NoNeed') {                    
+                reminderValue && reminderValue != 'NoNeed') {                    
 
             const showAlert = () => {
                 NotificationsManager.goToSettingsAlert({

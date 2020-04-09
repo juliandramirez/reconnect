@@ -4,9 +4,12 @@
 
 import { Alert, Linking, AppState } from 'react-native'
 import messaging from '@react-native-firebase/messaging'
+import functions from '@react-native-firebase/functions'
 import LocalNotification from 'react-native-push-notification'
 import AsyncStorage from '@react-native-community/async-storage'
 import moment from 'moment'
+
+import type { StringMap } from 'Reconnect/src/lib/utils'
 
 import AuthManager from './auth'
 
@@ -33,7 +36,7 @@ export type NotificationPermissions = 'disabled' | 'enabled' | 'pending'
 const NotificationsManager = {}
 
 NotificationsManager.init = (): Function => {
-
+    
     // 1. subscribe to token changes (on foreground)...
     const tokenRefreshUnsubscribe = messaging().onTokenRefresh( token => {
         AuthManager.updateCurrentUserNotificationToken(token)
@@ -58,14 +61,26 @@ NotificationsManager.init = (): Function => {
     }
 }
 
+NotificationsManager.subscribeToRemoteNotifications = (listener: (?StringMap) => any) : Function => {
+    return messaging().onMessage( remoteMessage => {
+        listener(remoteMessage.data)
+    })
+}
+
 NotificationsManager.sendRemoteNotification = async ({ userId, title, message, extra } 
-        : { userId: string, title: string, message: string, extra?: ?Object }) => {
-    // TODO: call Firebase remote function
+        : { userId: string, title: string, message: string, extra?: StringMap }) => {
+
+    const token = await AuthManager.getUserNotificationToken(userId)
+    if (token) {
+        await functions().httpsCallable('sendPushNotification')({
+            token, title, message, extra
+        })
+    }    
 }
 
 NotificationsManager.updateNotificationToken = async () => {
     const token = await messaging().getToken()
-    if (token !== null && token !== 'unregistered') {        
+    if (token && token !== 'unregistered') {        
         await AuthManager.updateCurrentUserNotificationToken(token)
     }
 }
@@ -108,7 +123,7 @@ NotificationsManager.configureLocalNotification = async ({ id, title, message, r
 
   // cancel local notification if it existed before... 
     const previousNotificationId = await AsyncStorage.getItem(storageKey)
-    if (previousNotificationId != null) {
+    if (previousNotificationId) {
         LocalNotification.cancelLocalNotifications({ id: previousNotificationId })
         await AsyncStorage.removeItem(storageKey)     
     }
