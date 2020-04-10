@@ -2,128 +2,193 @@
  * @flow
  */
 
-import React from 'react'
-import { View, FlatList, TouchableOpacity } from 'react-native'
-import { Avatar, Badge } from 'react-native-elements'
+import React, { useEffect, useState, useRef } from 'react'
+import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native'
+import { Avatar } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 
+import { showInfoMessage } from 'Reconnect/src/lib/utils'
+import NotificationsManager from 'Reconnect/src/services/notifications'
+import SpacesManager from 'Reconnect/src/services/spaces'
+import type { Space } from 'Reconnect/src/services/spaces'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
-const DATA = [
-  {
-    profile: '+',
-    id: 'ADD',
-    color: 'white',
-    width: 0.5
-  },
-  {
-    profile: 'Big Bro.',
-    id: '1',
-    color: '#ffe5ee',
-    width: 1
-  },  
-  /*{
-    profile: 'Dad',
-    id: '3',
-    color: '#c2f2d0',
-    width: 0
-  },  
-  {
-    profile: 'BFF',
-    id: '2',
-    color: '#fdf5c9',
-    width: 0
-  },*/  
-];
+const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => any }) => {
+
+    /* State */
+    const [selectedId, setSelectedId] = useState<?string>(null)
+
+    useEffect(_selectedIdUpdated, [selectedId])
+    function _selectedIdUpdated() {
+        if(selectedId) {
+            onSelectSpace(selectedId)
+        }
+    }
+
+    /* Navigation Param Update */
+    const navigation = useNavigation()
+
+    useEffect(_initNavigationListener, [])
+    function _initNavigationListener() {
+        return navigation.addListener('state', event => {
+            //$FlowExpectedError: unsupported feature
+            const routes = event?.data?.state?.routes?.filter(r => r.name == NavigationRoutes.Main)
+            if (routes && routes.length == 1) {
+                const spaceId = routes[0]?.params?.spaceId
+                if (spaceId) {
+                    setSelectedId(spaceId)
+                }
+            }
+        })
+    }
 
 
-const PeopleList = () => {
-    return (
-        <View style={{
-            flexDirection: 'row', 
+    /* Remote Notification Handling */
+    useEffect(_setUpRemoteNotificationListener, [])
+    function _setUpRemoteNotificationListener() {
+        return NotificationsManager.subscribeToRemoteNotifications( (data, receivedOnBackground) => {
+            if (data && data.spaceId) {
+                if (receivedOnBackground) {
+                    setSelectedId(data.spaceId)
+                } else {
+                    showInfoMessage(`You just received a new post in one of your spaces!`)
+                }
+            }
+        })
+    }        
+
+    /* Render */
+    return <SpaceList selectedId={selectedId} onSelectSpace={setSelectedId} />
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row', 
+        alignItems: 'center',
+        borderColor: Theme.colors.contentSeparator,
+        borderBottomWidth: 1,
+        paddingHorizontal: 10
+    },
+    spaceContainer: {                    
+        height: 80, 
+        maxHeight: 80
+    },
+        spaceContentContainer: {
             alignItems: 'center',
-            borderColor: Theme.colors.contentSeparator,
-            borderBottomWidth: 1,
-            paddingHorizontal: 10
-            }}
-        >        
+            borderBottomColor: '#dedede',
+            borderBottomWidth: 1, 
+            flexGrow: 1
+        }
+})
+
+const SpaceList = ({ selectedId, onSelectSpace } 
+        : { selectedId: ?string, onSelectSpace: (string) => any }) => {
+
+    /* Hooks */
+    const navigation = useNavigation()
+
+    /* References */
+    //$FlowExpectedError: always initialized
+    const listRef = useRef<FlatList<?Space>>()
+
+    /* State */
+    const [spaces, setSpaces] = useState<Array<Space>>([])
+    
+    /* Effects */
+    useEffect(_init, [])   
+    useEffect(_scrollToSelectedId, [spaces, selectedId]) 
+
+    /* Functions */
+    function _init() {        
+        return SpacesManager.subscribeToChanges(spaces => {
+            setSpaces(spaces)   
+            
+            // initial selection...
+            if (!selectedId && spaces.length > 0) {
+                // ...inform about selection
+                onSelectSpace(spaces[0].id)
+            }
+        })
+    }
+
+    function _scrollToSelectedId() {        
+        if (selectedId) {
+            // scroll to index...
+            const index = spaces.findIndex(item => item?.id == selectedId)
+            if (index != -1) {
+                listRef.current.scrollToIndex({ index, animated: true })
+            }              
+        }      
+    }
+
+    function _spacePressed(spaceId: ?string) {
+        if (spaceId) {
+            onSelectSpace(spaceId)
+        } else {            
+            navigation.navigate(NavigationRoutes.AddSpace)
+        }
+    }
+
+    /* Render */
+    return (
+        <View style={styles.container}>        
             <FlatList horizontal
-                data={DATA}
-                renderItem={({item}) => <Profile {...item} />}
-                keyExtractor={item => item.id}
+                data={[ null, ...spaces ]}
+                renderItem={ ({ item, index }) => 
+                    <TouchableOpacity onPress={ () => _spacePressed( index == 0 ? null : item?.id ) }>
+                        <SpaceView 
+                            space={ item } 
+                            isSelected={ index == 0 ? false : selectedId === item?.id }
+                        /> 
+                    </TouchableOpacity>
+                }
+                keyExtractor={ item => item == null ? 'ADD' : item.id }
                 ItemSeparatorComponent={() => <View style={{width: 10}} />}
-                contentContainerStyle={{
-                    alignItems: 'center',
-                    borderBottomColor: '#dedede',
-                    borderBottomWidth: 1, 
-                    flexGrow: 1
-                }}
-                style={{                    
-                    height: 80, 
-                    maxHeight: 80
-                }}
+                contentContainerStyle={styles.spaceContentContainer}
+                style={styles.spaceContainer}
+
+                ref={ref => listRef.current = ref}
             />
         </View>
     )
 }
 
-export const Profile = ({profile, id, color, width} : Object ) => {
+export const SpaceView = ({ space, isSelected, previewMode = false } 
+        : { space: ?Space, isSelected: boolean, previewMode?: boolean }) => {
 
-    /* Hooks */
-    const navigation = useNavigation()
-
-    /* Functions */
-    function _newPerson() {
-        if (id == 'ADD') {
-            navigation.navigate( NavigationRoutes.AddSpace )
-        } else {
-            navigation.navigate( NavigationRoutes.SpaceAdded, { 
-                isNewSpace: true, 
-                notificationPermissions: 'disabled',
-                space: {
-                    id: 'id',
-                    invitationCode: 'CODE',                
-                } 
-            })
-        }
-        
+    /* Properties */
+    const props = space == null ? {
+        title: '+',
+        borderWidth: 0.5,
+        backgroundColor: 'white'
+    } : {
+        title: space.configuration?.shortName ?? '',
+        borderWidth: previewMode ? 0.5 : isSelected ? 1 : 0,
+        backgroundColor: space.configuration?.color ?? 'white'
     }
 
-    return (
-        <TouchableOpacity onPress={_newPerson}>
-            <Avatar rounded
-                size={ id === '1' ? 50 : 50 }
-                title={profile} 
-                titleStyle={{
-                    fontSize: 14,
-                    color: '#444444',
-                    fontWeight: 'bold'
-                }}
-                containerStyle={{
-                    borderWidth: width,
-                    borderColor: 'black',                                       
-                    backgroundColor: 'white'
-                }}                
-                overlayContainerStyle={{
-                    backgroundColor: color
-                }}                
-            />
-
-            {id != '2' ? <></> : (
-              <Badge
-                  status="primary"
-                  value={id}
-                  containerStyle={{ 
-                      position: 'absolute', 
-                      top: 0, 
-                      right: 0 
-                  }}
-              />
-            )}
-        </TouchableOpacity>
+    /* Render */
+    return (        
+        <Avatar rounded
+            size={50}
+            title={props.title} 
+            titleStyle={{
+                fontSize: 14,
+                color: '#444444',
+                fontWeight: 'bold'
+            }}
+            containerStyle={{
+                borderWidth: props.borderWidth,
+                borderColor: 'black',                                       
+                backgroundColor: 'white'
+            }}                
+            overlayContainerStyle={{
+                backgroundColor: props.backgroundColor
+            }}                
+        />
     )
 }
 
-export default PeopleList
+export default SpaceListContainer

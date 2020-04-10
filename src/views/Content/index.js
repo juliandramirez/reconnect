@@ -67,7 +67,8 @@ const PostsContainer = () => (
         <Stack.Screen 
             name={ NavigationRoutes.Main } 
             component={ Container } 
-            options={{ headerShown: false }}                
+            options={{ headerShown: false }} 
+            initialParams={{ spaceId: null }}               
         /> 
 
         <Stack.Screen 

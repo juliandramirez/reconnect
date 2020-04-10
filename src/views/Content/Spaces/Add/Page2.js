@@ -12,9 +12,7 @@ import type { SpaceConfiguration } from 'Reconnect/src/services/spaces'
 import type { NotificationPermissions, ReminderValue } from 'Reconnect/src/services/notifications'
 import NotificationsManager, { ReminderValues } from 'Reconnect/src/services/notifications'
 import Theme from 'Reconnect/src/theme/Theme'
-
-import { Profile } from './../List'
-
+import { SpaceView } from 'Reconnect/src/views/Content/Spaces/List'
 
 const styles = EStyleSheet.create({
     container: {
@@ -164,10 +162,16 @@ const Page2 = ({ submit, cancel } :
                     </View>
 
                     <View style={styles.previewContainer}>
-                        <Profile id='-1' width={0.5}
-                            profile={shortName}                            
-                            color={color}
-                        />                        
+                        <SpaceView isSelected={true} previewMode={true} space={{
+                            id: 'id',
+                            hostId: 'id',
+                            invitationCode: 'code',
+                            configuration: {
+                                color: color,
+                                shortName: shortName,
+                                reminderValue: 'NoNeed'
+                            }
+                        }}/>                        
                     </View>
                 </View>                
 

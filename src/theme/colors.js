@@ -15,6 +15,7 @@ const colors = {
     ],
     successNotification: '#7BAE7E',
     errorNotification: '#802814',
+    infoNotification: '#407894',
     textNotification: 'white',   
     addSpaceBackground: 'snow', 
     titleColor: '#555555',

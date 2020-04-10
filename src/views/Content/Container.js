@@ -10,10 +10,10 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 import Theme from 'Reconnect/src/theme/Theme'
-import NotificationsManager from 'Reconnect/src/services/notifications'
 import type { Post } from 'Reconnect/src/services/posts'
+import type { Space } from 'Reconnect/src/services/spaces'
 
-import SpaceList from './Spaces/List'
+import SpaceListContainer from './Spaces/List'
 import PostView from './Posts/ViewPost'
 import NewPost from './Posts/NewPost'
 import { NavigationRoutes } from './index'
@@ -25,8 +25,7 @@ const Container = () => {
     const [posts, setPosts] = useState<?Array<Post>>(null)
 
     /* Effects */
-    useEffect(_init, [])   
-    useEffect(_setUpRemoteNotificationListener, []) 
+    useEffect(_init, [])       
 
     /* Hooks */
     const navigation = useNavigation()
@@ -45,14 +44,9 @@ const Container = () => {
         setPosts(POSTS)
     }
 
-    function _setUpRemoteNotificationListener() {
-        return NotificationsManager.subscribeToRemoteNotifications(data => {
-            console.log('Notification received!: ' + JSON.stringify(data ?? {}))
-        })
-    }
-
-    function _onPersonSelect(person: any) {
-
+    function _onSelectSpace(spaceId: string) {
+        // May get multiple notifications for the same space...do changes if it's different than the current space        
+        console.log('CURRENT ID: ' + spaceId )
     }
 
     /* Render */
@@ -61,7 +55,7 @@ const Container = () => {
         <View style={{ flex: 1, backgroundColor: Theme.colors.appBackground }}>
 
             <View style={{ flex: 0 }}>
-                <SpaceList onPersonSelect={_onPersonSelect}/>
+                <SpaceListContainer onSelectSpace={_onSelectSpace}/>
             </View>
 
             <View style={{ flex: 1 }}>

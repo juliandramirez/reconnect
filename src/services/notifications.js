@@ -61,9 +61,24 @@ NotificationsManager.init = (): Function => {
     }
 }
 
-NotificationsManager.subscribeToRemoteNotifications = (listener: (?StringMap) => any) : Function => {
+NotificationsManager.subscribeToRemoteNotifications = (listener: (?StringMap, boolean) => any) : Function => {
+
+    // if app started because the user pressed the notification, send the event signaling it was a notification in the background
+    messaging().getInitialNotification().then( remoteMessage => {
+        if (remoteMessage && remoteMessage.data) {
+            listener(remoteMessage.data, true)
+        }        
+    })
+    messaging().onNotificationOpenedApp(remoteMessage => {
+        if (remoteMessage && remoteMessage.data) {
+            listener(remoteMessage.data, true)
+        }
+    })
+
     return messaging().onMessage( remoteMessage => {
-        listener(remoteMessage.data)
+        if (remoteMessage && remoteMessage.data) {
+            listener(remoteMessage.data, false)
+        }
     })
 }
 

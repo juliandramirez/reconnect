@@ -12,6 +12,7 @@ import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
 /* MARK: - Type Alias */
 
 export type StringMap = { [key: string]: string }
+export type DataMap = { [key: string]: any }
 
 /* MARK: - Helper functions */
 
@@ -32,8 +33,15 @@ export function hideFlashMessage() {
 export function showSuccessMessage(text: string) {
     showMessage({
         message: text,
-        // icon: 'success',
         backgroundColor: Theme.colors.successNotification,
+        titleStyle: { ...Theme.palette.h6, color: Theme.colors.textNotification },
+    })
+}
+
+export function showInfoMessage(text: string) {
+    showMessage({
+        message: text,
+        backgroundColor: Theme.colors.infoNotification,
         titleStyle: { ...Theme.palette.h6, color: Theme.colors.textNotification },
     })
 }
@@ -41,7 +49,6 @@ export function showSuccessMessage(text: string) {
 export function showErrorMessage(text: string) {
     showMessage({
         message: text,
-        // icon: 'danger',
         backgroundColor: Theme.colors.errorNotification,
         titleStyle: { ...Theme.palette.h6, color: Theme.colors.textNotification },        
     })
