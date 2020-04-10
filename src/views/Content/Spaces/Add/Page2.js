@@ -8,11 +8,13 @@ import { Button, Input } from 'react-native-elements'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import RNPickerSelect from 'react-native-picker-select'
 
+import { showErrorMessage } from 'Reconnect/src/lib/utils'
 import type { SpaceConfiguration } from 'Reconnect/src/services/spaces'
 import type { NotificationPermissions, ReminderValue } from 'Reconnect/src/services/notifications'
 import NotificationsManager, { ReminderValues } from 'Reconnect/src/services/notifications'
 import Theme from 'Reconnect/src/theme/Theme'
 import { SpaceView } from 'Reconnect/src/views/Content/Spaces/List'
+
 
 const styles = EStyleSheet.create({
     container: {
@@ -76,20 +78,35 @@ const styles = EStyleSheet.create({
         }        
 })
 
-const Page2 = ({ submit, cancel } : 
-    { submit: (SpaceConfiguration) => any, cancel: () => void }) => {
+
+const Page2 = ({ initialConfiguration = null, submitLabel, submit, cancel, dismissable } : { 
+        initialConfiguration?: ?SpaceConfiguration, 
+        submitLabel: string,
+        submit: (SpaceConfiguration) => any, 
+        cancel: () => void,
+        dismissable: boolean
+     }) => {
 
     /* State */
     const [submitting, setSubmitting] = useState<boolean>(false)
-    const [shortName, setShortName] = useState<?string>(null)
-    const [color, setColor] = useState<string>(Theme.colors.spaceColors[0])
-    const [reminderValue, setReminderValue]= useState<?ReminderValue>(null)
+    const [shortName, setShortName] = 
+        useState<?string>(initialConfiguration ? initialConfiguration.shortName : null)
+    const [color, setColor] = 
+        useState<string>(initialConfiguration ? initialConfiguration.color : Theme.colors.spaceColors[0])
+    const [reminderValue, setReminderValue]= 
+        useState<?ReminderValue>(initialConfiguration ? initialConfiguration.reminderValue : null)
 
     /* Functions */
     function _submit() {
         if (!submitting && reminderValue) {
             setSubmitting(true)
-            submit({ shortName, color, reminderValue })
+
+            try {
+                submit({ shortName, color, reminderValue })
+            } catch {
+                setSubmitting(false)
+                showErrorMessage('Server error. Please try again')
+            }         
         }        
     }
 
@@ -198,12 +215,16 @@ const Page2 = ({ submit, cancel } :
             </View>
 
             <View>
-                <Button title='CREATE' onPress={ _submit } loading={submitting}
+                <Button title={submitLabel} onPress={ _submit } loading={submitting}
                     buttonStyle={{...styles.button, ...Theme.palette.button}}                         
                 />
-                <Button title='CANCEL' onPress={ cancel } 
-                    buttonStyle={{...styles.button, ...Theme.palette.button}}
-                />
+                {
+                    dismissable ?
+                        <Button title='CANCEL' onPress={ cancel } 
+                            buttonStyle={{...styles.button, ...Theme.palette.button}}
+                        />
+                    : <></>
+                }
             </View>
         </>
     )

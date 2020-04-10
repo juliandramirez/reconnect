@@ -13,7 +13,7 @@ const colors = {
         '#E7F4CD',        
         '#BBEECE',        
     ],
-    successNotification: '#7BAE7E',
+    successNotification: '#407894',
     errorNotification: '#802814',
     infoNotification: '#407894',
     textNotification: 'white',   

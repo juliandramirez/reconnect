@@ -4,7 +4,7 @@
 
 import React, { useState, useRef } from 'react'
 import { View, Text } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
 import NotificationsManager from 'Reconnect/src/services/notifications'
@@ -41,7 +41,11 @@ const AddSpace = () => {
 
     /* Hooks */
     const navigation = useNavigation()
+    const route = useRoute()
     const modalDismiss = useModalBackground(Theme.colors.addSpaceBackground)
+
+    /* Properties */
+    const { dismissable } = route.params
 
     /* State */
     const [pageNumber, setPageNumber] = useState<number>(1)
@@ -74,7 +78,7 @@ const AddSpace = () => {
             showSuccessMessage('Welcome to your shared space')
 
             modalDismiss()
-            navigation.navigate( NavigationRoutes.Main, { spaceId: updatedSpace.id } )
+            navigation.navigate( NavigationRoutes.Main, { space: updatedSpace } )
         } else {
             navigation.navigate( NavigationRoutes.SpaceAdded, { space: updatedSpace, isNewSpace, notificationPermissions } )
         }        
@@ -98,9 +102,15 @@ const AddSpace = () => {
             <View style={{ ...styles.page }}>
             { 
                 pageNumber === 1 ? 
-                    <Page1 submit={_submitPage1} cancel={_cancel}/> 
+                    <Page1 
+                        submit={_submitPage1} 
+                        cancel={_cancel} dismissable={dismissable} 
+                    /> 
                 : 
-                    <Page2 submit={_submitPage2} cancel={_cancel}/> 
+                    <Page2 submitLabel='CREATE' 
+                        submit={_submitPage2} 
+                        cancel={_cancel} dismissable={dismissable}                        
+                    /> 
             }
             </View>
         </View>

@@ -57,7 +57,7 @@ SpacesManager.getSpaceWithInvitationCode = async (code: string) : Promise<?Space
 SpacesManager.createSpace = async (configuration : SpaceConfiguration) : Promise<Space> => {
     const userId = AuthManager.currentUserId()
     if (!userId) {
-        throw 'unauthenticated'
+        throw Constants.errorCodes.unauthenticated
     }
 
     // create new space
@@ -80,7 +80,7 @@ SpacesManager.createSpace = async (configuration : SpaceConfiguration) : Promise
     }
 
     // configure local notifications
-    _configureLocalNotifications(space)
+    _configureLocalNotifications(space.id, space.configuration)
 
     return space
 }
@@ -88,7 +88,7 @@ SpacesManager.createSpace = async (configuration : SpaceConfiguration) : Promise
 SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfiguration) : Promise<Space> => {
     const userId = AuthManager.currentUserId()
     if (!userId) {
-        throw 'unauthenticated'
+        throw Constants.errorCodes.unauthenticated
     }
 
     const spaceRef = COLLECTION_REF.doc(space.id)
@@ -109,33 +109,129 @@ SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfigura
     }
 
     // configure local notifications
-    _configureLocalNotifications(updatedSpace)
+    _configureLocalNotifications(updatedSpace.id, updatedSpace.configuration)
 
     return updatedSpace
 }
 
+SpacesManager.editSpaceConfiguration = async ({ id, configuration } : { id: string, configuration: SpaceConfiguration }) => {
+    const userId = AuthManager.currentUserId()
+    if (!userId) {
+        throw Constants.errorCodes.unauthenticated
+    }
+
+    const spaceRef = COLLECTION_REF.doc(id)
+    const spaceDoc = await spaceRef.get()
+    if (!spaceDoc.exists) {
+        throw Constants.errorCodes.notFound
+    }
+
+    const space = _dataToSpaceObject(spaceDoc.id, spaceDoc.data())    
+    if (userId == space.hostId) {
+        await spaceRef.update({
+            hostConfiguration: {
+                userId,
+                ...configuration
+            }
+        })
+    } else if (userId == space.guestId) {
+        await spaceRef.update({
+            guestConfiguration: {
+                userId,
+                ...configuration
+            }
+        })        
+    } else {
+        throw Constants.errorCodes.unauthorized
+    }
+
+    // configure local notifications
+    _configureLocalNotifications(id, configuration)
+}
+
+SpacesManager.getNumberOfSpaces = async () : Promise<number> => {
+    const userId = AuthManager.currentUserId()
+    if (!userId) {
+        throw Constants.errorCodes.unauthenticated
+    }
+
+    const hostResults = await COLLECTION_REF.where('hostConfiguration.userId', '==', userId).get()
+    const guestResults = await COLLECTION_REF.where('guestConfiguration.userId', '==', userId).get()
+
+    return hostResults.size + guestResults.size
+}
+
 SpacesManager.subscribeToChanges = (listener: (Array<Space>) => any): Function => { 
-    return COLLECTION_REF.orderBy('created', 'asc').onSnapshot( (spaceRefs) => {
-        const spaces = spaceRefs.docs.map(spaceRef => 
+    const userId = AuthManager.currentUserId()
+    if (!userId) {
+        throw Constants.errorCodes.unauthenticated
+    }
+
+    // Firebase does not support or operations... we have to do 2 queries everytime something changes :(
+    const updateListener = async () => {        
+        const hostResults = await COLLECTION_REF.where('hostConfiguration.userId', '==', userId).get()
+        const guestResults = await COLLECTION_REF.where('guestConfiguration.userId', '==', userId).get()
+
+        const mergedResults = [...hostResults.docs, ...guestResults.docs]
+
+        const sortedResults = mergedResults.sort((a, b) => {
+            // created is null for items that are just created...
+            if (a.data().created === null && b.data().created === null ) {
+                return 0
+            } else if (a.data().created === null) {
+                return -1
+            } else if (b.data().created === null) {
+                return 1
+            } else {
+                return a.data().created.toMillis() - b.data().created.toMillis()
+            }
+        })            
+
+        const spaces = sortedResults.map(spaceRef => 
             _dataToSpaceObject(spaceRef.id, spaceRef.data())
         )
+        listener(spaces)        
+    }
 
-        listener(spaces)
-    }, (error) => {
-        console.log('Error listening to space changes:', error)
-    })
+    const hostSpacesUnsubscribe = COLLECTION_REF
+        .where('hostConfiguration.userId', '==', userId)
+        .onSnapshot( 
+            (spaceRefs) => {
+                updateListener()
+            }, 
+            (error) => {
+                console.log('Error listening to space changes:', error)
+            }
+        )
+    
+    const guestSpacesUnsubscribe = COLLECTION_REF
+        .where('guestConfiguration.userId', '==', userId)
+        .onSnapshot( 
+            (spaceRefs) => {
+                updateListener()
+            }, 
+            (error) => {
+                console.log('Error listening to space changes:', error)
+            }
+        )
+
+    return () => {
+        hostSpacesUnsubscribe()
+        guestSpacesUnsubscribe()
+    }
+    
 }
 
 /* MARK: - Helper Functions */
 
-async function _configureLocalNotifications(space: Space) {
+async function _configureLocalNotifications(id: string, configuration: SpaceConfiguration) {
     
-    const reminderValue = space.configuration?.reminderValue ?? 'NoNeed'
-    const writeTo = stringNotEmpty(space.configuration?.shortName) ? `to ${space.configuration?.shortName ?? ''}` : ''
+    const reminderValue = configuration.reminderValue
+    const writeTo = stringNotEmpty(configuration.shortName) ? `to ${configuration.shortName ?? ''}` : ''
     const writeEvery = ReminderValues[reminderValue].toLowerCase()
 
     NotificationsManager.configureLocalNotification({
-        id: space.id,
+        id: id,
         title: 'Time to reconnect',
         message: `Just reminding you that you wanted to write ${writeEvery} ${writeTo}`,
         reminderValue

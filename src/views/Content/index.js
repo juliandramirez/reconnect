@@ -9,6 +9,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 
 import Container from './Container'
 import AddSpace from './Spaces/Add'
+import EditSpace from './Spaces/Edit'
 import AddSpaceSuccess from './Spaces/Add/Success'
 import Post, { PostDetail } from './Posts/ViewPost'
 import NewPost from './Posts/NewPost'
@@ -21,6 +22,7 @@ export const NavigationRoutes = {
     AttachmentDetail: 'AttachmentDetail',
     NewPost: 'NewPost',
     AddSpace: 'AddSpace',
+    EditSpace: 'EditSpace',
     SpaceAdded: 'SpaceAdded'
 }
 
@@ -36,6 +38,11 @@ const RootStackScreen = () => (
         <Stack.Screen 
             name={ NavigationRoutes.AddSpace } 
             component={ AddSpace } 
+        />
+
+        <Stack.Screen 
+            name={ NavigationRoutes.EditSpace } 
+            component={ EditSpace } 
         />
 
         <Stack.Screen 
@@ -68,7 +75,7 @@ const PostsContainer = () => (
             name={ NavigationRoutes.Main } 
             component={ Container } 
             options={{ headerShown: false }} 
-            initialParams={{ spaceId: null }}               
+            initialParams={{ space: null }}               
         /> 
 
         <Stack.Screen 

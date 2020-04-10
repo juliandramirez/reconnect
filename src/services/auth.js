@@ -13,7 +13,7 @@ import NotificationsManager from './notifications'
 
 /* MARK: - Constants */
 
-const COLLECTION_REF = Constants.storageRefs.users
+const COLLECTION_REF = firestore().collection(Constants.storageRefs.users)
 
 /* MARK: - Services */
 
@@ -39,7 +39,7 @@ AuthManager.signIn = async () : Promise<string> => {
         const user = account.user
         
         // update notification token after sign in
-        await NotificationsManager.updateNotificationToken()
+        NotificationsManager.updateNotificationToken()
 
         return user.uid
     } catch (e) {        
@@ -57,7 +57,7 @@ AuthManager.signOut = async () => {
 }
 
 AuthManager.getUserNotificationToken = async (userId: string): Promise<?string> => {    
-    const ref = firestore().collection(COLLECTION_REF).doc(userId)
+    const ref = COLLECTION_REF.doc(userId)
     const info = await ref.get()
 
     return info.data().notificationToken
@@ -67,7 +67,7 @@ AuthManager.updateCurrentUserNotificationToken = async (token: string) => {
     const currentUserId = AuthManager.currentUserId()
 
     if (currentUserId != null) {
-        const ref = firestore().collection(COLLECTION_REF).doc(currentUserId)
+        const ref = COLLECTION_REF.doc(currentUserId)
         await ref.set({
             notificationToken: token
         })

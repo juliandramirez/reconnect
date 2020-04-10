@@ -69,7 +69,7 @@ const AddSpaceSuccess = () => {
     /* Functions */
     function _goToSpace() {
         modalDismiss()
-        navigation.navigate( NavigationRoutes.Main, { spaceId: space.id } )
+        navigation.navigate( NavigationRoutes.Main, { space: space } )
     }
 
     function _sendInstructions() {

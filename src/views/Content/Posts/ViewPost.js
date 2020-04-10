@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useRef } from 'react'
-import { View, Text, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, ScrollView } from 'react-native'
 import { Dimensions } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/stack'

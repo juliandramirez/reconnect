@@ -43,8 +43,8 @@ const styles = EStyleSheet.create({
         }
 })
 
-const Page1 = ({ submit, cancel } 
-    : { submit: (?Space) => void, cancel: () => void }) => {
+const Page1 = ({ submit, cancel, dismissable } 
+    : { submit: (?Space) => void, cancel: () => void, dismissable: boolean }) => {
 
     /* Variables */
     const invitationCodeRef = useRef<Input>()
@@ -79,13 +79,18 @@ const Page1 = ({ submit, cancel }
             if (invitationCode) {
                 setSubmitting(true)
 
-                const space = await SpacesManager.getSpaceWithInvitationCode(invitationCode)
-                if (space == null) {
+                try {
+                    const space = await SpacesManager.getSpaceWithInvitationCode(invitationCode)
+                    if (space == null) {
+                        showErrorMessage('Invalid invitation code')                    
+                        setSubmitting(false)
+                    } else {
+                        submit(space)
+                    }   
+                } catch {
                     showErrorMessage('Invalid invitation code')                    
                     setSubmitting(false)
-                } else {
-                    submit(space)
-                }                
+                }             
             } else if (newSpace) {
                 submit(null)
             }            
@@ -145,9 +150,13 @@ const Page1 = ({ submit, cancel }
                 <Button title='NEXT' onPress={_submit} loading={submitting}
                     buttonStyle={{...styles.button, ...Theme.palette.button}}                     
                 />
-                <Button title='CANCEL' onPress={cancel} 
-                    buttonStyle={{...styles.button, ...Theme.palette.button}}
-                />
+                {
+                    dismissable ? 
+                        <Button title='CANCEL' onPress={cancel} 
+                            buttonStyle={{...styles.button, ...Theme.palette.button}}
+                        />
+                    : <></>
+                }                
             </View>
 
         </>

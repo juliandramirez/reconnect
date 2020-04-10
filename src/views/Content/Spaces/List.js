@@ -15,15 +15,15 @@ import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
-const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => any }) => {
+const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any }) => {
 
     /* State */
-    const [selectedId, setSelectedId] = useState<?string>(null)
+    const [selectedSpace, setSelectedSpace] = useState<?Space>(null)
 
-    useEffect(_selectedIdUpdated, [selectedId])
-    function _selectedIdUpdated() {
-        if(selectedId) {
-            onSelectSpace(selectedId)
+    useEffect(_selectedSpaceUpdated, [selectedSpace])
+    function _selectedSpaceUpdated() {
+        if(selectedSpace) {
+            onSelectSpace(selectedSpace)
         }
     }
 
@@ -36,9 +36,9 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => an
             //$FlowExpectedError: unsupported feature
             const routes = event?.data?.state?.routes?.filter(r => r.name == NavigationRoutes.Main)
             if (routes && routes.length == 1) {
-                const spaceId = routes[0]?.params?.spaceId
-                if (spaceId) {
-                    setSelectedId(spaceId)
+                const space = routes[0]?.params?.space
+                if (space) {
+                    setSelectedSpace(space)
                 }
             }
         })
@@ -49,18 +49,21 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => an
     useEffect(_setUpRemoteNotificationListener, [])
     function _setUpRemoteNotificationListener() {
         return NotificationsManager.subscribeToRemoteNotifications( (data, receivedOnBackground) => {
-            if (data && data.spaceId) {
+            if (data && data.space) {
                 if (receivedOnBackground) {
-                    setSelectedId(data.spaceId)
+                    const space = JSON.parse(data.space)
+                    setSelectedSpace(space)
                 } else {
-                    showInfoMessage(`You just received a new post in one of your spaces!`)
+                    //$FlowExpectedError: null check
+                    const from = space.configuration?.shortName ? `from ${space.configuration?.shortName}!`: 'in one of your spaces!'
+                    showInfoMessage(`You just received a new post ${from}`)
                 }
             }
         })
     }        
 
     /* Render */
-    return <SpaceList selectedId={selectedId} onSelectSpace={setSelectedId} />
+    return <SpaceList selectedId={selectedSpace?.id} onSelectSpace={setSelectedSpace} />
 }
 
 const styles = StyleSheet.create({
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
 })
 
 const SpaceList = ({ selectedId, onSelectSpace } 
-        : { selectedId: ?string, onSelectSpace: (string) => any }) => {
+        : { selectedId: ?string, onSelectSpace: (Space) => any }) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -108,7 +111,7 @@ const SpaceList = ({ selectedId, onSelectSpace }
             // initial selection...
             if (!selectedId && spaces.length > 0) {
                 // ...inform about selection
-                onSelectSpace(spaces[0].id)
+                onSelectSpace(spaces[0])
             }
         })
     }
@@ -123,11 +126,11 @@ const SpaceList = ({ selectedId, onSelectSpace }
         }      
     }
 
-    function _spacePressed(spaceId: ?string) {
-        if (spaceId) {
-            onSelectSpace(spaceId)
+    function _spacePressed(space: ?Space) {
+        if (space) {
+            onSelectSpace(space)
         } else {            
-            navigation.navigate(NavigationRoutes.AddSpace)
+            navigation.navigate( NavigationRoutes.AddSpace, { dismissable: true } )
         }
     }
 
@@ -137,7 +140,7 @@ const SpaceList = ({ selectedId, onSelectSpace }
             <FlatList horizontal
                 data={[ null, ...spaces ]}
                 renderItem={ ({ item, index }) => 
-                    <TouchableOpacity onPress={ () => _spacePressed( index == 0 ? null : item?.id ) }>
+                    <TouchableOpacity onPress={ () => _spacePressed( item ) }>
                         <SpaceView 
                             space={ item } 
                             isSelected={ index == 0 ? false : selectedId === item?.id }
