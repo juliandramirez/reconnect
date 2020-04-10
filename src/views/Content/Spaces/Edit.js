@@ -70,7 +70,8 @@ const EditSpace = () => {
                 <Page2 
                     submitLabel='SAVE'
                     initialConfiguration={space.configuration} 
-                    submit={_submit} cancel={_cancel}                        
+                    submit={_submit} cancel={_cancel}
+                    dismissable={true}                        
                 /> 
             </View>
         </View>
