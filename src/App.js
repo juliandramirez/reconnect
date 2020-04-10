@@ -83,7 +83,7 @@ const MainUI = () => {
                     isSignedIn === true ? (
                         <Stack.Screen name="Timeline" component={ Content } />                        
                     ) : (
-                        <Stack.Screen name="Onboarding" component={ Content } />
+                        <Stack.Screen name="Onboarding" component={ Onboarding } />
                     )
                 }                        
                 </Stack.Navigator>

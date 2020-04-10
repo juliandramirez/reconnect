@@ -40,6 +40,9 @@ const styles = EStyleSheet.create({
         button: {                                
             marginTop: 1,   
             marginBottom: '1 rem'      
+        },
+        undismissableMargin:{
+            marginTop: '25 rem'
         }
 })
 
@@ -146,9 +149,9 @@ const Page1 = ({ submit, cancel, dismissable }
                 </TouchableOpacity>
             </View>
 
-            <View>
+            <View style={ !dismissable ? styles.undismissableMargin : {} }>
                 <Button title='NEXT' onPress={_submit} loading={submitting}
-                    buttonStyle={{...styles.button, ...Theme.palette.button}}                     
+                    buttonStyle={{...styles.button, ...Theme.palette.button }}                     
                 />
                 {
                     dismissable ? 

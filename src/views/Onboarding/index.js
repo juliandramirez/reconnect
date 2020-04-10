@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   ScrollView,
   View,
@@ -12,7 +12,9 @@ import OnboardingSwiper from './OnboardingSwiper';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AuthManager from '../../services/auth';
+
 const Onboarding = ({navigation}) => {
+  useEffect(AuthManager.signIn, [])
   const hook = useOnboarding(() => {
     navigation.navigate('Timeline');
     AuthManager.getUser();

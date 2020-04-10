@@ -3,8 +3,8 @@
  */
 
 import React, { useState, useRef } from 'react'
-import { View, Text } from 'react-native'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { View, Text, BackHandler } from 'react-native'
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
 import NotificationsManager from 'Reconnect/src/services/notifications'
@@ -23,7 +23,7 @@ const styles = EStyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: '20 rem',
-        paddingBottom: '8 rem',        
+        paddingBottom: '20 rem',        
         justifyContent: 'flex-end',
         backgroundColor: Theme.colors.addSpaceBackground,
     },
@@ -42,7 +42,7 @@ const AddSpace = () => {
     /* Hooks */
     const navigation = useNavigation()
     const route = useRoute()
-    const modalDismiss = useModalBackground(Theme.colors.addSpaceBackground)
+    const modalDismiss = useModalBackground(Theme.colors.addSpaceBackground)    
 
     /* Properties */
     const { dismissable } = route.params
@@ -53,7 +53,23 @@ const AddSpace = () => {
     /* Variables */
     const spaceRef = useRef<?Space>(null)
     
-    /* Functions */
+    useFocusEffect( _androidBackHandler, [pageNumber, dismissable])
+    function _androidBackHandler() {
+        const onBackPress = () => {            
+            if (pageNumber == 2) {
+                _back()
+                return true
+            } else {              
+                // consider even handled (ignore hardware press) when it is not dismissable
+                return !dismissable
+            }
+        }
+
+        BackHandler.addEventListener('hardwareBackPress', onBackPress)
+        return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }
+
+    /* Functions */    
     function _submitPage1(space: ?Space) {
         spaceRef.current = space
         setPageNumber(2)
@@ -89,6 +105,10 @@ const AddSpace = () => {
         navigation.goBack()
     }
 
+    function _back() {
+        setPageNumber(1)
+    }
+
     /* Render */
     return (
         <View style={ styles.container }>
@@ -109,7 +129,7 @@ const AddSpace = () => {
                 : 
                     <Page2 submitLabel='CREATE' 
                         submit={_submitPage2} 
-                        cancel={_cancel} dismissable={dismissable}                        
+                        cancelOrBack={ dismissable ? _cancel : _back }
                     /> 
             }
             </View>

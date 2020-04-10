@@ -88,8 +88,8 @@ const BottomBar = ( { space } : { space: ?Space }) => {
             justifyContent: 'space-evenly', 
             alignItems: 'center'
         }}>
-            <View style={{flex:1, flexGrow:1, alignItems: 'flex-start'}}>
-                <Button type='clear' style={{ marginLeft: 14 }} 
+            <View style={{flex:1, flexGrow:1, alignItems: 'flex-start', marginLeft: 8}}>
+                <Button type='clear' style={{  }} 
                     icon={
                         <Iosicons name='ios-arrow-up' size={30}/>
                     }

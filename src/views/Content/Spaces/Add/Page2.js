@@ -79,12 +79,11 @@ const styles = EStyleSheet.create({
 })
 
 
-const Page2 = ({ initialConfiguration = null, submitLabel, submit, cancel, dismissable } : { 
+const Page2 = ({ initialConfiguration = null, submitLabel, submit, cancelOrBack } : { 
         initialConfiguration?: ?SpaceConfiguration, 
         submitLabel: string,
         submit: (SpaceConfiguration) => any, 
-        cancel: () => void,
-        dismissable: boolean
+        cancelOrBack: () => void,
      }) => {
 
     /* State */
@@ -218,13 +217,9 @@ const Page2 = ({ initialConfiguration = null, submitLabel, submit, cancel, dismi
                 <Button title={submitLabel} onPress={ _submit } loading={submitting}
                     buttonStyle={{...styles.button, ...Theme.palette.button}}                         
                 />
-                {
-                    dismissable ?
-                        <Button title='CANCEL' onPress={ cancel } 
-                            buttonStyle={{...styles.button, ...Theme.palette.button}}
-                        />
-                    : <></>
-                }
+                <Button title='BACK' onPress={ cancelOrBack } 
+                    buttonStyle={{...styles.button, ...Theme.palette.button}}
+                />
             </View>
         </>
     )
