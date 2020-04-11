@@ -28,7 +28,8 @@ export type Post = {|
 export type Attachment = {|
     type: 'image' | 'video',
     url: string,
-    metadata: StringMap
+    metadata: StringMap,
+    mediaType? : ?string    
 |}
 
 type UploadPromise<T> = {
@@ -118,7 +119,7 @@ function _uploadAttachment({ spaceId, attachment, progressListener} : {
     const fileRef = storage().ref(`${Constants.storageRefs.attachments}/${spaceId}/${uniqueId}`)
 
     const metadata = {
-        contentType: attachment.type == 'image' ? 'image/*' : 'video/*',
+        contentType: attachment.mediaType,
         cacheControl: Constants.attachmentCacheControlHeader
     }
 

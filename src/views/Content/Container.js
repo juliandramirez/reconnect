@@ -17,7 +17,7 @@ import SpacesManager from 'Reconnect/src/services/spaces'
 
 import SpaceListContainer from './Spaces/List'
 import PostView from './Posts/ViewPost'
-import NewPost from './Posts/NewPost'
+import NewPost from './Posts/New'
 import { NavigationRoutes } from './index'
 
 
@@ -41,6 +41,16 @@ const Container = () => {
                 navigation.navigate( NavigationRoutes.AddSpace, { dismissable: false } )
             }
         })
+
+        const text = 'This week I had to do the same thing we did when we were working together.\n\nI felt really good about it and it reminded me of how much you helped me back then!'
+        const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/reconnect-eddf2.appspot.com/o/dev-attachments%2F8Am6shu9EzXB66PLO9cx%2F768a4cde-43ef-4825-a7db-8f2f8144f887?alt=media&token=bd05194a-e990-48e1-9b00-f8d136ccc676'
+        const videoUrl = 'https://firebasestorage.googleapis.com/v0/b/reconnect-eddf2.appspot.com/o/dev-attachments%2F8Am6shu9EzXB66PLO9cx%2F66ab9a75-ecb2-4c3b-9d97-9ae6890b8f68?alt=media&token=23c74a13-c82c-4bc1-85df-deef3256fcbd'
+        const POSTS = [
+            {id: '2', text: text + text, content: [], attachments: [{id: '1', type: 'video', url: videoUrl }, {id: '2', type: 'video', url: videoUrl}, {id: '3', type: 'image', url: imageUrl}, {id: '4', type: 'image', url: imageUrl}]},
+            {id: '1', text: 'This week I had to do the same thing we did when we were working together', content: [], attachments: []},            
+        ]
+
+        setPosts(POSTS)        
     }
 
     function _spaceChanged(newSpace: Space) {
