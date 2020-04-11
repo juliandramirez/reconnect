@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Iosicons from 'react-native-vector-icons/Ionicons'
 
+import LoadingView from 'Reconnect/src/Loading'
 import Theme from 'Reconnect/src/theme/Theme'
 import type { Post } from 'Reconnect/src/services/posts'
 import type { Space } from 'Reconnect/src/services/spaces'
@@ -42,40 +43,43 @@ const Container = () => {
         })
     }
 
-    function _onSelectSpace(space: Space) {
-        setSpace(space)
+    function _spaceChanged(newSpace: Space) {
+        if (newSpace && newSpace.id != space?.id) {            
+            setSpace(newSpace)
+        }        
     }
 
     /* Render */
-
     return (
         <View style={{ flex: 1, backgroundColor: Theme.colors.appBackground }}>
 
             <View style={{ flex: 0 }}>
-                <SpaceListContainer onSelectSpace={_onSelectSpace}/>
+                <SpaceListContainer onSelectSpace={_spaceChanged}/>
             </View>
+            {
+                !space ? <LoadingView /> : <>
+                    <View style={{ flex: 1 }}>
+                        <FlatList
+                            data={posts}
+                            renderItem={ ({item}) => 
+                                <PostView post={item} headerColor={Theme.colors.spaceColors[5]}/> 
+                            }
+                            keyExtractor={ item => item.id }
+                        />
+                    </View>
 
-            <View style={{ flex: 1 }}>
-                <FlatList
-                    data={posts}
-                    renderItem={ ({item}) => 
-                        <PostView post={item} headerColor={Theme.colors.spaceColors[5]}/> 
-                    }
-                    keyExtractor={ item => item.id }
-                />
-            </View>
-
-            <View style={{ flex: 0 }}>
-                <BottomBar space={space}/>
-            </View>
-
+                    <View style={{ flex: 0 }}>
+                        <BottomBar space={space}/>
+                    </View>
+                </>
+            }
         </View>
     )
 }
 
 /* MARK: - UI Components */
 
-const BottomBar = ( { space } : { space: ?Space }) => {
+const BottomBar = ( { space } : { space: Space }) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -88,16 +92,12 @@ const BottomBar = ( { space } : { space: ?Space }) => {
             justifyContent: 'space-evenly', 
             alignItems: 'center'
         }}>
-            <View style={{flex:1, flexGrow:1, alignItems: 'flex-start', marginLeft: 8}}>
-                <Button type='clear' style={{  }} 
+            <View style={{flex:1, flexGrow:1, alignItems: 'flex-start' }}>
+                <Button type='clear' 
                     icon={
-                        <Iosicons name='ios-arrow-up' size={30}/>
+                        <Iosicons style={{ paddingHorizontal: 8 }} name='ios-arrow-up' size={30}/>
                     }
-                    onPress={ () => {
-                        if (space) {
-                            navigation.navigate( NavigationRoutes.EditSpace, { space: space } )
-                        }                        
-                    }}/>                        
+                    onPress={ () => navigation.navigate(NavigationRoutes.EditSpace, { space: space }) }/>
             </View>
 
             <View style={{ flex:1, flexGrow:1 }}>
@@ -106,11 +106,8 @@ const BottomBar = ( { space } : { space: ?Space }) => {
                     icon={
                         <SimpleLineIcons name='pencil' size={32}/>
                     } 
-                    onPress={ () => {
-                        if (space) {
-                            navigation.navigate( NavigationRoutes.NewPost )
-                        }
-                    }}/>
+                    onPress={ () => navigation.navigate(NavigationRoutes.NewPost, { space: space }) }
+                />
             </View>
 
             <View style={{flex:1, flexGrow:1, alignItems: 'flex-end'}}>                

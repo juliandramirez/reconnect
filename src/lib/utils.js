@@ -4,7 +4,7 @@
 
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { Keyboard, Platform } from 'react-native'
+import { Keyboard, Platform, Linking, Alert } from 'react-native'
 import { showMessage, hideMessage } from 'react-native-flash-message'
 
 import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
@@ -25,6 +25,26 @@ export function wait(milliseconds: number) {
 }
 
 /* MARK: - UI Utils */
+export function goToSettingsAlert({ title, message, cancelButtonText, onCancel = () => {} } : 
+        { title: string, message: string, cancelButtonText: string, onCancel?: Function }) {
+
+    Alert.alert(title, message, [
+            {
+                text: cancelButtonText,
+                onPress: onCancel,
+                style: 'cancel'
+            },
+            {
+                text: 'Go to Settings',
+                onPress: Linking.openSettings,
+                style: 'default'
+            }            
+        ],
+        {
+            cancelable: false
+        },
+    )
+}
 
 export function hideFlashMessage() {
     hideMessage()

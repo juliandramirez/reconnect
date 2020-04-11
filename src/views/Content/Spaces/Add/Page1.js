@@ -156,6 +156,7 @@ const Page1 = ({ submit, cancel, dismissable }
                 {
                     dismissable ? 
                         <Button title='CANCEL' onPress={cancel} 
+                            disabled={submitting}
                             buttonStyle={{...styles.button, ...Theme.palette.button}}
                         />
                     : <></>

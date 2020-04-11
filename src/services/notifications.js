@@ -2,7 +2,7 @@
  * @flow
  */
 
-import { Alert, Linking, AppState } from 'react-native'
+import { AppState } from 'react-native'
 import messaging from '@react-native-firebase/messaging'
 import functions from '@react-native-firebase/functions'
 import LocalNotification from 'react-native-push-notification'
@@ -108,27 +108,6 @@ NotificationsManager.getPermissions = async (): Promise<NotificationPermissions>
 NotificationsManager.requestPermissions = async (): Promise<NotificationPermissions> => {
     const requestedPermission = await messaging().requestPermission()
     return _toPermissionType(requestedPermission)
-}
-
-NotificationsManager.goToSettingsAlert = ({ message, cancelButtonText, onCancel = () => {} } : 
-        { message: string, cancelButtonText: string, onCancel?: Function }) => {
-
-    Alert.alert('Notifications disabled', message, [
-            {
-                text: cancelButtonText,
-                onPress: onCancel,
-                style: 'cancel'
-            },
-            {
-                text: 'Go to Settings',
-                onPress: Linking.openSettings,
-                style: 'default'
-            }            
-        ],
-        {
-            cancelable: false
-        },
-    )
 }
 
 NotificationsManager.configureLocalNotification = async ({ id, title, message, reminderValue } 

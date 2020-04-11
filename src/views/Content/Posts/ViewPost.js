@@ -187,7 +187,7 @@ const PostAttachments = ({ showClip, attachments } : { showClip: boolean, attach
                     <View style={{ width: 15, height: Dimensions.get('window').width * 0.25 }}/>
                 )}
                 data={ attachments }                        
-                keyExtractor={ attachment => attachment.id }
+                keyExtractor={ attachment => attachment.url }
                 renderItem={ ({ item }) => (<AttachmentThumbnail attachment={item}/>)}
                 
                 ref={ref => scrollView.current = ref}

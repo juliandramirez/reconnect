@@ -26,13 +26,13 @@ export type SpaceConfiguration = {|
     reminderValue: ReminderValue    
 |}
 
-export type Space = {
+export type Space = {|
     id: string,
     invitationCode: string,
     hostId: string,
     guestId?: ?string,
     configuration?: ?SpaceConfiguration
-}
+|}
 
 /* MARK: - Services */
 

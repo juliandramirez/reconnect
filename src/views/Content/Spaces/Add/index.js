@@ -53,6 +53,7 @@ const AddSpace = () => {
     /* Variables */
     const spaceRef = useRef<?Space>(null)
     
+    /* Back handler */
     useFocusEffect( _androidBackHandler, [pageNumber, dismissable])
     function _androidBackHandler() {
         const onBackPress = () => {            
@@ -127,9 +128,9 @@ const AddSpace = () => {
                         cancel={_cancel} dismissable={dismissable} 
                     /> 
                 : 
-                    <Page2 submitLabel='CREATE' 
-                        submit={_submitPage2} 
-                        cancelOrBack={ dismissable ? _cancel : _back }
+                    <Page2 
+                        submitLabel='CREATE' submit={_submitPage2} 
+                        cancelLabel='BACK' cancelOrBack={ dismissable ? _cancel : _back }
                     /> 
             }
             </View>

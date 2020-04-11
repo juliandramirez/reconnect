@@ -10,7 +10,7 @@ import EStyleSheet from 'react-native-extended-stylesheet'
 
 import NotificationsManager from 'Reconnect/src/services/notifications'
 import Constants from 'Reconnect/src/Constants'
-import { useModalBackground } from 'Reconnect/src/lib/utils'
+import { useModalBackground, goToSettingsAlert } from 'Reconnect/src/lib/utils'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
@@ -81,7 +81,8 @@ const AddSpaceSuccess = () => {
     async function _enableNotifications() {
         const requestedPermission = await NotificationsManager.requestPermissions()                
         if (requestedPermission != 'enabled') {                    
-            NotificationsManager.goToSettingsAlert({
+            goToSettingsAlert({
+                title: 'Notifications disabled',
                 message: 'You must enable notifications in settings', 
                 cancelButtonText: 'I don\'t want notifications'
             })

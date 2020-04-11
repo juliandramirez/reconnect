@@ -21,7 +21,7 @@ const styles = EStyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: '20 rem',
-        paddingBottom: '8 rem',        
+        paddingBottom: '20 rem',        
         justifyContent: 'flex-end',
         backgroundColor: Theme.colors.addSpaceBackground,
     },
@@ -68,7 +68,7 @@ const EditSpace = () => {
 
             <View style={{ ...styles.page }}>
                 <Page2 
-                    submitLabel='SAVE'
+                    submitLabel='SAVE' cancelLabel='CANCEL'
                     initialConfiguration={space.configuration} 
                     submit={_submit} cancelOrBack={_cancel}                        
                 /> 

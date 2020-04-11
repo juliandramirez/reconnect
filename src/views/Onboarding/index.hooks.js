@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 
-import JournalsManager from './../../services/journals'
 
 const useOnboarding = nextPage => {
   const [tab, setTab] = useState(0);
@@ -27,7 +26,7 @@ const useOnboarding = nextPage => {
 
   const onPress = () => {
 
-    JournalsManager.getJournalPage('', '123')
+    //JournalsManager.getJournalPage('', '123')
 
     //console.log('tab', tab);
     if (tab < 3) {

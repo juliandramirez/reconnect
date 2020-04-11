@@ -8,7 +8,7 @@ import { Button, Input } from 'react-native-elements'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import RNPickerSelect from 'react-native-picker-select'
 
-import { showErrorMessage } from 'Reconnect/src/lib/utils'
+import { showErrorMessage, goToSettingsAlert } from 'Reconnect/src/lib/utils'
 import type { SpaceConfiguration } from 'Reconnect/src/services/spaces'
 import type { NotificationPermissions, ReminderValue } from 'Reconnect/src/services/notifications'
 import NotificationsManager, { ReminderValues } from 'Reconnect/src/services/notifications'
@@ -79,10 +79,11 @@ const styles = EStyleSheet.create({
 })
 
 
-const Page2 = ({ initialConfiguration = null, submitLabel, submit, cancelOrBack } : { 
+const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, cancelOrBack } : { 
         initialConfiguration?: ?SpaceConfiguration, 
         submitLabel: string,
         submit: (SpaceConfiguration) => any, 
+        cancelLabel: string,
         cancelOrBack: () => void,
      }) => {
 
@@ -114,7 +115,8 @@ const Page2 = ({ initialConfiguration = null, submitLabel, submit, cancelOrBack 
                 reminderValue && reminderValue != 'NoNeed') {                    
 
             const showAlert = () => {
-                NotificationsManager.goToSettingsAlert({
+                goToSettingsAlert({
+                    title: 'Notifications disabled',
                     message: 'To get reminders you must enable notifications in settings', 
                     cancelButtonText: 'I don\'t need reminders',
                     onCancel: () => setReminderValue('NoNeed')
@@ -217,7 +219,8 @@ const Page2 = ({ initialConfiguration = null, submitLabel, submit, cancelOrBack 
                 <Button title={submitLabel} onPress={ _submit } loading={submitting}
                     buttonStyle={{...styles.button, ...Theme.palette.button}}                         
                 />
-                <Button title='BACK' onPress={ cancelOrBack } 
+                <Button title={cancelLabel} onPress={ cancelOrBack } 
+                    disabled={submitting}
                     buttonStyle={{...styles.button, ...Theme.palette.button}}
                 />
             </View>
