@@ -42,55 +42,36 @@ export type PostError = 'upload-failed' | 'upload-cancelled'
 
 const PostsManager = {}
 
-PostsManager.addPost = ({ spaceId, text, attachments, progressListener } 
+PostsManager.addPost = async ({ spaceId, text, attachments, progressListener } 
         : { spaceId: string, 
             text: string, 
             attachments?: Array<Attachment>,
             progressListener?: (total: number, each: Array<number>) => any
-        }) : UploadPromise<void> => {
+    }) => {
 
     const userId = AuthManager.currentUserId()
     if (!userId) {
         throw Constants.errorCodes.unauthenticated
     }
 
-    if (attachments && attachments.length > 0) {
-        const attachmentsPromise = _uploadAttachments({ userId, spaceId, attachments, progressListener })
-        const res = attachmentsPromise.promise.then((attachments) => _createPost({ userId, spaceId, text, attachments }))
-
-        return { promise: res, cancelHook: attachmentsPromise.cancelHook }
-    } else {
-        const res = _createPost({ userId, spaceId, text, attachments: [] })
-        return { promise: res, cancelHook: null }
-    }    
-}
-
-async function _createPost({ userId, spaceId, text, attachments } : {
-        userId: string,
-        spaceId: string,
-        text: string,
-        attachments: Array<Attachment>
-    }) {
     await COLLECTION_REF.add({
         spaceId,
         created: firestore.FieldValue.serverTimestamp(),
         content: text,
         authorId: userId,
         attachments
-    })
+    })  
 }
 
-function _uploadAttachments({ userId, spaceId, attachments, progressListener } : { 
-        userId: string,
+PostsManager.uploadAttachments = ({ spaceId, attachments, progressListener } : { 
         spaceId: string, 
         attachments: Array<Attachment>,
         progressListener?: (total: number, each: Array<number>) => any
-    }) : UploadPromise<Array<Attachment>> {
+    }) : UploadPromise<Array<Attachment>> => {
 
     // keep track of all cancel hooks and progress of every attachment
     let cancelHookArray = Array(attachments.length).fill(undefined)
-    let progressArray = Array(attachments.length).fill(0)
-
+    let progressArray = Array(attachments.length).fill(0)   
     const signalProgressChange = () => {
         const totalSum = progressArray.reduce((a,b) => a + b, 0)
         const total = Math.floor(totalSum / attachments.length)
@@ -98,20 +79,20 @@ function _uploadAttachments({ userId, spaceId, attachments, progressListener } :
         if (progressListener) {            
             progressListener(total, progressArray)
         }
-    }   
+    }
 
     // start all uploads
     const promise = Promise.all(
         attachments.map((attachment, index) => {
             // each progress listener reports to the 'global' progress listener
             const attachmentProgressListener = !progressListener ? null : (progress) => {
-                progressArray[index] = progress
+                progressArray[index] = progress                
                 signalProgressChange()
             }
 
             // get each cancel hook reference
             const attachmentPromise = _uploadAttachment({ 
-                userId, spaceId, attachment, progressListener: attachmentProgressListener})
+                spaceId, attachment, progressListener: attachmentProgressListener})
 
             cancelHookArray[index] = attachmentPromise.cancelHook
             
@@ -127,15 +108,14 @@ function _uploadAttachments({ userId, spaceId, attachments, progressListener } :
 }
 
 // resolves with file url
-function _uploadAttachment({ userId, spaceId, attachment, progressListener}
-         : { userId: string,
+function _uploadAttachment({ spaceId, attachment, progressListener} : { 
              spaceId: string, 
              attachment: Attachment, 
              progressListener?: ?((number) => any) })
     : UploadPromise<Attachment> { 
                    
     const uniqueId = uuidv4()
-    const fileRef = storage().ref(`${Constants.storageRefs.attachments}/${spaceId}/${userId}/${uniqueId}`)
+    const fileRef = storage().ref(`${Constants.storageRefs.attachments}/${spaceId}/${uniqueId}`)
 
     const metadata = {
         contentType: attachment.type == 'image' ? 'image/*' : 'video/*',

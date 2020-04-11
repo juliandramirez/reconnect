@@ -28,6 +28,8 @@ const NewPostView = () => {
     const [publishing, setPublishing] = useState<boolean>(false)
 
     /* Variables */
+    //$FlowExpectedError: not null
+    const textRef = useRef<TextInput>(null)
     const attachmentsRef = useRef<Array<Attachment>>([])
     const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>(null)
 
@@ -43,6 +45,7 @@ const NewPostView = () => {
             headerRight: () => (
                 <Button title='PUBLISH' type='clear' 
                     loading={publishing}
+                    loadingProps={{color: 'darkgrey'}}
                     titleStyle={{color: 'black'}}                     
                     onPress={_save}                    
                     containerStyle={{paddingRight: 8}}                    
@@ -76,7 +79,7 @@ const NewPostView = () => {
     }
 
     function _dismiss() {            
-        if (stringNotEmpty(content)) {            
+        if (stringNotEmpty(content) || attachmentsRef.current?.length > 0) {            
             Alert.alert('Post wasn\'t published', 'Dismiss post without publishing?', [{
                     text: 'Cancel',
                     style: 'cancel'
@@ -93,30 +96,35 @@ const NewPostView = () => {
     }
 
     function _save() {
-        if (stringNotEmpty(content)) {
-            setPublishing(true)
-
-            if(attachmentsRef.current.length == 0)
-            {                
-                PostsManager.addPost({ 
+        const doSendPost = async () => {
+            try { 
+                await PostsManager.addPost({ 
                     spaceId: space.id, 
                     text: content, 
-                    attachments: attachmentsRef.current 
-                }).promise.then(() => {
-                    navigation.goBack()
-                    showSuccessMessage('Post published')
-                }).catch((error) => {
-                    showErrorMessage('Post could not be published')
-                    setPublishing(false) 
+                    attachments: []
                 })
+
+                navigation.goBack()
+                showSuccessMessage('Post published')
+            } catch {
+                showErrorMessage('Post could not be published')
+                setPublishing(false) 
+            }
+        }  
+
+        if (stringNotEmpty(content)) {
+            Keyboard.dismiss()
+            setPublishing(true)            
+
+            if (attachmentsRef.current.length == 0) {      
+                doSendPost()
             } else {
                 setUploadModalProps({
                     spaceId: space.id, 
-                    text: content, 
                     attachments: attachmentsRef.current,
-                    success: () => {
-                        navigation.goBack()
-                        showSuccessMessage('Post published')
+                    success: async (attachments) => { 
+                        setUploadModalProps(null)                       
+                        doSendPost()
                     },
                     error: (e) => {
                         if (e != 'upload-cancelled') {
@@ -125,13 +133,9 @@ const NewPostView = () => {
                         setPublishing(false)
                         setUploadModalProps(null)
                     },
-                    cancel: () => {
-                        setPublishing(false)
-                        setUploadModalProps(null)
-                    }
                 })
             }
-        }
+        }      
     }
 
     /* Render */
@@ -143,6 +147,7 @@ const NewPostView = () => {
             <>
                 {/* TEXT */}
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
+
                     <TextInput multiline={true}                 
                         placeholder='Share your thoughts'
                         placeholderTextColor='grey'
@@ -153,14 +158,17 @@ const NewPostView = () => {
                             fontFamily: 'the girl next door', 
                             textAlignVertical: 'top'
                         }} 
-
+                        ref={ref => textRef.current = ref}
                         value={content}
                         onChangeText={val => setContent(val)}          
                     />
 
                     <KeyboardShown>
                         <Button 
-                            onPress={Keyboard.dismiss} 
+                            onPress={() => { 
+                                textRef.current.focus()
+                                Keyboard.dismiss()
+                            }} 
                             type='clear' 
                             containerStyle={{ position: 'absolute', bottom: 0, right: 0 }} 
                             icon={
@@ -188,16 +196,15 @@ const NewPostView = () => {
 
 type UploadModalProps = {| 
     spaceId : string, 
-    text: string,
     attachments: Array<Attachment>,
-    success: Function,
+    success: (Array<Attachment>) => any,
     error: Function,
-    cancel: Function
 |}
-const UploadModal = ({ spaceId, text, attachments, success, error, cancel } : UploadModalProps ) => {
+const UploadModal = ({ spaceId, attachments, success, error } : UploadModalProps ) => {
 
     /* State */
     const [progress, setProgress] = useState<{total: number, each: Array<number>}>({total: 0, each:[0]})
+    const [finished, setFinished] = useState<boolean>(false)
 
     /* References */
     const cancelHookRef = useRef<Function>(() => {})
@@ -211,20 +218,22 @@ const UploadModal = ({ spaceId, text, attachments, success, error, cancel } : Up
             setProgress({total, each})
         }
 
-        const addPostFuture = PostsManager.addPost({ 
+        const addPostFuture = PostsManager.uploadAttachments({ 
             spaceId,
-            text, 
             attachments,
             progressListener
         })
 
         cancelHookRef.current = addPostFuture.cancelHook
-        addPostFuture.promise.then(() => success()).catch((e) => error(e))        
+
+        addPostFuture.promise.then( (attachments) => {
+            setFinished(true)
+            success(attachments)
+        }).catch((e) => error(e))
     }
 
     function _cancel() {
         cancelHookRef.current()
-        cancel()
     }
 
     /* Render */
@@ -244,7 +253,7 @@ const UploadModal = ({ spaceId, text, attachments, success, error, cancel } : Up
                 progress.each.map(i=><Progress.Bar progress={i/100.0} />)
             }
 
-            <Button title='CANCEL'
+            <Button title='CANCEL' disabled={finished}
                 onPress={_cancel} 
             />
         </View>
@@ -255,6 +264,7 @@ const AddAttachments = ({ attachmentListener } : { attachmentListener: (Array<At
     
     /* State */
     const [attachments, setAttachments] = useState<Array<Attachment>>([])
+    const [adding, setAdding] = useState<boolean>(false)
 
     /* Effects */
     useEffect(_notifyAttachmentChange, [attachments])
@@ -262,6 +272,24 @@ const AddAttachments = ({ attachmentListener } : { attachmentListener: (Array<At
     /* Functions */
     function _notifyAttachmentChange() {
         attachmentListener(attachments)
+    }
+
+    function _addMedia() {
+        Keyboard.dismiss()
+        setAdding(true)
+        ImagePicker.showImagePicker({
+                takePhotoButtonTitle: 'Take Photo or Video',
+                title: '',
+                mediaType: 'mixed',                                    
+                allowsEditing: false,
+                noData: true,
+                quality: 0.8,
+                videoQuality: Platform.OS == 'ios' ? 'medium' : 'high'
+            }, (response) => {
+                _onSelectedMedia(response)
+                setAdding(false)
+            }            
+        )        
     }
 
     function _onSelectedMedia(response) {
@@ -283,6 +311,7 @@ const AddAttachments = ({ attachmentListener } : { attachmentListener: (Array<At
             return
         }        
 
+        const type = response.height && response.width ? 'image' : 'video'
         const attachment = {
             metadata: {
                 latitude: response.latitude,
@@ -290,10 +319,12 @@ const AddAttachments = ({ attachmentListener } : { attachmentListener: (Array<At
                 timestamp: response.timestamp,
             },
             url: response.uri,
-            type: response.height && response.width ? 'image' : 'video'
+            type
         }
 
         setAttachments([...attachments, attachment])
+
+        showSuccessMessage(`${type} attached to the post`)
     }
 
     function _numberOfAtachments(): string {
@@ -304,6 +335,7 @@ const AddAttachments = ({ attachmentListener } : { attachmentListener: (Array<At
     }
 
     function _clearAttachments() {
+        showSuccessMessage(`media attachments removed`)
         setAttachments([])
     }
 
@@ -316,7 +348,7 @@ const AddAttachments = ({ attachmentListener } : { attachmentListener: (Array<At
             <View style={{ flexDirection: 'column', alignItems: 'center' }}>
 
                 <View style={{ paddingTop: '3%' }}>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: Theme.colors.contentBorders, textAlignVertical: 'center' }}>
+                    <Text style={{ fontSize: 18, color: Theme.colors.contentBorders, textAlignVertical: 'center' }}>
                         {_numberOfAtachments()}
                     </Text>
                 </View>
@@ -326,21 +358,12 @@ const AddAttachments = ({ attachmentListener } : { attachmentListener: (Array<At
                     <View style={{ flex: 1 }}>
                         <Button
                             title='ADD MEDIA' 
+                            loading={adding}
+                            loadingProps={{color: 'darkgrey'}}
                             type='clear'                            
                             titleStyle={{ color: 'black', letterSpacing: 0.5, fontWeight: '400' }}
                             
-                            onPress={() => {
-                                ImagePicker.showImagePicker({
-                                    takePhotoButtonTitle: 'Take Photo or Video',
-                                    title: '',
-                                    mediaType: 'mixed',                                    
-                                    allowsEditing: false,
-                                    noData: true,
-                                    quality: 0.8,
-                                    videoQuality: Platform.OS == 'ios' ? 'medium' : 'high'
-                                }, 
-                                _onSelectedMedia)
-                            }}
+                            onPress={_addMedia}
                         />
                     </View>
 
