@@ -24,7 +24,7 @@ const COLLECTION_REF = firestore().collection(Constants.storageRefs.posts)
 export type Moment = Object // flow and typescript do not bide well
 export type Post = {|
     id: string,
-    text: string,
+    content: string,
     authorId: string,
     created: Moment,
     attachments: Array<Attachment>
@@ -210,7 +210,7 @@ function _dataToPostObject(id: string, data: DataMap): Post {
     
     return {
         id,
-        text: data.content,
+        content: data.content,
         authorId: data.authorId,
         created: moment(createdMillis).utcOffset(offset),
         attachments: (data.attachments:Array<Attachment>)

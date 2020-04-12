@@ -36,12 +36,12 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
         headerColor: Theme.colors.appBackground,
         authorLabel: 'You',
         actionLabel: 'EDIT POST',
-        action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )
+        action: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
     } : {
         headerColor: space.configuration?.color ?? 'white',
         authorLabel: space.configuration?.shortName ?? 'Them',
         actionLabel: 'READ POST',
-        action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )
+        action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )        
     }
 
     return configuration
@@ -90,12 +90,15 @@ export const PostDetail = () => {
 
             {/* TEXT */}
             <View style={{ flex: 1, backgroundColor: 'white' }}>
-                <PostTextScrollable text={post.text}/> 
+                <PostTextScrollable text={post.content}/> 
             </View>
 
             {/* ATTACHMENTS */} 
             <View style={{flex: 0}}>
-                <PostAttachments showClip={false} attachments={post.attachments} />
+                <PostAttachments 
+                    showClip={false} 
+                    attachments={post.attachments} 
+                    interactive={true}/>
             </View>
         </>
     )
@@ -122,7 +125,7 @@ const PostView = ({ post, space } : { post: Post, space: Space } ) => {
                 {/* TEXT */}
                 <View style={{flex: 0}}>
                     <PostText 
-                        content={post.text} 
+                        content={post.content} 
                         actionLabel={ configuration.actionLabel }/>
                 </View>
 
@@ -130,7 +133,8 @@ const PostView = ({ post, space } : { post: Post, space: Space } ) => {
                 <View style={{flex: 0}}>
                     <PostAttachments 
                         showClip={true} 
-                        attachments={post.attachments}                             
+                        attachments={post.attachments} 
+                        interactive={true}                            
                     />
                 </View>
             </PostEnvelope>

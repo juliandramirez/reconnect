@@ -87,7 +87,6 @@ const PostsContainer = () => (
         <Stack.Screen 
             name={ NavigationRoutes.NewPost } 
             component={ NewPost } 
-            options={{ headerTitle: 'New Post' }}
         />
     </Stack.Navigator>
 )

@@ -15,7 +15,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
-export const AttachmentThumbnail = ({ attachment } : { attachment: Attachment }) => {
+export const AttachmentThumbnail = ({ attachment, tappable } : { attachment: Attachment, tappable: boolean }) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -32,8 +32,9 @@ export const AttachmentThumbnail = ({ attachment } : { attachment: Attachment })
     }
 
     /* Render */
-    return (      
-        <TouchableOpacity activeOpacity={1} onPress={_onPress}>
+
+    function _render() {
+        return (
             <Image resizeMode='cover' 
                 style={{
                     width: Dimensions.get('window').width * 0.25,  
@@ -42,7 +43,17 @@ export const AttachmentThumbnail = ({ attachment } : { attachment: Attachment })
                 source={source}
                 PlaceholderContent={<ActivityIndicator color='white'/>}                               
             />
+        )
+    }
+    
+    return tappable ? (      
+        <TouchableOpacity activeOpacity={1} onPress={_onPress}>
+            {_render()}
         </TouchableOpacity>
+    ) : (
+        <View>
+            {_render()}
+        </View>
     )
 }
 

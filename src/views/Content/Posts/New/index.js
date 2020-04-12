@@ -22,32 +22,32 @@ import AddAttachments from './attachment'
 import { PostEnvelope } from './../Components'
 
 
-const NewPostView = ( { editPost = null } : { editPost: ?Post }) => {
-    /* Properties */
-    const previousAttachments = editPost?.attachments ?? []
-    const editMode = editPost != null
-
-    /* State */
-    const [content, setContent] = useState<string>(editPost?.text ?? '')
-    const [publishing, setPublishing] = useState<boolean>(false)
-    const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>(null)
-
-    /* Variables */
-    //$FlowExpectedError: not null
-    const textRef = useRef<TextInput>()    
-    const attachmentsRef = useRef<Array<Attachment>>(previousAttachments)
+const NewPostView = () => {
 
     /* Hooks */
     const navigation = useNavigation()
     const route = useRoute()
 
     /* Properties */
-    const { space } = route.params
+    const { space, editPost } = route.params    
+    const editMode = editPost != null
+
+    /* State */
+    const [content, setContent] = useState<string>(editPost?.content ?? '')
+    const [publishing, setPublishing] = useState<boolean>(false)
+    const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>(null)
+
+    /* Variables */
+    //$FlowExpectedError: not null
+    const textRef = useRef<TextInput>()    
+    const attachmentsRef = useRef<Array<Attachment>>(editPost?.attachments ?? [])
+    const previousAttachmentsRef = useRef<Array<Attachment>>(editPost?.attachments ?? [])
 
     useLayoutEffect( () => {
         navigation.setOptions({
+            headerTitle: editMode ? 'Edit Post' : 'New Post',
             headerRight: () => (
-                <Button title='PUBLISH' type='clear' 
+                <Button title={editMode ? 'SAVE' : 'PUBLISH'} type='clear' 
                     loading={publishing}
                     loadingProps={{color: 'darkgrey'}}
                     titleStyle={{color: 'black'}}                     
@@ -80,13 +80,17 @@ const NewPostView = ( { editPost = null } : { editPost: ?Post }) => {
 
     function _newAttachments(): Array<Attachment> {
         const inPreviousAttachments = (attachment: Attachment) => {
-            return previousAttachments.findIndex(item => item.url == attachment.url ) >= 0
+            return previousAttachmentsRef.current.findIndex(item => item.url == attachment.url ) >= 0
         }
 
         return attachmentsRef.current.filter( attachment => !inPreviousAttachments(attachment))
     }
 
-    function _addingAttachment(adding) {
+    function _clearAttachments() {
+        previousAttachmentsRef.current = []
+    }
+
+    function _addingAttachment(adding: boolean) {
         // prevent publishing while adding
         setPublishing(adding)
     }
@@ -95,14 +99,31 @@ const NewPostView = ( { editPost = null } : { editPost: ?Post }) => {
         attachmentsRef.current = attachments
     }
 
-    function _dismiss() {            
-        if (stringNotEmpty(content) || attachmentsRef.current?.length > 0) {  
+    function _dismiss() {
+        if (
+            (!editMode && stringNotEmpty(content)) || 
+            (editMode && editPost?.content != content) ||
+            _newAttachments().length > 0 || 
+            (editMode && attachmentsRef.current.length < editPost.attachments.length) 
+        ) {  
+            
+            const alertMessages = editMode ? {
+                title: 'Changes weren\'t saved',
+                message: 'Dismiss changes without saving?',
+                cancelButton: 'Don\'t dismiss',
+                continueButton: 'Dismiss changes'
+            } : {
+                title: 'Post wasn\'t published',
+                message: 'Dismiss post without publishing?',
+                cancelButton: 'Don\'t dismiss',
+                continueButton: 'Dismiss Post'
+            }
 
-            Alert.alert('Post wasn\'t published', 'Dismiss post without publishing?', [{
-                    text: 'Don\'t dismiss',
+            Alert.alert(alertMessages.title, alertMessages.message, [{
+                    text: alertMessages.cancelButton,
                     style: 'cancel'
                 }, {
-                    text: 'Dismiss Post',
+                    text: alertMessages.continueButton,
                     onPress: navigation.goBack
                 },                
             ], {
@@ -114,7 +135,7 @@ const NewPostView = ( { editPost = null } : { editPost: ?Post }) => {
     }
 
     function _save() {
-        const doSendPost = async (attachments) => {
+        const doSendPost = async (attachments) => {            
             try { 
                 if (editMode) {                    
                     await PostsManager.editPost({
@@ -151,8 +172,8 @@ const NewPostView = ( { editPost = null } : { editPost: ?Post }) => {
                     spaceId: space.id, 
                     attachments: newAttachments,
                     success: async (attachments) => { 
-                        setUploadModalProps(null)                       
-                        doSendPost([...previousAttachments, ...attachments])
+                        setUploadModalProps(null)                    
+                        doSendPost([...previousAttachmentsRef.current, ...attachments])
                     },
                     error: (e) => {
                         if (e != 'upload-cancelled') {
@@ -201,9 +222,10 @@ const NewPostView = ( { editPost = null } : { editPost: ?Post }) => {
                 {/* ATTACHMENTS */} 
                 <View style={{flex: 0}}>
                     <AddAttachments 
-                        addingAttachmentListener={_addingAttachment} 
+                        addingAttachmentListener={_addingAttachment}
+                        clearAttachmentsListener={_clearAttachments} 
                         attachmentListener={_attachmentsUpdated}
-                        previousAttachments={previousAttachments}
+                        previousAttachments={previousAttachmentsRef.current}
                     />
                 </View>
                 

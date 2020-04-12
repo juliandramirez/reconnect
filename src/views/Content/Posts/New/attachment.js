@@ -12,7 +12,8 @@ import Theme from 'Reconnect/src/theme/Theme'
 import type { Attachment } from 'Reconnect/src/services/posts'
 
 
-const AddAttachments = ({ previousAttachments, addingAttachmentListener, attachmentListener } : { 
+const AddAttachments = ({ clearAttachmentsListener, previousAttachments, addingAttachmentListener, attachmentListener } : { 
+    clearAttachmentsListener: () => any,
     previousAttachments: Array<Attachment>,
     addingAttachmentListener: (boolean) => any, 
     attachmentListener: (Array<Attachment>) => any }) => {
@@ -116,15 +117,16 @@ const AddAttachments = ({ previousAttachments, addingAttachmentListener, attachm
         const doClear = () => {
             showSuccessMessage(`media attachments removed`)
             setAttachments([])
+            clearAttachmentsListener()
         }
 
         if (previousAttachments.length > 0) {
             Alert.alert('Remove all media', 'Are you sure you want to remove ALL media attached to this post?', [{
+                        text: 'No',
+                        style: 'cancel'                        
+                    }, {
                         text: 'Yes',
                         onPress: doClear
-                    }, {
-                        text: 'No',
-                        style: 'cancel'
                     }
                 ], {
                     cancelable: false,

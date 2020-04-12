@@ -69,7 +69,7 @@ const AddSpaceSuccess = () => {
     /* Functions */
     function _goToSpace() {
         modalDismiss()
-        navigation.navigate( NavigationRoutes.Main, { space: space } )
+        navigation.navigate( NavigationRoutes.Main, { selectedSpace: space } )
     }
 
     function _sendInstructions() {

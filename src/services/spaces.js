@@ -290,7 +290,7 @@ async function _computeInvitationCode(): Promise<string> {
     const offlineSalt = Math.floor(Math.random() * 100)
 
     // rotate every 1000 spaces
-    return offlineSalt.toString(10) + (numberOfSpaces % 1000).toString(10)
+    return offlineSalt.toString(10) + (numberOfSpaces % 1000).toString(10).padStart(3, '0')
 }
 
 function _dataToSpaceObject(id: string, data: DataMap): Space {

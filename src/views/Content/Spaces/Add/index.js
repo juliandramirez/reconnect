@@ -95,7 +95,7 @@ const AddSpace = () => {
             showSuccessMessage('Welcome to your shared space')
 
             modalDismiss()
-            navigation.navigate( NavigationRoutes.Main, { space: updatedSpace } )
+            navigation.navigate( NavigationRoutes.Main, { selectedSpace: updatedSpace } )
         } else {
             navigation.navigate( NavigationRoutes.SpaceAdded, { space: updatedSpace, isNewSpace, notificationPermissions } )
         }        

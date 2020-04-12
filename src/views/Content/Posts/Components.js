@@ -4,7 +4,7 @@
 
 import * as React from 'react'
 import { useRef } from 'react'
-import { View, Image, ScrollView, Text } from 'react-native'
+import { View, Image, ScrollView, Text, FlatList } from 'react-native'
 import { Dimensions } from 'react-native'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import EStyleSheet from 'react-native-extended-stylesheet'
@@ -116,7 +116,11 @@ export const PostText = ({ content, actionLabel } : { content: string, actionLab
     )
 }
 
-export const PostAttachments = ({ showClip, attachments } : { showClip: boolean, attachments: Array<Attachment> }) => {
+export const PostAttachments = ({ showClip, attachments, interactive } : { 
+        showClip: boolean, 
+        attachments: Array<Attachment>,
+        interactive: boolean
+    }) => {
 
     // $FlowExpectedError: Always intialized before use
     const scrollView = useRef<FlatList>()
@@ -140,7 +144,7 @@ export const PostAttachments = ({ showClip, attachments } : { showClip: boolean,
                 )}
                 data={ attachments }                        
                 keyExtractor={ attachment => attachment.url }
-                renderItem={ ({ item }) => (<AttachmentThumbnail attachment={item}/>)}
+                renderItem={ ({ item }) => (<AttachmentThumbnail attachment={item} tappable={interactive}/>)}
                 
                 ref={ref => scrollView.current = ref}
                 onLayout={_initialScroll}

@@ -36,7 +36,7 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any
             //$FlowExpectedError: unsupported feature
             const routes = event?.data?.state?.routes?.filter(r => r.name == NavigationRoutes.Main)
             if (routes && routes.length == 1) {
-                const space = routes[0]?.params?.space
+                const space = routes[0]?.params?.selectedSpace
                 if (space) {
                     setSelectedSpace(space)
                 }
@@ -49,13 +49,14 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any
     useEffect(_setUpRemoteNotificationListener, [])
     function _setUpRemoteNotificationListener() {
         return NotificationsManager.subscribeToRemoteNotifications( (data, receivedOnBackground) => {
+            
             if (data && data.space) {
                 if (receivedOnBackground) {
                     const space = JSON.parse(data.space)
                     setSelectedSpace(space)
                 } else {
                     //$FlowExpectedError: null check
-                    const from = space.configuration?.shortName ? `from ${space.configuration?.shortName}!`: 'in one of your spaces!'
+                    const from = data.space.configuration?.shortName ? `from ${data.space.configuration?.shortName}!`: 'in one of your spaces!'
                     showInfoMessage(`You just received a new post ${from}`)
                 }
             }

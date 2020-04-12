@@ -24,11 +24,12 @@ const PostList = ({ space } : { space: Space}) => {
     const listRef = useRef<FlatList>()
 
     /* Effects */
-    useEffect(_init, [])
-    useEffect(_initListenToSpace, [])
+    useEffect(_init, [space])
+    useEffect(_initListenToSpace, [space])
 
     /* Functions */
     function _init() {
+        
         return PostsManager.subscribeToChanges({ space, listener: posts => {
                 setPosts(posts)
                 listRef.current.scrollToOffset({ offset: 0, animated: true })

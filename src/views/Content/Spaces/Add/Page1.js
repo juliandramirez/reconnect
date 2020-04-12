@@ -76,14 +76,12 @@ const Page1 = ({ submit, cancel, dismissable }
     }
 
     async function _submit() {        
-        if (!submitting && (invitationCode || newSpace)) {
-            hideFlashMessage()
-            
+        if (!submitting && (invitationCode || newSpace)) {            
             if (invitationCode) {
                 setSubmitting(true)
 
                 try {
-                    const space = await SpacesManager.getSpaceWithInvitationCode(invitationCode)
+                    const space = await SpacesManager.getSpaceWithInvitationCode(invitationCode)                    
                     if (space == null) {
                         showErrorMessage('Invalid invitation code')                    
                         setSubmitting(false)
