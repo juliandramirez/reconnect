@@ -6,11 +6,13 @@ import storage from '@react-native-firebase/storage'
 import firestore from '@react-native-firebase/firestore'
 import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid'
+import moment from 'moment'
 
-import type { StringMap } from 'Reconnect/src/lib/utils'
+import type { StringMap, DataMap } from 'Reconnect/src/lib/utils'
 import Constants from 'Reconnect/src/Constants'
 
 import AuthManager from  './auth'
+import type { Space } from './spaces'
 
 
 /* MARK: - Constants */
@@ -19,9 +21,12 @@ const COLLECTION_REF = firestore().collection(Constants.storageRefs.posts)
 
 /* MARK: - Types */
 
+export type Moment = Object // flow and typescript do not bide well
 export type Post = {|
     id: string,
     text: string,
+    authorId: string,
+    created: Moment,
     attachments: Array<Attachment>
 |}
 
@@ -32,7 +37,7 @@ export type Attachment = {|
     mediaType? : ?string    
 |}
 
-type UploadPromise<T> = {
+export type UploadPromise<T> = {
     promise: Promise<T>,
     cancelHook?: ?(() => any)
 }
@@ -43,8 +48,8 @@ export type PostError = 'upload-failed' | 'upload-cancelled'
 
 const PostsManager = {}
 
-PostsManager.addPost = async ({ spaceId, text, attachments, progressListener } 
-        : { spaceId: string, 
+PostsManager.addPost = async ({ spaceId, text, attachments, progressListener } : { 
+            spaceId: string, 
             text: string, 
             attachments?: Array<Attachment>,
             progressListener?: (total: number, each: Array<number>) => any
@@ -57,17 +62,18 @@ PostsManager.addPost = async ({ spaceId, text, attachments, progressListener }
 
     await COLLECTION_REF.add({
         spaceId,
-        created: firestore.FieldValue.serverTimestamp(),
-        content: text,
         authorId: userId,
+        authorUtcOffset: moment().utcOffset(),
+        created: firestore.FieldValue.serverTimestamp(),        
+        content: text,        
         attachments
     })  
 }
 
 PostsManager.uploadAttachments = ({ spaceId, attachments, progressListener } : { 
-        spaceId: string, 
-        attachments: Array<Attachment>,
-        progressListener?: (total: number, each: Array<number>) => any
+            spaceId: string, 
+            attachments: Array<Attachment>,
+            progressListener?: (total: number, each: Array<number>) => any
     }) : UploadPromise<Array<Attachment>> => {
 
     // keep track of all cancel hooks and progress of every attachment
@@ -109,11 +115,11 @@ PostsManager.uploadAttachments = ({ spaceId, attachments, progressListener } : {
 }
 
 // resolves with file url
-function _uploadAttachment({ spaceId, attachment, progressListener} : { 
-             spaceId: string, 
-             attachment: Attachment, 
-             progressListener?: ?((number) => any) })
-    : UploadPromise<Attachment> { 
+function _uploadAttachment({ spaceId, attachment, progressListener } : { 
+            spaceId: string, 
+            attachment: Attachment, 
+            progressListener?: ?((number) => any) 
+    }) : UploadPromise<Attachment> { 
                    
     const uniqueId = uuidv4()
     const fileRef = storage().ref(`${Constants.storageRefs.attachments}/${spaceId}/${uniqueId}`)
@@ -159,6 +165,40 @@ function _uploadAttachment({ spaceId, attachment, progressListener} : {
     })
 
     return { promise: uploadPromise, cancelHook: () => uploadTask.cancel() }
+}
+
+PostsManager.subscribeToChanges = ( { space, listener } : { 
+        space: Space, 
+        listener: (Array<Post>) => any 
+    }): Function => {
+
+    return COLLECTION_REF
+        .where('spaceId', '==', space.id)
+        .orderBy('created', 'desc')
+        .onSnapshot( 
+            (postRefs) => {
+                const posts = postRefs.docs.map(item => 
+                    _dataToPostObject(item.id, item.data()))                    
+                listener(posts)
+            }, 
+            (error) => {
+                console.log(`Error listening to changes of posts of space ${space.id}: `, error)
+            }
+        )
+}
+
+function _dataToPostObject(id: string, data: DataMap): Post {
+    //$FlowExpectedError: not yet supported
+    const createdMillis = data.created?.toMillis() ?? moment()
+    const offset = data.authorUtcOffset
+    
+    return {
+        id,
+        text: data.content,
+        authorId: data.authorId,
+        created: moment(createdMillis).utcOffset(offset),
+        attachments: (data.attachments:Array<Attachment>)
+    }
 }
 
 export default PostsManager

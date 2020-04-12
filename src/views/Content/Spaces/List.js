@@ -105,7 +105,7 @@ const SpaceList = ({ selectedId, onSelectSpace }
 
     /* Functions */
     function _init() {        
-        return SpacesManager.subscribeToChanges(spaces => {
+        return SpacesManager.subscribeToUserSpacesChanges(spaces => {
             setSpaces(spaces)   
             
             // initial selection...

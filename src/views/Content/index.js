@@ -11,7 +11,7 @@ import Container from './Container'
 import AddSpace from './Spaces/Add'
 import EditSpace from './Spaces/Edit'
 import AddSpaceSuccess from './Spaces/Add/Success'
-import Post, { PostDetail } from './Posts/ViewPost'
+import Post, { PostDetail } from './Posts/View'
 import NewPost from './Posts/New'
 import { AttachmentDetailView } from './Posts/Attachment'
 

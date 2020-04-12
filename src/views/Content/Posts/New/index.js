@@ -12,11 +12,14 @@ import { HeaderBackButton } from '@react-navigation/stack'
 import Theme from 'Reconnect/src/theme/Theme'
 import { showSuccessMessage, showErrorMessage, stringNotEmpty } from 'Reconnect/src/lib/utils'
 import type { Attachment } from 'Reconnect/src/services/posts'
+import SpacesManager from 'Reconnect/src/services/spaces'
 import PostsManager from 'Reconnect/src/services/posts'
+import NotificationsManager from 'Reconnect/src/services/notifications'
 import { } from 'Reconnect/src/lib/utils'
 
 import type { UploadModalProps } from './upload'
-import { UploadModal, AddAttachments } from './upload'
+import UploadModal from './upload'
+import AddAttachments from './attachment'
 import { PostEnvelope } from './../Components'
 
 
@@ -112,6 +115,7 @@ const NewPostView = () => {
 
                 navigation.goBack()
                 showSuccessMessage('Post published')
+                SpacesManager.notifyUserPublishedNewPost(space)
             } catch {
                 showErrorMessage('Post could not be published')
                 setPublishing(false) 
@@ -140,7 +144,9 @@ const NewPostView = () => {
                     },
                 })
             }
-        }      
+        } else {
+            showErrorMessage('Can not publish an empty post')
+        }     
     }
 
     /* Render */

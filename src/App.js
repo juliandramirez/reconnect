@@ -14,7 +14,7 @@ import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
 import AuthManager from 'Reconnect/src/services/auth'
 
-import Loading from './Loading'
+import Loading from 'Reconnect/src/lib/Loading'
 import Onboarding from './views/Onboarding'
 import Content from './views/Content'
 

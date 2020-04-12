@@ -161,7 +161,23 @@ SpacesManager.getNumberOfSpaces = async () : Promise<number> => {
     return hostResults.size + guestResults.size
 }
 
-SpacesManager.subscribeToChanges = (listener: (Array<Space>) => any): Function => { 
+SpacesManager.subscribeToSpaceChanges = ({ spaceId, listener } : { 
+        spaceId: string, 
+        listener: (Space) => any }) => {
+
+        return COLLECTION_REF.doc(spaceId)
+            .onSnapshot( 
+                (spaceDoc) => {
+                    const space = _dataToSpaceObject(spaceDoc.id, spaceDoc.data())
+                    listener(space)
+                }, 
+                (error) => {
+                    console.log(`Error listening to changes of space ${spaceId}: `, error)
+                }
+            )
+}
+
+SpacesManager.subscribeToUserSpacesChanges = (listener: (Array<Space>) => any): Function => { 
     const userId = AuthManager.currentUserId()
     if (!userId) {
         throw Constants.errorCodes.unauthenticated
@@ -220,6 +236,34 @@ SpacesManager.subscribeToChanges = (listener: (Array<Space>) => any): Function =
         guestSpacesUnsubscribe()
     }
     
+}
+
+SpacesManager.notifyUserPublishedNewPost = (space: Space) => {
+    const userId = AuthManager.currentUserId()
+    if (!userId) {
+        throw Constants.errorCodes.unauthenticated
+    }
+
+    let recipientId = null
+    if (space.hostId == userId) {
+        recipientId = space.guestId
+    } else if (space.guestId == userId) {
+        recipientId = space.hostId
+    } else {
+        throw Constants.errorCodes.unauthorized
+    }
+
+    if (recipientId) {
+        NotificationsManager.sendRemoteNotification({
+            userId: recipientId,
+            title: 'New post received',
+            message: 'You just received a post from someone special',
+            extra: {
+                space: JSON.stringify(space)
+            }
+
+        })
+    }
 }
 
 /* MARK: - Helper Functions */
