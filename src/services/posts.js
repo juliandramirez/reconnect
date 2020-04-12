@@ -34,7 +34,7 @@ export type Attachment = {|
 
 type UploadPromise<T> = {
     promise: Promise<T>,
-    cancelHook?: ?(() => void)
+    cancelHook?: ?(() => any)
 }
 
 export type PostError = 'upload-failed' | 'upload-cancelled'

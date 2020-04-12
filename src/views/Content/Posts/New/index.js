@@ -23,7 +23,7 @@ import { PostEnvelope } from './../Components'
 const NewPostView = () => {
 
     /* State */
-    const [content, setContent] = useState<string>('1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20')
+    const [content, setContent] = useState<string>('')
     const [publishing, setPublishing] = useState<boolean>(false)
 
     /* Variables */
@@ -31,7 +31,7 @@ const NewPostView = () => {
     const textRef = useRef<TextInput>(null)    
 
     const attachmentsRef = useRef<Array<Attachment>>([])
-    const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>(null)
+    const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>()
 
     /* Hooks */
     const navigation = useNavigation()
@@ -146,7 +146,7 @@ const NewPostView = () => {
     /* Render */
     return (  
         <>    
-            <Modal visible={uploadModalProps != null} transparent={true}>
+            <Modal animationType='fade' visible={uploadModalProps != null}>
                 <UploadModal {...uploadModalProps} />
             </Modal>  
             <>

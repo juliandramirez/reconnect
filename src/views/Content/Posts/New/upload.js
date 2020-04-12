@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Platform, Text, Alert } from 'react-native'
+import { View, Platform, Text, Alert, Keyboard } from 'react-native'
 import { Button } from 'react-native-elements'
 import ImagePicker from 'react-native-image-picker'
 import * as Progress from 'react-native-progress'
@@ -12,6 +12,7 @@ import { showSuccessMessage, showErrorMessage, goToSettingsAlert, wait } from 'R
 import Theme from 'Reconnect/src/theme/Theme'
 import type { Attachment } from 'Reconnect/src/services/posts'
 import PostsManager from 'Reconnect/src/services/posts'
+import EStyleSheet from 'react-native-extended-stylesheet'
 
 
 /* Types */
@@ -21,11 +22,47 @@ export type UploadModalProps = {|
     success: (Array<Attachment>) => any,
     error: Function,
 |}
+
+const modalStyles = EStyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: Theme.colors.appBackground        
+    },
+    pie: {
+        fontSize: '125 rem',
+        padding: '8 rem'
+    },  
+    pieContainer: {
+        marginBottom: '10 rem'
+    },
+    itemsContainer: {
+        marginBottom: '5 rem'
+    },
+        barProgress: {
+            marginTop : 10
+        },
+        bar: {
+            height: '8 rem'
+        },
+    button: {
+        fontSize: '18 rem',
+        color: '#333',  
+        letterSpacing: '1 rem'
+    }
+    
+})
+
+const PIE_COLOR = 'black'
+const BAR_COLOR = '#bbb'
+
 export const UploadModal = ({ spaceId, attachments, success, error } : UploadModalProps ) => {
 
     /* State */
     const [progress, setProgress] = useState<{total: number, each: Array<number>}>({total: 0, each:[0]})
     const [finished, setFinished] = useState<boolean>(false)
+    const [cancelling, setCancelling] = useState<boolean>(false)
 
     /* References */
     const cancelHookRef = useRef<Function>(() => {})
@@ -35,6 +72,8 @@ export const UploadModal = ({ spaceId, attachments, success, error } : UploadMod
 
     /* Functions */
     function _init() {
+        Keyboard.dismiss()
+
         const progressListener = (total, each) => {
             setProgress({total, each})
         }
@@ -54,29 +93,57 @@ export const UploadModal = ({ spaceId, attachments, success, error } : UploadMod
     }
 
     function _cancel() {
-        cancelHookRef.current()
+        setCancelling(true)
+        cancelHookRef.current()        
     }
 
     /* Render */
     return (
-        <View style={{flex: 1,
-            justifyContent: "center",
-            alignItems: "center"}}>
+        <View style={ modalStyles.container }>
 
-            <Progress.Circle 
-                showsText={true}
-                progress={ progress.total ?? 0 / 100.0 } 
-                animated={true}
-                size={50}
-                color={'red'}
-            />
+            <View style={ modalStyles.pieContainer }>
+                <Progress.Circle 
+                    showsText={true}
+                    progress={ !progress.total ? 0 : 
+                        progress.total == 100 ? 0.99 : progress.total / 100.0 } 
+                    animated={true}
+                    size={ modalStyles._pie.fontSize }
+                    thickness={ modalStyles._pie.padding }
+                    color={ PIE_COLOR }
+                />
+            </View>
+
             {
-                progress.each.map( (item, index) => <Progress.Bar key={index} progress={ item ?? 0 / 100.0 } />)
+                progress.each.length > 1 ?
+                    <View style={ modalStyles.itemsContainer }>
+                    {
+                        progress.each.map( (item, index) => 
+                            <Progress.Bar key={index} 
+                                progress={ ( item ?? 0 ) / 100.0 } 
+                                height={ modalStyles._bar.height }
+                                style={ modalStyles.barProgress }
+                                color={ BAR_COLOR }
+                            />)
+                    }
+                    </View>
+                : 
+                    <></>
             }
+            
+            { 
+                finished ? <></> :
+                    <View>
+                        <Button title='CANCEL' type='clear' 
+                            loading={cancelling}
+                            loadingProps={{color: 'darkgrey'}}
+                            disabled={finished}
+                            onPress={_cancel} 
+                            titleStyle={ modalStyles.button }
+                        />
+                    </View>            
+            }
+            
 
-            <Button title='CANCEL' disabled={finished}
-                onPress={_cancel} 
-            />
         </View>
     )
 }
@@ -155,7 +222,7 @@ export const AddAttachments = ({ addingAttachmentListener, attachmentListener } 
 
         // libary is buggy :( need to give it a second or so to process
         await wait(1000)
-console.log(response.type)
+
         const type = response.height && response.width ? 'image' : 'video'
         const attachment = {
             metadata: {
