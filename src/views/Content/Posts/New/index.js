@@ -11,11 +11,10 @@ import { HeaderBackButton } from '@react-navigation/stack'
 
 import Theme from 'Reconnect/src/theme/Theme'
 import { showSuccessMessage, showErrorMessage, stringNotEmpty } from 'Reconnect/src/lib/utils'
-import type { Attachment } from 'Reconnect/src/services/posts'
+import type { Attachment, Post } from 'Reconnect/src/services/posts'
 import SpacesManager from 'Reconnect/src/services/spaces'
 import PostsManager from 'Reconnect/src/services/posts'
 import NotificationsManager from 'Reconnect/src/services/notifications'
-import { } from 'Reconnect/src/lib/utils'
 
 import type { UploadModalProps } from './upload'
 import UploadModal from './upload'
@@ -23,18 +22,20 @@ import AddAttachments from './attachment'
 import { PostEnvelope } from './../Components'
 
 
-const NewPostView = () => {
+const NewPostView = ( { editPost = null } : { editPost: ?Post }) => {
+    /* Properties */
+    const previousAttachments = editPost?.attachments ?? []
+    const editMode = editPost != null
 
     /* State */
-    const [content, setContent] = useState<string>('')
+    const [content, setContent] = useState<string>(editPost?.text ?? '')
     const [publishing, setPublishing] = useState<boolean>(false)
+    const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>(null)
 
     /* Variables */
     //$FlowExpectedError: not null
-    const textRef = useRef<TextInput>(null)    
-
-    const attachmentsRef = useRef<Array<Attachment>>([])
-    const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>()
+    const textRef = useRef<TextInput>()    
+    const attachmentsRef = useRef<Array<Attachment>>(previousAttachments)
 
     /* Hooks */
     const navigation = useNavigation()
@@ -77,6 +78,14 @@ const NewPostView = () => {
     
     /* Helper Functions */
 
+    function _newAttachments(): Array<Attachment> {
+        const inPreviousAttachments = (attachment: Attachment) => {
+            return previousAttachments.findIndex(item => item.url == attachment.url ) >= 0
+        }
+
+        return attachmentsRef.current.filter( attachment => !inPreviousAttachments(attachment))
+    }
+
     function _addingAttachment(adding) {
         // prevent publishing while adding
         setPublishing(adding)
@@ -107,15 +116,24 @@ const NewPostView = () => {
     function _save() {
         const doSendPost = async (attachments) => {
             try { 
-                await PostsManager.addPost({ 
-                    spaceId: space.id, 
-                    text: content, 
-                    attachments
-                })
+                if (editMode) {                    
+                    await PostsManager.editPost({
+                        //$FlowExpectedError: editMode == editPost != null
+                        id: editPost.id, 
+                        content,
+                        attachments
+                    })
+                } else {
+                    await PostsManager.addPost({ 
+                        spaceId: space.id, 
+                        content, 
+                        attachments
+                    })
+                    SpacesManager.notifyUserPublishedNewPost(space)
+                }
 
                 navigation.goBack()
-                showSuccessMessage('Post published')
-                SpacesManager.notifyUserPublishedNewPost(space)
+                showSuccessMessage('Post published')                
             } catch {
                 showErrorMessage('Post could not be published')
                 setPublishing(false) 
@@ -124,16 +142,17 @@ const NewPostView = () => {
 
         if (stringNotEmpty(content)) {
             setPublishing(true)            
-
-            if (attachmentsRef.current.length == 0) {      
+            
+            const newAttachments = _newAttachments()
+            if (newAttachments.length == 0) {      
                 doSendPost([])
-            } else {
+            } else {                
                 setUploadModalProps({
                     spaceId: space.id, 
-                    attachments: attachmentsRef.current,
+                    attachments: newAttachments,
                     success: async (attachments) => { 
                         setUploadModalProps(null)                       
-                        doSendPost(attachments)
+                        doSendPost([...previousAttachments, ...attachments])
                     },
                     error: (e) => {
                         if (e != 'upload-cancelled') {
@@ -160,7 +179,6 @@ const NewPostView = () => {
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
  
                     <TextInput                         
-
                         ref={ref => textRef.current = ref}                          
                         autoFocus={true}
                         onChangeText={ val => setContent(val) }
@@ -184,7 +202,9 @@ const NewPostView = () => {
                 <View style={{flex: 0}}>
                     <AddAttachments 
                         addingAttachmentListener={_addingAttachment} 
-                        attachmentListener={_attachmentsUpdated}/>
+                        attachmentListener={_attachmentsUpdated}
+                        previousAttachments={previousAttachments}
+                    />
                 </View>
                 
             </>

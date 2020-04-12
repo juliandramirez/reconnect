@@ -12,12 +12,13 @@ import Theme from 'Reconnect/src/theme/Theme'
 import type { Attachment } from 'Reconnect/src/services/posts'
 
 
-const AddAttachments = ({ addingAttachmentListener, attachmentListener } : { 
+const AddAttachments = ({ previousAttachments, addingAttachmentListener, attachmentListener } : { 
+    previousAttachments: Array<Attachment>,
     addingAttachmentListener: (boolean) => any, 
     attachmentListener: (Array<Attachment>) => any }) => {
 
     /* State */
-    const [attachments, setAttachments] = useState<Array<Attachment>>([])
+    const [attachments, setAttachments] = useState<Array<Attachment>>(previousAttachments)
     const [adding, setAdding] = useState<boolean>(false)
 
     /* Effects */
@@ -112,8 +113,25 @@ const AddAttachments = ({ addingAttachmentListener, attachmentListener } : {
     }
 
     function _clearAttachments() {
-        showSuccessMessage(`media attachments removed`)
-        setAttachments([])
+        const doClear = () => {
+            showSuccessMessage(`media attachments removed`)
+            setAttachments([])
+        }
+
+        if (previousAttachments.length > 0) {
+            Alert.alert('Remove all media', 'Are you sure you want to remove ALL media attached to this post?', [{
+                        text: 'Yes',
+                        onPress: doClear
+                    }, {
+                        text: 'No',
+                        style: 'cancel'
+                    }
+                ], {
+                    cancelable: false,
+                })            
+        } else {
+            doClear()
+        }        
     }
 
     /* Render */

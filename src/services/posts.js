@@ -48,11 +48,10 @@ export type PostError = 'upload-failed' | 'upload-cancelled'
 
 const PostsManager = {}
 
-PostsManager.addPost = async ({ spaceId, text, attachments, progressListener } : { 
+PostsManager.addPost = async ({ spaceId, content, attachments } : { 
             spaceId: string, 
-            text: string, 
-            attachments?: Array<Attachment>,
-            progressListener?: (total: number, each: Array<number>) => any
+            content: string, 
+            attachments?: Array<Attachment>
     }) => {
 
     const userId = AuthManager.currentUserId()
@@ -65,7 +64,7 @@ PostsManager.addPost = async ({ spaceId, text, attachments, progressListener } :
         authorId: userId,
         authorUtcOffset: moment().utcOffset(),
         created: firestore.FieldValue.serverTimestamp(),        
-        content: text,        
+        content,        
         attachments
     })  
 }
@@ -185,6 +184,23 @@ PostsManager.subscribeToChanges = ( { space, listener } : {
                 console.log(`Error listening to changes of posts of space ${space.id}: `, error)
             }
         )
+}
+
+PostsManager.editPost = async ({ id, content, attachments } : { 
+        id: string, 
+        content: string,
+        attachments: Array<Attachment> 
+    }) => {
+
+    const userId = AuthManager.currentUserId()
+    if (!userId) {
+        throw Constants.errorCodes.unauthenticated
+    }
+
+    await COLLECTION_REF.doc(id).update({ 
+        content,
+        attachments
+    })
 }
 
 function _dataToPostObject(id: string, data: DataMap): Post {
