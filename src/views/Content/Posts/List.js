@@ -25,17 +25,20 @@ const PostList = ({ space } : { space: Space}) => {
     const listRef = useRef<FlatList>()
 
     /* Effects */
-    useEffect(_init, [space])
+    useEffect(_spaceSet, [space])
     useEffect(_initListenToSpace, [space])
 
     /* Functions */
-    function _init() {
+    function _spaceSet() {               
+        setPosts([])
+        setWaitingForGuest(space.guestId == null)
+        setInitializing(true)
+
         return PostsManager.subscribeToChanges({ space, listener: posts => {
                 setPosts(posts)                
+                setInitializing(false)
 
-                if (initializing) {
-                    setInitializing(false)
-                } else if (listRef.current) {
+                if (listRef.current) {
                     listRef.current.scrollToOffset({ offset: 0, animated: true })
                 }
             }
@@ -51,14 +54,16 @@ const PostList = ({ space } : { space: Space}) => {
     }
 
     /* Render */
-    return initializing ? <Loading /> : (
+    return initializing  ? <Loading /> : ( <>
+        
         <FlatList
             data={posts}
             renderItem={ ({item}) => <PostView post={item} space={space}/> }
             keyExtractor={ item => item.id }
             ref={ ref => listRef.current = ref }
         />
-    )
+        
+    </>)
 }
 
 export default PostList
