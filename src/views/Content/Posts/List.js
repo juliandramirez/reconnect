@@ -9,6 +9,7 @@ import type { Post } from 'Reconnect/src/services/posts'
 import { FlatList } from 'react-native-gesture-handler'
 import PostsManager from 'Reconnect/src/services/posts'
 import SpacesManager from 'Reconnect/src/services/spaces'
+import Loading from 'Reconnect/src/lib/Loading'
 
 import PostView from './View'
 
@@ -17,10 +18,10 @@ const PostList = ({ space } : { space: Space}) => {
 
     /* State */
     const [posts, setPosts] = useState<Array<Post>>([])
+    const [initializing, setInitializing] = useState<boolean>(true)
     const [waitingForGuest, setWaitingForGuest] = useState<boolean>(space.guestId == null)
 
     /* Variables */
-    //$FlowExpectedError: always initialized before use    
     const listRef = useRef<FlatList>()
 
     /* Effects */
@@ -29,10 +30,14 @@ const PostList = ({ space } : { space: Space}) => {
 
     /* Functions */
     function _init() {
-        
         return PostsManager.subscribeToChanges({ space, listener: posts => {
-                setPosts(posts)
-                listRef.current.scrollToOffset({ offset: 0, animated: true })
+                setPosts(posts)                
+
+                if (initializing) {
+                    setInitializing(false)
+                } else if (listRef.current) {
+                    listRef.current.scrollToOffset({ offset: 0, animated: true })
+                }
             }
         })
     }
@@ -46,7 +51,7 @@ const PostList = ({ space } : { space: Space}) => {
     }
 
     /* Render */
-    return (
+    return initializing ? <Loading /> : (
         <FlatList
             data={posts}
             renderItem={ ({item}) => <PostView post={item} space={space}/> }

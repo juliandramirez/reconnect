@@ -138,8 +138,7 @@ const NewPostView = () => {
         const doSendPost = async (attachments) => {            
             try { 
                 if (editMode) {                    
-                    await PostsManager.editPost({
-                        //$FlowExpectedError: editMode == editPost != null
+                    await PostsManager.editPost({                        
                         id: editPost.id, 
                         content,
                         attachments
