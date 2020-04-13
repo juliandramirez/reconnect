@@ -19,9 +19,7 @@ const OnboardingSwiper = ({tab, swiped}) => {
       ref={swiper}
       index={0}
       onIndexChanged={i => {
-        // console.log('index');
         if (hook.scrolling) {
-          // console.log('scrolling');
           hook.setScrolling(false);
         } else {
           swiped(i);

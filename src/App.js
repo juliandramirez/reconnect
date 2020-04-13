@@ -13,6 +13,8 @@ import NotificationsManager from 'Reconnect/src/services/notifications'
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
 import AuthManager from 'Reconnect/src/services/auth'
+import CrashReportManager from 'Reconnect/src/lib/crashreports'
+import Constants from 'Reconnect/src/Constants'
 
 import Loading from 'Reconnect/src/lib/Loading'
 import Onboarding from './views/Onboarding'
@@ -30,10 +32,11 @@ const App = () => {
     useEffect(NotificationsManager.init, [])
 
     /* Functions */    
-    function _init() {         
-        initializeStyles().then(() => {
-            setInitializing(false)
-        })        
+    function _init() { 
+        Promise.all([initializeStyles(), Constants.init(), CrashReportManager.init()])
+            .then(() => {
+                setInitializing(false)
+            })
     }
 
     function initializeStyles() {
@@ -67,8 +70,9 @@ const MainUI = () => {
 
     /* Functions */
     function _authInit() {
-        const authListener = (userId: ?string) => {                                                    
-            setIsSignedIn(userId !== null && userId !== undefined)        
+        const authListener = (userId: ?string) => {                              
+            CrashReportManager.setUserId(userId)
+            setIsSignedIn(userId !== null && userId !== undefined)               
         }
         return AuthManager.init(authListener)        
     }

@@ -13,6 +13,15 @@ const colors = {
         '#E7F4CD',        
         '#BBEECE',        
     ],
+    highlightColors: [
+        '#6a0a11',
+        '#035f71',
+        '#0c1c69',
+        '#705e00',
+        '#624500',
+        '#425a13',        
+        '#14532c'
+    ],
     successNotification: '#407894',
     errorNotification: '#802814',
     infoNotification: '#407894',

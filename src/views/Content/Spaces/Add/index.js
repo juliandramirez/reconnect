@@ -91,11 +91,11 @@ const AddSpace = () => {
         and your notifications are already enabled, no need to show the success screen, 
         just a success notification is enough... */
         const notificationPermissions = await NotificationsManager.getPermissions()
-        if (!isNewSpace && notificationPermissions === 'enabled') {
-            showSuccessMessage('Welcome to your shared space')
-
+        if (!isNewSpace && notificationPermissions === 'enabled') {            
             modalDismiss()
             navigation.navigate( NavigationRoutes.Main, { selectedSpace: updatedSpace } )
+
+            showSuccessMessage('Welcome to your shared space')
         } else {
             navigation.navigate( NavigationRoutes.SpaceAdded, { space: updatedSpace, isNewSpace, notificationPermissions } )
         }        

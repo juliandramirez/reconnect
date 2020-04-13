@@ -4,10 +4,12 @@
 
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { Keyboard, Platform, Linking, Alert } from 'react-native'
+import { Keyboard, Platform, Linking, Alert, Share } from 'react-native'
 import { showMessage, hideMessage } from 'react-native-flash-message'
 
+import Constants from 'Reconnect/src/Constants'
 import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
+
 
 /* MARK: - Type Alias */
 
@@ -22,6 +24,11 @@ export function stringNotEmpty(str: ?string) {
 
 export function wait(milliseconds: number) {
     return new Promise<void>(resolve => setTimeout(resolve, milliseconds))
+}
+
+export function shareInstallApp(spaceInvitationCode: string) {
+    const message = `1. Download app here: ${Constants.appUrl}\n2. Open the app and use the invitation code ${spaceInvitationCode}`
+    Share.share({ message })    
 }
 
 /* MARK: - UI Utils */

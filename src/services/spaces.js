@@ -9,6 +9,7 @@ import { stringNotEmpty } from 'Reconnect/src/lib/utils'
 import type { ReminderValue } from 'Reconnect/src/services/notifications'
 import { ReminderValues } from 'Reconnect/src/services/notifications'
 import Constants from 'Reconnect/src/Constants'
+import CrashReportManager from 'Reconnect/src/lib/crashreports'
 
 import NotificationsManager from './notifications'
 import AuthManager from './auth'
@@ -172,7 +173,8 @@ SpacesManager.subscribeToSpaceChanges = ({ spaceId, listener } : {
                     listener(space)
                 }, 
                 (error) => {
-                    console.log(`Error listening to changes of space ${spaceId}: `, error)
+                    CrashReportManager.log(`Error listening to changes of space ${spaceId}`)
+                    CrashReportManager.recordError(error)
                 }
             )
 }
@@ -216,7 +218,8 @@ SpacesManager.subscribeToUserSpacesChanges = (listener: (Array<Space>) => any): 
                 updateListener()
             }, 
             (error) => {
-                console.log('Error listening to space changes:', error)
+                CrashReportManager.log(`Error listening to space changes for user ${userId}`)
+                CrashReportManager.recordError(error)
             }
         )
     
@@ -227,7 +230,8 @@ SpacesManager.subscribeToUserSpacesChanges = (listener: (Array<Space>) => any): 
                 updateListener()
             }, 
             (error) => {
-                console.log('Error listening to space changes:', error)
+                CrashReportManager.log(`Error listening to space changes for user ${userId}`)
+                CrashReportManager.recordError(error)
             }
         )
 

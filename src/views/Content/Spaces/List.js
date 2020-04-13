@@ -96,6 +96,7 @@ const SpaceList = ({ selectedId, onSelectSpace }
     /* References */
     //$FlowExpectedError: always initialized
     const listRef = useRef<FlatList<?Space>>()
+    const selectedIdRef = useRef<?string>(selectedId)
 
     /* State */
     const [spaces, setSpaces] = useState<Array<Space>>([])
@@ -103,6 +104,7 @@ const SpaceList = ({ selectedId, onSelectSpace }
     /* Effects */
     useEffect(_init, [])   
     useEffect(_scrollToSelectedId, [spaces, selectedId]) 
+    useEffect(_updateCurrentIdRef, [selectedId])
 
     /* Functions */
     function _init() {        
@@ -110,14 +112,18 @@ const SpaceList = ({ selectedId, onSelectSpace }
             setSpaces(spaces)   
             
             // initial selection...
-            if (!selectedId && spaces.length > 0) {
+            if (!selectedIdRef.current && spaces.length > 0) {
                 // ...inform about selection
                 onSelectSpace(spaces[0])
             }
         })
     }
 
-    function _scrollToSelectedId() {        
+    function _updateCurrentIdRef() {
+        selectedIdRef.current = selectedId
+    }
+
+    function _scrollToSelectedId() {         
         if (selectedId) {
             // scroll to index...
             const index = spaces.findIndex(item => item?.id == selectedId)
@@ -152,6 +158,9 @@ const SpaceList = ({ selectedId, onSelectSpace }
                 ItemSeparatorComponent={() => <View style={{width: 10}} />}
                 contentContainerStyle={styles.spaceContentContainer}
                 style={styles.spaceContainer}
+                getItemLayout={(data, index) => (
+                    {length: 60, offset: 60 * index, index}
+                )}
 
                 ref={ref => listRef.current = ref}
             />

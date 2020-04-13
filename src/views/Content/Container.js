@@ -77,6 +77,26 @@ const BottomBar = ( { space } : { space: Space }) => {
 
     /* Hooks */
     const navigation = useNavigation()
+
+    /* State */
+    const [highlightColor, setHighlightColor] = useState<string>(_highlightColor(space))
+
+    /* Effects */
+    useEffect(_subscribeToChanges, [space])
+    function _subscribeToChanges() {
+        return SpacesManager.subscribeToSpaceChanges({ spaceId: space.id, listener: space => {
+                setHighlightColor(_highlightColor(space))
+            }
+        })
+    }
+
+    /* Functions */
+    function _highlightColor(space: Space) {        
+        return Theme.colors.highlightColors[
+                Theme.colors.spaceColors.findIndex(val => 
+                    //$FlowExpectedError: space configuration is not null here
+                    val == space.configuration.color)]
+    }
   
     /* Render */
     return (
@@ -89,7 +109,9 @@ const BottomBar = ( { space } : { space: Space }) => {
             <View style={{flex:1, flexGrow:1, alignItems: 'flex-start' }}>
                 <Button type='clear' 
                     icon={
-                        <Iosicons style={{ paddingHorizontal: 8 }} name='ios-arrow-up' size={30}/>
+                        <Iosicons style={{ paddingHorizontal: 8 }} name='ios-arrow-up' size={30} 
+                            color={highlightColor}                             
+                            />
                     }
                     onPress={ () => navigation.navigate(NavigationRoutes.EditSpace, { space: space }) }/>
             </View>
@@ -98,7 +120,9 @@ const BottomBar = ( { space } : { space: Space }) => {
                 <Button 
                     type='clear' 
                     icon={
-                        <SimpleLineIcons name='pencil' size={32}/>
+                        <SimpleLineIcons name='pencil' size={32} 
+                            color={highlightColor}                                
+                            />
                     } 
                     onPress={ () => navigation.navigate(NavigationRoutes.NewPost, { space: space }) }
                 />

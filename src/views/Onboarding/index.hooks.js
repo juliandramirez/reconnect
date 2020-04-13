@@ -28,7 +28,6 @@ const useOnboarding = nextPage => {
 
     //JournalsManager.getJournalPage('', '123')
 
-    //console.log('tab', tab);
     if (tab < 3) {
       setTab(tab + 1);
     } else {
@@ -37,7 +36,6 @@ const useOnboarding = nextPage => {
   };
 
   const swiped = i => {
-    // console.log('swiped', i);
     // if (tab !== i) {
     //   setTab(i);
     // }

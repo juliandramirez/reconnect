@@ -1,1 +1,19 @@
-{}
+{
+    "hosting": {
+      "public": "web",
+      "cleanUrls": true,
+      "trailingSlash" : false,
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],         
+      "appAssociation": "AUTO", 
+      "rewrites": [    
+        {
+            "source": "/links/**",
+            "dynamicLinks": true
+        }       
+      ]
+    }
+}

@@ -3,14 +3,14 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { View, Share, Text, Linking, TouchableOpacity } from 'react-native'
+import { View, Text, Linking, TouchableOpacity } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
 import NotificationsManager from 'Reconnect/src/services/notifications'
 import Constants from 'Reconnect/src/Constants'
-import { useModalBackground, goToSettingsAlert } from 'Reconnect/src/lib/utils'
+import { useModalBackground, goToSettingsAlert, shareInstallApp } from 'Reconnect/src/lib/utils'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
@@ -73,8 +73,7 @@ const AddSpaceSuccess = () => {
     }
 
     function _sendInstructions() {
-        const message = `1. Download app here: ${Constants.appUrl}\n2. Open the app and use the invitation code ${space.invitationCode}`
-        Share.share({ message })
+        shareInstallApp(space.invitationCode)
         setSendCodePressed(true)
     }
 

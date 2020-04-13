@@ -8,8 +8,9 @@ import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment'
 
+import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import type { StringMap, DataMap } from 'Reconnect/src/lib/utils'
-import Constants from 'Reconnect/src/Constants'
+import Constants, { RemoteConstants } from 'Reconnect/src/Constants'
 
 import AuthManager from  './auth'
 import type { Space } from './spaces'
@@ -125,7 +126,7 @@ function _uploadAttachment({ spaceId, attachment, progressListener } : {
 
     const metadata = {
         contentType: attachment.mediaType,
-        cacheControl: Constants.attachmentCacheControlHeader
+        cacheControl: Constants.getRemoteConstant(RemoteConstants.attachmentCacheControlHeader)
     }
 
     const uploadTask = fileRef.putFile(attachment.url, metadata)
@@ -166,13 +167,13 @@ function _uploadAttachment({ spaceId, attachment, progressListener } : {
     return { promise: uploadPromise, cancelHook: () => uploadTask.cancel() }
 }
 
-PostsManager.subscribeToChanges = ( { space, listener } : { 
-        space: Space, 
+PostsManager.subscribeToChanges = ( { spaceId, listener } : { 
+        spaceId: string, 
         listener: (Array<Post>) => any 
     }): Function => {
 
     return COLLECTION_REF
-        .where('spaceId', '==', space.id)
+        .where('spaceId', '==', spaceId)
         .orderBy('created', 'desc')
         .onSnapshot( 
             (postRefs) => {
@@ -181,7 +182,8 @@ PostsManager.subscribeToChanges = ( { space, listener } : {
                 listener(posts)
             }, 
             (error) => {
-                console.log(`Error listening to changes of posts of space ${space.id}: `, error)
+                CrashReportManager.log(`Error listening to changes of posts of space ${spaceId}`)
+                CrashReportManager.recordError(error)
             }
         )
 }

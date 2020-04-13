@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { Dimensions } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -14,6 +14,7 @@ import type { Space } from 'Reconnect/src/services/spaces'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 import AuthManager from 'Reconnect/src/services/auth'
+import SpacesManager from 'Reconnect/src/services/spaces'
 
 import { PostEnvelope, PostHeader, PostAttachments, PostTextScrollable, PostText } from './Components'
 
@@ -30,18 +31,40 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
     /* Hooks */
     const navigation = useNavigation()
 
-    /* Properties */
-    const userIsHost = space.hostId == AuthManager.currentUserId()
-    const configuration = userIsHost ? {
-        headerColor: Theme.colors.appBackground,
-        authorLabel: 'You',
-        actionLabel: 'EDIT POST',
-        action: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
-    } : {
-        headerColor: space.configuration?.color ?? 'white',
-        authorLabel: space.configuration?.shortName ?? 'Them',
-        actionLabel: 'READ POST',
-        action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )        
+    /* State */
+    const [configuration, setConfiguration] = useState<PostConfiguration>(_buildConfiguration(space, post))  
+
+    /* Effects */
+
+    useEffect(_update, [space, post])
+    function _update() {
+        setConfiguration(_buildConfiguration(space, post)) 
+    }
+
+    useEffect(_subscribeToChanges, [space])
+    function _subscribeToChanges() {
+        return SpacesManager.subscribeToSpaceChanges({ spaceId: space.id, listener: space => {
+                setConfiguration(_buildConfiguration(space, post))           
+            }
+        })
+    }
+
+    /* Functions */
+
+    function _buildConfiguration(space: Space, post: Post) {
+        const userIsHost = space.hostId == AuthManager.currentUserId()
+        const configuration = userIsHost ? {
+            headerColor: Theme.colors.appBackground,
+            authorLabel: 'You',
+            actionLabel: 'EDIT POST',
+            action: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
+        } : {
+            headerColor: space.configuration?.color ?? 'white',
+            authorLabel: space.configuration?.shortName ?? 'Them',
+            actionLabel: 'READ POST',
+            action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )        
+        }
+        return configuration
     }
 
     return configuration

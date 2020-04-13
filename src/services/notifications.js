@@ -67,20 +67,17 @@ NotificationsManager.subscribeToRemoteNotifications = (listener: (?StringMap, bo
     messaging().getInitialNotification().then( remoteMessage => {
         if (remoteMessage && remoteMessage.data) {
             listener(remoteMessage.data, true)
-            console.log('INITIAL')
         }        
     })
     messaging().onNotificationOpenedApp(remoteMessage => {
         if (remoteMessage && remoteMessage.data) {
             listener(remoteMessage.data, true)
-            console.log('OPENED')
         }
     })
 
     return messaging().onMessage( remoteMessage => {
         if (remoteMessage && remoteMessage.data) {
             listener(remoteMessage.data, false)
-            console.log('ON MSG')
         }
     })
 }
