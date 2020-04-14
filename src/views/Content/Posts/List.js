@@ -28,9 +28,10 @@ const styles = EStyleSheet.create({
         emptyMessage: {
             textAlign: 'center', 
             textTransform: 'uppercase', 
-            color: '#444',
-            fontSize: '20 rem',
-            fontFamily: 'the girl next door', 
+            color: '#888',
+            fontSize: '22 rem',
+            lineHeight: '40 rem',
+            fontFamily: 'courier', 
             paddingHorizontal: '25 rem',
         },
     waitingContainer: {
@@ -135,7 +136,7 @@ const PostList = ({ space } : { space: Space}) => {
                     />
 
                     <View style={styles.waitingMessageContainer}>
-                        <Text style={styles.waitingMessage}>...waiting for them get here</Text>
+                        <Text style={styles.waitingMessage}>...waiting for them to get here</Text>
                         <Text style={styles.waitingAction}>SHARE CODE AGAIN</Text>
                     </View>
                 </TouchableOpacity>   
@@ -153,7 +154,7 @@ const PostList = ({ space } : { space: Space}) => {
             :
                 <View style={styles.emptyMessageContainer}>
                     <Text style={styles.emptyMessage}>
-                        Nothing here....{'\n'}You should write the first post
+                        Nothing here{'\n'}You should write the first post
                     </Text>
                 </View>
         } 

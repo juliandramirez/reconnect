@@ -52,8 +52,8 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
     /* Functions */
 
     function _buildConfiguration(space: Space, post: Post) {
-        const userIsHost = space.hostId == AuthManager.currentUserId()
-        const configuration = userIsHost ? {
+        const userIsAuthor = post.authorId == AuthManager.currentUserId()
+        const configuration = userIsAuthor ? {
             headerColor: Theme.colors.appBackground,
             authorLabel: 'You',
             actionLabel: 'EDIT POST',
@@ -74,7 +74,7 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
 
 const PostDetailStyles = EStyleSheet.create({
     headerContainer: {
-        height: '66 rem',                        
+        height: 66,                        
         alignItems: 'center',
         borderBottomWidth: 2,
         borderTopWidth: 1,

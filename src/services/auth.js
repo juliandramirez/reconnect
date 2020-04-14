@@ -22,7 +22,7 @@ const AuthManager = {}
 AuthManager.init = (authListener: Function) : Function => {
     // transform firebase model to our model (just a user id for now)
     const listener = (user) => {
-        authListener(user?.uid)
+        authListener(user?.uid ?? null)
     }
 
     // returns unsubscribe function
@@ -30,7 +30,7 @@ AuthManager.init = (authListener: Function) : Function => {
 }
 
 AuthManager.currentUserId = (): ?string => {
-    return auth().currentUser?.uid
+    return auth().currentUser?.uid ?? null
 }
 
 AuthManager.signIn = async () : Promise<string> => {

@@ -98,12 +98,13 @@ PostsManager.uploadAttachments = ({ spaceId, attachments, progressListener } : {
             }
 
             // get each cancel hook reference
-            const attachmentPromise = _uploadAttachment({ 
-                spaceId, attachment, progressListener: attachmentProgressListener})
+            const attachmentPromise: UploadPromise<Attachment> = _uploadAttachment({ 
+                spaceId, attachment, progressListener: attachmentProgressListener
+            })
 
             cancelHookArray[index] = attachmentPromise.cancelHook
             
-            // return the promise
+            // return the promise for map
             return attachmentPromise.promise
         })
     )
@@ -182,8 +183,10 @@ PostsManager.subscribeToChanges = ( { spaceId, listener } : {
                 listener(posts)
             }, 
             (error) => {
-                CrashReportManager.log(`Error listening to changes of posts of space ${spaceId}`)
-                CrashReportManager.recordError(error)
+                CrashReportManager.report({ 
+                    message:`Error listening to changes of posts of space ${spaceId}`,
+                    cause: error
+                })
             }
         )
 }

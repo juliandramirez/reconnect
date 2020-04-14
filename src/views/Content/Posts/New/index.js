@@ -165,7 +165,7 @@ const NewPostView = () => {
             
             const newAttachments = _newAttachments()
             if (newAttachments.length == 0) {      
-                doSendPost([])
+                doSendPost([...previousAttachmentsRef.current])
             } else {                
                 setUploadModalProps({
                     spaceId: space.id, 

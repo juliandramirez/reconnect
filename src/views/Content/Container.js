@@ -8,7 +8,9 @@ import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Iosicons from 'react-native-vector-icons/Ionicons'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 
+import AuthServices from 'Reconnect/src/services/auth'
 import LoadingView from 'Reconnect/src/lib/Loading'
 import Theme from 'Reconnect/src/theme/Theme'
 import type { Post } from 'Reconnect/src/services/posts'
@@ -36,11 +38,11 @@ const Container = () => {
     /* Functions */    
     function _init() {
         SpacesManager.getNumberOfSpaces()
-        .then( total => {
-            if (total == 0) {
-                navigation.navigate( NavigationRoutes.AddSpace, { dismissable: false } )
-            }
-        })      
+            .then( total => {
+                if (total == 0) {
+                    navigation.navigate( NavigationRoutes.AddSpace, { dismissable: false } )
+                }
+            })
     }
 
     function _spaceChanged(newSpace: Space) {
@@ -128,7 +130,16 @@ const BottomBar = ( { space } : { space: Space }) => {
                 />
             </View>
 
-            <View style={{flex:1, flexGrow:1, alignItems: 'flex-end'}}>                
+            
+            <View style={{flex:1, flexGrow:1, alignItems: 'flex-end'}}>
+            { 
+                __DEV__ ? 
+                    <Button onPress={AuthServices.signOut} type='clear' style={{ marginRight: 12 }} icon={
+                        <AntDesign color={highlightColor} name='logout' size={26}/>
+                    }/> 
+                :
+                    <></>
+            }                
             </View>
         </View>        
     )

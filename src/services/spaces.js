@@ -173,8 +173,10 @@ SpacesManager.subscribeToSpaceChanges = ({ spaceId, listener } : {
                     listener(space)
                 }, 
                 (error) => {
-                    CrashReportManager.log(`Error listening to changes of space ${spaceId}`)
-                    CrashReportManager.recordError(error)
+                    CrashReportManager.report({ 
+                        message: `Error listening to changes of space ${spaceId}`,
+                        cause: error
+                    })
                 }
             )
 }
@@ -218,8 +220,10 @@ SpacesManager.subscribeToUserSpacesChanges = (listener: (Array<Space>) => any): 
                 updateListener()
             }, 
             (error) => {
-                CrashReportManager.log(`Error listening to space changes for user ${userId}`)
-                CrashReportManager.recordError(error)
+                CrashReportManager.report({ 
+                    message: `Error listening to space changes for user ${userId}`,
+                    cause: error
+                })                
             }
         )
     
@@ -230,8 +234,10 @@ SpacesManager.subscribeToUserSpacesChanges = (listener: (Array<Space>) => any): 
                 updateListener()
             }, 
             (error) => {
-                CrashReportManager.log(`Error listening to space changes for user ${userId}`)
-                CrashReportManager.recordError(error)
+                CrashReportManager.report({ 
+                    message: `Error listening to space changes for user ${userId}`,
+                    cause: error
+                })                                
             }
         )
 

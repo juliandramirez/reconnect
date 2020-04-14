@@ -53,10 +53,10 @@ export const PostEnvelope = ({ children } : { children: React.Node }) => (
 
 const PostHeaderStyles = EStyleSheet.create({
     headerContainer: {
-        paddingVertical: '8 rem',
+        paddingVertical: 8,
     },
     headerText: {
-        fontSize: '14 rem'
+        fontSize: 14
     }
 })
 export const PostHeader = ({ postDate, postAuthorLabel, color } : { 
