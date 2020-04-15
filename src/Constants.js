@@ -18,7 +18,7 @@ const RemoteConstantsDefaults = {
 /* Constants */
 
 const Constants = {
-    appUrl: 'http://google.com',
+    appUrl: 'https://reconnectapp.co/links/install',
     storageRefs: {
         users: __DEV__ ? 'dev-users' : 'users',
         spaces: __DEV__ ? 'dev-spaces' : 'spaces',

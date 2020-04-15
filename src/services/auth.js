@@ -6,6 +6,8 @@ import React from 'react'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
+import AnalyticsManager from 'Reconnect/src/lib/analytics'
+import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import Constants from 'Reconnect/src/Constants'
 
 import NotificationsManager from './notifications'
@@ -41,11 +43,17 @@ AuthManager.signIn = async () : Promise<string> => {
         // update notification token after sign in
         NotificationsManager.updateNotificationToken()
 
+        CrashReportManager.setUserId(user.uid)
+        AnalyticsManager.logLogin('anonymous-auth')        
+
         return user.uid
     } catch (e) {        
         switch (e.code) {
             default:
-                console.error(e)
+                CrashReportManager.report({ 
+                    message: `Error signing in to firebase`,
+                    cause: e
+                })
                 break
         }
         throw e

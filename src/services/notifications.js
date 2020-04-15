@@ -133,6 +133,8 @@ NotificationsManager.configureLocalNotification = async ({ id, title, message, r
             importance: 'max',
             priority: 'max', 
             id: newNotificationId,
+            largeIcon: 'ic_notification',
+            smallIcon: 'ic_notification',
 
             /* IOS Only Properties */
             userInfo: { id: newNotificationId },
@@ -153,6 +155,11 @@ function _notificationScheduleParams(reminderValue: ReminderValue) {
 
     switch(reminderValue){
         case 'EveryMorning':
+            
+            // TEST VALUES
+            // nextTime = moment().add(5, 'seconds').toDate()
+            // repeatInterval = 'minute'
+
             // 9 am every day, starting tomorrow
             nextTime = moment().startOf('day').add(1, 'days').add(9, 'hours').toDate()
             repeatInterval = 'day'

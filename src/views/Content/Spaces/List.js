@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { showInfoMessage } from 'Reconnect/src/lib/utils'
 import NotificationsManager from 'Reconnect/src/services/notifications'
-import SpacesManager from 'Reconnect/src/services/spaces'
+import SpacesManager, { PushNotificationActions } from 'Reconnect/src/services/spaces'
 import type { Space } from 'Reconnect/src/services/spaces'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
@@ -49,16 +49,18 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any
     useEffect(_setUpRemoteNotificationListener, [])
     function _setUpRemoteNotificationListener() {
         return NotificationsManager.subscribeToRemoteNotifications( (data, receivedOnBackground) => {
-            
-            if (data && data.space) {
-                if (receivedOnBackground) {
+            if (data && data.space) {                
+                if (receivedOnBackground) {                    
                     const space = JSON.parse(data.space)
                     setSelectedSpace(space)
-                } else {
-                    //$FlowExpectedError: null check
-                    const from = data.space.configuration?.shortName ? `from ${data.space.configuration?.shortName}!`: 'in one of your spaces!'
-                    showInfoMessage(`You just received a new post ${from}`)
                 }
+                else {                    
+                    if (data.action == PushNotificationActions.postSent) {                        
+                        showInfoMessage(`You just received a new post!`)
+                    } else if (data.action == PushNotificationActions.spaceJoined) {
+                        showInfoMessage('Your invitation has been accepted!')
+                    }
+                }                       
             }
         })
     }        

@@ -18,6 +18,10 @@ import AuthManager from './auth'
 /* MARK: - Constants */
 
 const COLLECTION_REF = firestore().collection(Constants.storageRefs.spaces)
+export const PushNotificationActions = {
+    spaceJoined: 'joined',
+    postSent: 'post-ent'
+}
 
 /* MARK: - Types */
 
@@ -111,6 +115,17 @@ SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfigura
 
     // configure local notifications
     _configureLocalNotifications(updatedSpace.id, updatedSpace.configuration)
+
+    // send push notification to host
+    NotificationsManager.sendRemoteNotification({
+        userId: updatedSpace.hostId,
+        title: 'Someone joined you',
+        message: 'Your invitation to your shared space has been accepted!',
+        extra: {
+            space: JSON.stringify(updatedSpace),
+            action: PushNotificationActions.spaceJoined
+        }
+    })
 
     return updatedSpace
 }
@@ -269,9 +284,9 @@ SpacesManager.notifyUserPublishedNewPost = (space: Space) => {
             title: 'New post received',
             message: 'You just received a post from someone special',
             extra: {
-                space: JSON.stringify(space)
+                space: JSON.stringify(space),
+                action: PushNotificationActions.postSent
             }
-
         })
     }
 }

@@ -3,9 +3,9 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { View, Text, Linking, TouchableOpacity } from 'react-native'
+import { View, Text, Linking, TouchableOpacity, BackHandler } from 'react-native'
 import { Button } from 'react-native-elements'
-import { useNavigation, useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
 import NotificationsManager from 'Reconnect/src/services/notifications'
@@ -65,6 +65,17 @@ const AddSpaceSuccess = () => {
 
     /* Properties */
     const { space, isNewSpace, notificationPermissions } = route.params
+
+    /* Back handler */
+    useFocusEffect( _androidBackHandler, [])
+    function _androidBackHandler() {
+        const onBackPress = () => {            
+            return true
+        }
+
+        BackHandler.addEventListener('hardwareBackPress', onBackPress)
+        return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+    }
 
     /* Functions */
     function _goToSpace() {

@@ -86,20 +86,15 @@ const PostList = ({ space } : { space: Space}) => {
         let spaceInitialized = false
 
         const spaceUnsubscribe = SpacesManager.subscribeToSpaceChanges({ spaceId: space.id, listener: updatedSpace => {
+            setWaitingForGuest(updatedSpace.guestId == null)
             spaceInitialized = true
             if (postsInitialized) {
                 setInitializing(false)
             }
-
-            if (updatedSpace.hostId == AuthManager.currentUserId() && 
-                updatedSpace.guestId != null && space.guestId == null) {
-                setWaitingForGuest(false)
-                showInfoMessage('The other person has joined the space!')
-            }
         }})
 
-        const postsUnsubscribe = PostsManager.subscribeToChanges({ spaceId: space.id, listener: posts => {
-                setPosts(posts)    
+        const postsUnsubscribe = PostsManager.subscribeToChanges({ spaceId: space.id, listener: updatedPosts => {
+                setPosts(updatedPosts)    
                 postsInitialized = true
                 if (spaceInitialized) {
                     setInitializing(false)

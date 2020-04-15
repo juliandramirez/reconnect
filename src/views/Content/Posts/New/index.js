@@ -3,7 +3,7 @@
  */
 
 import React, { useLayoutEffect, useState, useRef } from 'react'
-import { View, ScrollView, TextInput, BackHandler, Alert, Modal } from 'react-native'
+import { View, ScrollView, TextInput, BackHandler, Alert, Modal, Platform } from 'react-native'
 import { Button } from 'react-native-elements'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native'
@@ -45,7 +45,10 @@ const NewPostView = () => {
 
     useLayoutEffect( () => {
         navigation.setOptions({
-            headerTitle: editMode ? 'Edit Post' : 'New Post',
+            headerTitle: editMode ? 'Edit Post' : 
+                space.configuration?.shortName ? 
+                    `To: ${Platform.OS == 'ios' ? space.configuration.shortName.substring(0, 6) : space.configuration.shortName}` 
+                : 'New Post',
             headerRight: () => (
                 <Button title={editMode ? 'SAVE' : 'PUBLISH'} type='clear' 
                     loading={publishing}
@@ -100,38 +103,40 @@ const NewPostView = () => {
     }
 
     function _dismiss() {
-        if (
-            (!editMode && stringNotEmpty(content)) || 
-            (editMode && editPost?.content != content) ||
-            _newAttachments().length > 0 || 
-            (editMode && attachmentsRef.current.length < editPost.attachments.length) 
-        ) {  
-            
-            const alertMessages = editMode ? {
-                title: 'Changes weren\'t saved',
-                message: 'Dismiss changes without saving?',
-                cancelButton: 'Don\'t dismiss',
-                continueButton: 'Dismiss changes'
-            } : {
-                title: 'Post wasn\'t published',
-                message: 'Dismiss post without publishing?',
-                cancelButton: 'Don\'t dismiss',
-                continueButton: 'Dismiss Post'
+        if (uploadModalProps == null && !publishing) {
+            if (
+                (!editMode && stringNotEmpty(content)) || 
+                (editMode && editPost?.content != content) ||
+                _newAttachments().length > 0 || 
+                (editMode && attachmentsRef.current.length < editPost.attachments.length) 
+            ) {  
+                
+                const alertMessages = editMode ? {
+                    title: 'Changes weren\'t saved',
+                    message: 'Dismiss changes without saving?',
+                    cancelButton: 'Don\'t dismiss',
+                    continueButton: 'Dismiss changes'
+                } : {
+                    title: 'Post wasn\'t published',
+                    message: 'Dismiss post without publishing?',
+                    cancelButton: 'Don\'t dismiss',
+                    continueButton: 'Dismiss Post'
+                }
+    
+                Alert.alert(alertMessages.title, alertMessages.message, [{
+                        text: alertMessages.cancelButton,
+                        style: 'cancel'
+                    }, {
+                        text: alertMessages.continueButton,
+                        onPress: navigation.goBack
+                    },                
+                ], {
+                    cancelable: true,
+                })
+            } else {
+                navigation.goBack()
             }
-
-            Alert.alert(alertMessages.title, alertMessages.message, [{
-                    text: alertMessages.cancelButton,
-                    style: 'cancel'
-                }, {
-                    text: alertMessages.continueButton,
-                    onPress: navigation.goBack
-                },                
-            ], {
-                cancelable: true,
-            })
-        } else {
-            navigation.goBack()
-        }
+        }        
     }
 
     function _save() {

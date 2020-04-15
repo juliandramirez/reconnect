@@ -14,6 +14,7 @@ import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
 import AuthManager from 'Reconnect/src/services/auth'
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
+import AnalyticsManager from 'Reconnect/src/lib/analytics'
 import Constants from 'Reconnect/src/Constants'
 
 import Loading from 'Reconnect/src/lib/Loading'
@@ -33,7 +34,12 @@ const App = () => {
 
     /* Functions */    
     function _init() { 
-        Promise.all([initializeStyles(), Constants.init(), CrashReportManager.init()])
+        Promise.all([
+                initializeStyles(), 
+                Constants.init(), 
+                CrashReportManager.init(),
+                AnalyticsManager.init()
+            ])
             .then(() => {
                 setInitializing(false)
             })
@@ -70,8 +76,7 @@ const MainUI = () => {
 
     /* Functions */
     function _authInit() {
-        const authListener = (userId: ?string) => {                              
-            CrashReportManager.setUserId(userId)
+        const authListener = (userId: ?string) => {                                          
             setIsSignedIn(userId !== null && userId !== undefined)               
         }
         return AuthManager.init(authListener)        

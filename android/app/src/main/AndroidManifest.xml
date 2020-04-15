@@ -40,10 +40,14 @@
         android:name="com.google.firebase.messaging.default_notification_channel_id"
         android:value="remote_posts"
         tools:replace="android:value"/>
+      <meta-data  android:name="com.google.firebase.messaging.default_notification_icon" 
+        android:resource="@mipmap/ic_notification" />
+
+
       <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
                   android:value="Reminder"/>
       <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
-                  android:value="Reminds you to write something to a person"/>
+                  android:value="Reminds you to write something to a person"/>               
 
 
       <!-- < Only if you're using GCM or localNotificationSchedule() > -->
@@ -56,16 +60,20 @@
               </intent-filter>
       </receiver>
 
-      <!-- < Only if you're using GCM or localNotificationSchedule() > -->
+      
+      <!-- Set up reactnativepushnotification local notifications -->
       <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
       <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
               <intent-filter>
                   <action android:name="android.intent.action.BOOT_COMPLETED" />
               </intent-filter>
       </receiver>
-      <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
+
 
       <!-- < Only if you're using GCM or localNotificationSchedule() > -->
+      <!--
+      <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>      
+
       <service
               android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm"
               android:exported="false" >
@@ -73,8 +81,7 @@
               <action android:name="com.google.android.c2dm.intent.RECEIVE" />
           </intent-filter>
       </service>
-      <!-- </ Only if you're using GCM or localNotificationSchedule() > -->
-
+      
       <service
           android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
           android:exported="false" >
@@ -82,6 +89,7 @@
                   <action android:name="com.google.firebase.MESSAGING_EVENT" />
           </intent-filter>
       </service>      
+      -->
     </application>
 
 </manifest>

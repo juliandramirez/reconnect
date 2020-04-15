@@ -61,7 +61,7 @@ const AddSpace = () => {
                 _back()
                 return true
             } else {              
-                // consider even handled (ignore hardware press) when it is not dismissable
+                // consider event handled (ignore hardware press) when it is not dismissable
                 return !dismissable
             }
         }
@@ -79,7 +79,7 @@ const AddSpace = () => {
     async function _submitPage2(configuration: SpaceConfiguration) {
 
         let updatedSpace, isNewSpace
-        if (spaceRef.current != null) {            
+        if (spaceRef.current != null) {           
             updatedSpace = await SpacesManager.attachToSpace( spaceRef.current, configuration)
             isNewSpace = false
         } else {
