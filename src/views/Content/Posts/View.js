@@ -28,43 +28,23 @@ type PostConfiguration = {|
     action: Function
 |}
 function usePostConfiguration({ space, post } : { space: Space, post: Post }) : PostConfiguration {
+    
     /* Hooks */
     const navigation = useNavigation()
 
-    /* State */
-    const [configuration, setConfiguration] = useState<PostConfiguration>(_buildConfiguration(space, post))  
+    /* Properties */
+    const userIsAuthor = post.authorId == AuthManager.currentUserId()
 
-    /* Effects */
-
-    useEffect(_update, [space, post])
-    function _update() {
-        setConfiguration(_buildConfiguration(space, post)) 
-    }
-
-    useEffect(_subscribeToChanges, [space])
-    function _subscribeToChanges() {
-        return SpacesManager.subscribeToSpaceChanges({ spaceId: space.id, listener: space => {
-                setConfiguration(_buildConfiguration(space, post))           
-            }
-        })
-    }
-
-    /* Functions */
-
-    function _buildConfiguration(space: Space, post: Post) {
-        const userIsAuthor = post.authorId == AuthManager.currentUserId()
-        const configuration = userIsAuthor ? {
-            headerColor: Theme.colors.appBackground,
-            authorLabel: 'You',
-            actionLabel: 'EDIT POST',
-            action: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
-        } : {
-            headerColor: space.configuration?.color ?? 'white',
-            authorLabel: space.configuration?.shortName ?? 'Them',
-            actionLabel: 'READ POST',
-            action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )        
-        }
-        return configuration
+    const configuration = userIsAuthor ? {
+        headerColor: Theme.colors.appBackground,
+        authorLabel: 'You',
+        actionLabel: 'EDIT POST',
+        action: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
+    } : {
+        headerColor: space.configuration?.color ?? 'white',
+        authorLabel: space.configuration?.shortName ?? 'Them',
+        actionLabel: 'READ POST',
+        action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )        
     }
 
     return configuration
@@ -87,6 +67,7 @@ export const PostDetail = () => {
     /* Hooks */
     const navigation = useNavigation()
     const route = useRoute()
+
     const { post, space } = route.params
     const configuration = usePostConfiguration({ space, post })
     

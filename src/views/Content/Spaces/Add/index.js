@@ -93,7 +93,7 @@ const AddSpace = () => {
         const notificationPermissions = await NotificationsManager.getPermissions()
         if (!isNewSpace && notificationPermissions === 'enabled') {            
             modalDismiss()
-            navigation.navigate( NavigationRoutes.Main, { selectedSpace: updatedSpace } )
+            navigation.navigate( NavigationRoutes.Main, { selectedSpaceId: updatedSpace.id } )
 
             showSuccessMessage('Welcome to your shared space')
         } else {
@@ -130,7 +130,7 @@ const AddSpace = () => {
                 : 
                     <Page2 
                         submitLabel='CREATE' submit={_submitPage2} 
-                        cancelLabel='BACK' cancelOrBack={ dismissable ? _cancel : _back }
+                        cancelLabel={ dismissable ? 'CANCEL' : 'BACK' } cancelOrBack={ dismissable ? _cancel : _back }
                     /> 
             }
             </View>

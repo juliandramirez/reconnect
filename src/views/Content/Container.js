@@ -2,7 +2,7 @@
  * @flow
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
@@ -24,16 +24,19 @@ import NewPost from './Posts/New'
 import { NavigationRoutes } from './index'
 
 
-const Container = () => {
+const Container = () => {      
+
+    /* Hooks */
+    const navigation = useNavigation()
 
     /* State */
     const [space, setSpace] = useState<?Space>()
 
-    /* Effects */
-    useEffect(_init, [])       
+    /* Refs */
+    const unsubscribeRef = useRef<?Function>()
 
-    /* Hooks */
-    const navigation = useNavigation()
+    /* Effects */
+    useEffect(_init, []) 
 
     /* Functions */    
     function _init() {
@@ -45,10 +48,20 @@ const Container = () => {
             })
     }
 
-    function _spaceChanged(newSpace: Space) {
-        if (newSpace && newSpace.id != space?.id) {            
-            setSpace(newSpace)
-        }        
+    function _spaceChanged(spaceId: string) {
+        if (spaceId != space?.id) { 
+        // unsubscribe
+            if (unsubscribeRef.current) {
+                unsubscribeRef.current()
+            }            
+
+        // subscribe to space changes
+            unsubscribeRef.current = SpacesManager.subscribeToSpaceChanges({ spaceId, 
+                listener: updatedSpace => {
+                    setSpace(updatedSpace)
+                }
+            })
+        }   
     }
 
     /* Render */
@@ -80,28 +93,17 @@ const BottomBar = ( { space } : { space: Space }) => {
     /* Hooks */
     const navigation = useNavigation()
 
-    /* State */
-    const [highlightColor, setHighlightColor] = useState<string>(_highlightColor(space))
+    /* Properties */
+    const highlightColor = 
+        Theme.colors.highlightColors[
+            Theme.colors.spaceColors.findIndex(val => 
+                //$FlowExpectedError: space configuration is not null here
+                val == space.configuration.color
+            )
+        ]
 
-    /* Effects */
-    useEffect(_subscribeToChanges, [space])
-    function _subscribeToChanges() {
-        return SpacesManager.subscribeToSpaceChanges({ spaceId: space.id, listener: space => {
-                setHighlightColor(_highlightColor(space))
-            }
-        })
-    }
-
-    /* Functions */
-    function _highlightColor(space: Space) {        
-        return Theme.colors.highlightColors[
-                Theme.colors.spaceColors.findIndex(val => 
-                    //$FlowExpectedError: space configuration is not null here
-                    val == space.configuration.color)]
-    }
-  
     /* Render */
-    return (
+    return (        
         <View style={{ 
             flexDirection: 'row', 
             height: 50, 

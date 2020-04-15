@@ -122,7 +122,7 @@ SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfigura
         title: 'Someone joined you',
         message: 'Your invitation to your shared space has been accepted!',
         extra: {
-            space: JSON.stringify(updatedSpace),
+            spaceId: updatedSpace.id,
             action: PushNotificationActions.spaceJoined
         }
     })
@@ -284,7 +284,7 @@ SpacesManager.notifyUserPublishedNewPost = (space: Space) => {
             title: 'New post received',
             message: 'You just received a post from someone special',
             extra: {
-                space: JSON.stringify(space),
+                spaceId: space.id,
                 action: PushNotificationActions.postSent
             }
         })

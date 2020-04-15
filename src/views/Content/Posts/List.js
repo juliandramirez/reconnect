@@ -63,7 +63,7 @@ const styles = EStyleSheet.create({
     }
 })
 
-const PostList = ({ space } : { space: Space}) => {
+const PostList = ({ space } : { space: Space }) => {
 
     /* State */
     const [posts, setPosts] = useState<Array<Post>>([])
@@ -73,45 +73,32 @@ const PostList = ({ space } : { space: Space}) => {
     /* Variables */
     const listRef = useRef()
 
-    /* Effects */
+    /* Effects */    
+/*  
+   IMPORTANT: _init has to be recomputed when the space changes because 
+   THE STATE OF THE COMPONENT DEPENDS ON THE INPUT OF RENDER (the space) 
+   (state is persisted through re renders... the same components gets called with different properties on re renders)
+*/
     useEffect(_init, [space])
 
     /* Functions */
-    function _init() {           
+    function _init() {  
+    // every time space changes reset to defaults the values...
         setPosts([])
-        setWaitingForGuest(space.guestId == null)
         setInitializing(true)
+        setWaitingForGuest(space.guestId == null)
 
-        let postsInitialized = false
-        let spaceInitialized = false
-
-        const spaceUnsubscribe = SpacesManager.subscribeToSpaceChanges({ spaceId: space.id, listener: updatedSpace => {
-            setWaitingForGuest(updatedSpace.guestId == null)
-            spaceInitialized = true
-            if (postsInitialized) {
+        return PostsManager.subscribeToChanges({ spaceId: space.id, listener: updatedPosts => {
                 setInitializing(false)
-            }
-        }})
-
-        const postsUnsubscribe = PostsManager.subscribeToChanges({ spaceId: space.id, listener: updatedPosts => {
-                setPosts(updatedPosts)    
-                postsInitialized = true
-                if (spaceInitialized) {
-                    setInitializing(false)
-                }                            
+                setPosts(updatedPosts)                    
 
                 if (listRef.current) {
                     listRef.current.scrollToOffset({ offset: 0, animated: true })
                 }
             }
         })
-
-        return () => {
-            spaceUnsubscribe()
-            postsUnsubscribe()
-        }
     }
-
+    
     /* Render */
     return initializing  ? <Loading /> : ( <>
         {
@@ -139,7 +126,7 @@ const PostList = ({ space } : { space: Space}) => {
         }
 
         {
-            posts.length > 0 ?
+            posts.length > 0 ?            
                 <FlatList
                     data={posts}
                     renderItem={ ({item}) => <PostView post={item} space={space}/> }

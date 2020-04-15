@@ -15,15 +15,20 @@ import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
-const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any }) => {
+/** 
+ * Briges the space list (handles spaces objects) 
+ * with the component that listens to space changes (handles space ids).
+ * Changes in space selected arrive from remote notifications, navigation changes and user selection
+ */
+const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => any }) => {
 
     /* State */
-    const [selectedSpace, setSelectedSpace] = useState<?Space>(null)
+    const [selectedSpaceId, setSelectedSpaceId] = useState<?string>(null)
 
-    useEffect(_selectedSpaceUpdated, [selectedSpace])
+    useEffect(_selectedSpaceUpdated, [selectedSpaceId])
     function _selectedSpaceUpdated() {
-        if(selectedSpace) {
-            onSelectSpace(selectedSpace)
+        if(selectedSpaceId) {
+            onSelectSpace(selectedSpaceId)
         }
     }
 
@@ -36,9 +41,9 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any
             //$FlowExpectedError: unsupported feature
             const routes = event?.data?.state?.routes?.filter(r => r.name == NavigationRoutes.Main)
             if (routes && routes.length == 1) {
-                const space = routes[0]?.params?.selectedSpace
-                if (space) {
-                    setSelectedSpace(space)
+                const spaceId = routes[0]?.params?.selectedSpaceId
+                if (spaceId) {
+                    setSelectedSpaceId(spaceId)
                 }
             }
         })
@@ -49,10 +54,9 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any
     useEffect(_setUpRemoteNotificationListener, [])
     function _setUpRemoteNotificationListener() {
         return NotificationsManager.subscribeToRemoteNotifications( (data, receivedOnBackground) => {
-            if (data && data.space) {                
+            if (data && data.spaceId) {                
                 if (receivedOnBackground) {                    
-                    const space = JSON.parse(data.space)
-                    setSelectedSpace(space)
+                    setSelectedSpaceId(data.spaceId)
                 }
                 else {                    
                     if (data.action == PushNotificationActions.postSent) {                        
@@ -66,7 +70,7 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (Space) => any
     }        
 
     /* Render */
-    return <SpaceList selectedId={selectedSpace?.id} onSelectSpace={setSelectedSpace} />
+    return <SpaceList selectedId={selectedSpaceId} onSelectSpace={setSelectedSpaceId} />
 }
 
 const styles = StyleSheet.create({
@@ -90,7 +94,7 @@ const styles = StyleSheet.create({
 })
 
 const SpaceList = ({ selectedId, onSelectSpace } 
-        : { selectedId: ?string, onSelectSpace: (Space) => any }) => {
+        : { selectedId: ?string, onSelectSpace: (string) => any }) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -109,14 +113,13 @@ const SpaceList = ({ selectedId, onSelectSpace }
     useEffect(_updateCurrentIdRef, [selectedId])
 
     /* Functions */
-    function _init() {        
+    function _init() {            
         return SpacesManager.subscribeToUserSpacesChanges(spaces => {
-            setSpaces(spaces)   
-            
+            setSpaces(spaces)               
             // initial selection...
             if (!selectedIdRef.current && spaces.length > 0) {
                 // ...inform about selection
-                onSelectSpace(spaces[0])
+                onSelectSpace(spaces[0].id)                
             }
         })
     }
@@ -125,7 +128,7 @@ const SpaceList = ({ selectedId, onSelectSpace }
         selectedIdRef.current = selectedId
     }
 
-    function _scrollToSelectedId() {         
+    function _scrollToSelectedId() {                
         if (selectedId) {
             // scroll to index...
             const index = spaces.findIndex(item => item?.id == selectedId)
@@ -137,7 +140,7 @@ const SpaceList = ({ selectedId, onSelectSpace }
 
     function _spacePressed(space: ?Space) {
         if (space) {
-            onSelectSpace(space)
+            onSelectSpace(space.id)
         } else {            
             navigation.navigate( NavigationRoutes.AddSpace, { dismissable: true } )
         }
