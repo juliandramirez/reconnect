@@ -165,7 +165,7 @@ SpacesManager.editSpaceConfiguration = async ({ id, configuration } : { id: stri
     _configureLocalNotifications(id, configuration)
 }
 
-SpacesManager.getNumberOfSpaces = async () : Promise<number> => {
+SpacesManager.getNumberOfUserSpaces = async () : Promise<number> => {
     const userId = AuthManager.currentUserId()
     if (!userId) {
         throw Constants.errorCodes.unauthenticated

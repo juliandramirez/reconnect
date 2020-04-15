@@ -128,7 +128,7 @@ const Onboarding = () => {
 
                 <View style={styles.firstScreenContainer}>
                     <Text style={styles.firstMessage}>
-                        {'Get closer to the people you care about' + '\n\n' + 'rediscover the power of written words'}
+                        {'Get closer to the people you care about' + '\n\n' + 'rediscover the power of words'}
                     </Text>
                 </View>
 

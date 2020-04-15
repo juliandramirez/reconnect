@@ -40,7 +40,7 @@ const Container = () => {
 
     /* Functions */    
     function _init() {
-        SpacesManager.getNumberOfSpaces()
+        SpacesManager.getNumberOfUserSpaces()
             .then( total => {
                 if (total == 0) {
                     navigation.navigate( NavigationRoutes.AddSpace, { dismissable: false } )

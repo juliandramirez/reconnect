@@ -60,7 +60,16 @@ const styles = EStyleSheet.create({
         fontWeight: 'bold', 
         color: '#444', 
         fontSize: '14 rem'
-    }
+    },
+    notWaitingContainer: {
+        paddingVertical: '8 rem'
+    },
+    notWaitingMessage: { 
+        fontSize: '13 rem', 
+        fontWeight: 'normal', 
+        color: '#000', 
+        textAlign: 'center', 
+        textTransform: 'uppercase' }
 })
 
 const PostList = ({ space } : { space: Space }) => {
@@ -122,7 +131,19 @@ const PostList = ({ space } : { space: Space }) => {
                         <Text style={styles.waitingAction}>SHARE CODE AGAIN</Text>
                     </View>
                 </TouchableOpacity>   
-            : <></>         
+            : 
+                posts.length == 0 ? 
+                    <View style={{                         
+                        ...styles.notWaitingContainer,
+                        //$FlowExpectedError: not null
+                        backgroundColor: space.configuration.color 
+                    }}>
+                        <Text style={ styles.notWaitingMessage }>
+                            You are both part of this space now
+                        </Text>
+                    </View>
+                : 
+                    <></>         
         }
 
         {
