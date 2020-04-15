@@ -550,6 +550,8 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - ReactNativeART (1.2.0):
     - React
+  - RNBootSplash (2.2.2):
+    - React
   - RNCAsyncStorage (1.9.0):
     - React
   - RNCMaskedView (0.1.7):
@@ -643,6 +645,7 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
+  - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
@@ -753,6 +756,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeART:
     :path: "../node_modules/@react-native-community/art"
+  RNBootSplash:
+    :path: "../node_modules/react-native-bootsplash"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
@@ -848,6 +853,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
+  RNBootSplash: 634aa1cd7fe9cd3b0205fb4989b67da0d9aadb12
   RNCAsyncStorage: 453cd7c335ec9ba3b877e27d02238956b76f3268
   RNCMaskedView: 76c40a1d41c3e2535df09246a2b5487f04de0814
   RNCPushNotificationIOS: a0b6894f4ad9b93d9dac467fdf4d055660ac8a0d

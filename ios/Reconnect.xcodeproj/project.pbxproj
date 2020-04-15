@@ -13,6 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		23644277876B4F8FB8784C46 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0B248EC2F5B481295DBDC1E /* Foundation.ttf */; };
+		2715362A2446D4CB00EC1853 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 271536292446D4CB00EC1853 /* BootSplash.storyboard */; };
 		27674D97240DA33B00450605 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27674D96240DA33B00450605 /* GoogleService-Info.plist */; };
 		2BF7086BC9BF4C208A9EEF03 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E16A020EBF1B4CD382F81AD2 /* Octicons.ttf */; };
 		32C8A5DA7BB04B9590AB967E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2036A3B4C8CD420C8EF324E9 /* Feather.ttf */; };
@@ -48,6 +49,7 @@
 		2036A3B4C8CD420C8EF324E9 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		20763845C9F942DA9D542E64 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		21520F199E83C0C4C77920DF /* libPods-Reconnect-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Reconnect-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		271536292446D4CB00EC1853 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Reconnect/BootSplash.storyboard; sourceTree = "<group>"; };
 		27674D96240DA33B00450605 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		27F72759243AE557001BE96A /* Reconnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Reconnect.entitlements; path = Reconnect/Reconnect.entitlements; sourceTree = "<group>"; };
 		377F88842C8A478C8C5EE3E0 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 			children = (
 				27F72759243AE557001BE96A /* Reconnect.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
+				271536292446D4CB00EC1853 /* BootSplash.storyboard */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -275,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				2715362A2446D4CB00EC1853 /* BootSplash.storyboard in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				27674D97240DA33B00450605 /* GoogleService-Info.plist in Resources */,
 				8682898120604D55B2787BC9 /* AntDesign.ttf in Resources */,

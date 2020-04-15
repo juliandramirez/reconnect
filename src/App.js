@@ -9,6 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import FlashMessage from 'react-native-flash-message'
 
+import { hideLoadingScreen } from 'Reconnect/src/lib/utils'
 import NotificationsManager from 'Reconnect/src/services/notifications'
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
@@ -78,6 +79,7 @@ const MainUI = () => {
     function _authInit() {
         const authListener = (userId: ?string) => {                                          
             setIsSignedIn(userId !== null && userId !== undefined)               
+            hideLoadingScreen()
         }
         return AuthManager.init(authListener)        
     }

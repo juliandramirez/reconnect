@@ -6,6 +6,7 @@ import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { Keyboard, Platform, Linking, Alert, Share } from 'react-native'
 import { showMessage, hideMessage } from 'react-native-flash-message'
+import RNBootSplash from 'react-native-bootsplash'
 
 import Constants from 'Reconnect/src/Constants'
 import Theme, { useSkin, initialSkin } from 'Reconnect/src/theme/Theme'
@@ -32,6 +33,10 @@ export function shareInstallApp(spaceInvitationCode: string) {
 }
 
 /* MARK: - UI Utils */
+export function hideLoadingScreen() {
+    RNBootSplash.hide()
+}
+
 export function goToSettingsAlert({ title, message, cancelButtonText, onCancel = () => {} } : 
         { title: string, message: string, cancelButtonText: string, onCancel?: Function }) {
 
