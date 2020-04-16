@@ -115,7 +115,7 @@
         "git commit -m 'codepush deploy update'",
         "git push origin master",
         "appcenter codepush release-react -a julianramirez/Reconnect-Android -d Production",
-        "appcenter codepush release-react -a julianramirez/Audiomark-iOS -d Production"
+        "appcenter codepush release-react -a julianramirez/Reconnect-iOS -d Production"
       ],
       "focus": true
     }, 

@@ -43,6 +43,7 @@ const App = () => {
             ])
             .then(() => {
                 setInitializing(false)
+                alert('v3')
             })
     }
 
