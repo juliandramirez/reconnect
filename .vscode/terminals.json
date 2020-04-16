@@ -16,6 +16,13 @@
       "focus": true
     },
     {
+      "name": "Publish Website",
+      "description": "Publish Website",
+      "cwd": "[workspaceFolder]",
+      "command": "firebase deploy --only hosting",
+      "focus": true
+    },
+    {
       "name": "Run iOS - All sizes (Development)",
       "description": "Run iOS - All sizes (Development)",
       "cwd": "[workspaceFolder]",
