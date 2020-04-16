@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Alert } from 'react-native'
 import { Dimensions } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { HeaderBackButton } from '@react-navigation/stack'
@@ -39,7 +39,19 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
         headerColor: Theme.colors.appBackground,
         authorLabel: 'You',
         actionLabel: 'EDIT POST',
-        action: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
+        action: () => {
+            Alert.alert('Edit Post', 'Do you want to edit this post?', [ {
+                    text: 'Edit',
+                    onPress: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
+                },
+                {
+                    text: 'Cancel',
+                    style: 'cancel',                    
+                }
+            ], {
+                cancelable: true
+            })
+        }
     } : {
         headerColor: space.configuration?.color ?? 'white',
         authorLabel: space.configuration?.shortName ?? 'Them',

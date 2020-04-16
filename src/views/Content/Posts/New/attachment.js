@@ -41,9 +41,10 @@ const AddAttachments = ({ clearAttachmentsListener, previousAttachments, addingA
                     quality: 0.8,
                     videoQuality: Platform.OS == 'ios' ? 'medium' : 'high'
                 }, (response) => {                    
-                    _onSelectedMedia(response)
-                    setAdding(false)
-                    addingAttachmentListener(false)
+                    _onSelectedMedia(response).then(() => {
+                        setAdding(false)
+                        addingAttachmentListener(false)
+                    })                    
                 }            
             )
         }
