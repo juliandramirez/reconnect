@@ -70,7 +70,7 @@ const styles = EStyleSheet.create({
             },
         fieldText: {
             fontSize: '14 rem',
-            color: 'grey',
+            color: 'grey'
         },
         button: {                                
             marginTop: 1,   
@@ -90,7 +90,7 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
     /* State */
     const [submitting, setSubmitting] = useState<boolean>(false)
     const [shortName, setShortName] = 
-        useState<?string>(initialConfiguration ? initialConfiguration.shortName : null)
+        useState<?string>(initialConfiguration ? initialConfiguration.shortName : '')
     const [color, setColor] = 
         useState<string>(initialConfiguration ? initialConfiguration.color : Theme.colors.spaceColors[0])
     const [reminderValue, setReminderValue]= 
@@ -98,7 +98,7 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
 
     /* Functions */
     function _submit() {
-        if (!submitting && reminderValue) {
+        if (!submitting && reminderValue && shortName) {
             setSubmitting(true)
 
             try {
@@ -146,12 +146,13 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
                 <View style={ styles.basicInfoContainer }>
 
                     <View style={ styles.basicInfoField }>
-                        <Text style={ styles.fieldText }>Short Name for this space (optional)</Text>
+                        <Text style={ styles.fieldText }>Short Name for this space</Text>
                         <Input 
                             inputContainerStyle={{ marginHorizontal: -10 }}
-                            placeholder="e.g. 'Dad', 'big Bro', 'BFF'"    
+                            placeholder="e.g. 'Dad', 'big Bro', 'BFF'"   
+                            placeholderTextColor='#ccc'
                             value={ shortName }
-                            onChangeText={val => setShortName(val)}                
+                            onChangeText={val => setShortName(val)}              
                         />
                     </View>
 

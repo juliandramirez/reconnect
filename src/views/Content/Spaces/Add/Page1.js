@@ -115,6 +115,7 @@ const Page1 = ({ submit, cancel, dismissable }
                         </Text>
                         <Input 
                             placeholder='Enter the code'
+                            placeholderTextColor='#999'
                             ref={ref => invitationCodeRef.current = ref}
                             onFocus={() => _setNewSpace(false)}
                             onSubmitEditing={() => {
@@ -125,6 +126,7 @@ const Page1 = ({ submit, cancel, dismissable }
                             returnKeyType='done'
                             value={ invitationCode }
                             onChangeText={val => setInvitationCode(val)}
+                            keyboardType='number-pad'
                         />                                                 
                     </View>
                 </TouchableOpacity>

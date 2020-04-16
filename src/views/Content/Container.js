@@ -34,6 +34,7 @@ const Container = () => {
 
     /* Refs */
     const unsubscribeRef = useRef<?Function>()
+    const spaceRef = useRef<?Space>()
 
     /* Effects */
     useEffect(_init, []) 
@@ -58,7 +59,19 @@ const Container = () => {
         // subscribe to space changes
             unsubscribeRef.current = SpacesManager.subscribeToSpaceChanges({ spaceId, 
                 listener: updatedSpace => {
-                    setSpace(updatedSpace)
+
+                // listen to this properties...
+                    const spaceChanged = 
+                        spaceRef.current?.hostId !== updatedSpace.hostId ||
+                        spaceRef.current?.guestId !== updatedSpace.guestId ||
+                        spaceRef.current?.configuration?.shortName !== updatedSpace.configuration?.shortName ||
+                        spaceRef.current?.configuration?.color !== updatedSpace.configuration?.color ||
+                        spaceRef.current?.configuration?.reminderValue !== updatedSpace.configuration?.reminderValue
+
+                     if (spaceChanged) {
+                        spaceRef.current = updatedSpace
+                        setSpace(updatedSpace)
+                    }                    
                 }
             })
         }   

@@ -42,8 +42,10 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => an
             const routes = event?.data?.state?.routes?.filter(r => r.name == NavigationRoutes.Main)
             if (routes && routes.length == 1) {
                 const spaceId = routes[0]?.params?.selectedSpaceId
-                if (spaceId) {
+                if (spaceId && spaceId !== selectedSpaceId) {
                     setSelectedSpaceId(spaceId)
+                    // reset selection after navigation...
+                    routes[0].params.selectedSpaceId = null
                 }
             }
         })
@@ -69,8 +71,14 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => an
         })
     }        
 
+    function spaceSelectedFromList(spaceId: string) {
+        if (spaceId !== selectedSpaceId) {
+            setSelectedSpaceId(spaceId)
+        }        
+    }
+
     /* Render */
-    return <SpaceList selectedId={selectedSpaceId} onSelectSpace={setSelectedSpaceId} />
+    return <SpaceList selectedId={selectedSpaceId} onSelectSpace={spaceSelectedFromList} />
 }
 
 const styles = StyleSheet.create({
