@@ -7,32 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D7E40782ED843CF9E0D44E7 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 377F88842C8A478C8C5EE3E0 /* FontAwesome5_Regular.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		23644277876B4F8FB8784C46 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0B248EC2F5B481295DBDC1E /* Foundation.ttf */; };
 		2715362A2446D4CB00EC1853 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 271536292446D4CB00EC1853 /* BootSplash.storyboard */; };
 		27674D97240DA33B00450605 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27674D96240DA33B00450605 /* GoogleService-Info.plist */; };
 		279C818E2447E5B400D87868 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 279C818D2447E5B300D87868 /* AppCenter-Config.plist */; };
-		2BF7086BC9BF4C208A9EEF03 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E16A020EBF1B4CD382F81AD2 /* Octicons.ttf */; };
-		32C8A5DA7BB04B9590AB967E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2036A3B4C8CD420C8EF324E9 /* Feather.ttf */; };
-		38047404AA534613A7195335 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E4AB7E79DEE4913AD1230E3 /* FontAwesome5_Solid.ttf */; };
-		382D34CBD99F401795127D0B /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 20763845C9F942DA9D542E64 /* FontAwesome5_Brands.ttf */; };
-		45F2A09826AC4095868E1914 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4F721C6758F4E149B83123A /* Fontisto.ttf */; };
-		5A96A0EED15A4EE1B829930E /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7598EB8A3FD343AEBD8B78A1 /* Zocial.ttf */; };
 		5B39154C5891242B771848AB /* libPods-Reconnect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 730E86E88E59CAFF3456F91A /* libPods-Reconnect.a */; };
-		6AAB6E6ED7804064A6F64A67 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E34627BA650842A08A79E98E /* EvilIcons.ttf */; };
 		6BADEBB75F9E454BBB3ACD72 /* the girl next door.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCCDF9773F7547489EA38749 /* the girl next door.ttf */; };
-		8682898120604D55B2787BC9 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 86E091326FFD45ABA18A7139 /* AntDesign.ttf */; };
-		906620AEE3C54745AF5FFB8E /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 896208185300447DAA20B54F /* Entypo.ttf */; };
-		95C07775256945B597B2DF16 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9B3A3FD89B2E4918B1188C29 /* SimpleLineIcons.ttf */; };
-		B4EA32E9E2194333A87D288C /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84DB5A0F8DFF4A71A936A76C /* MaterialCommunityIcons.ttf */; };
-		C66F292EB8AA4241838883CB /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AD540B3B2DB0417A820F7B82 /* Ionicons.ttf */; };
-		D1A138DE5A9E4B2DA29845C8 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48A084DBC84C426B852BED75 /* FontAwesome.ttf */; };
-		F1710DD0422646039F1CCFD1 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C03FC968833548BAAF629943 /* MaterialIcons.ttf */; };
-		F58107FF26BB4AA8859F8EE6 /* The Girl Next Door.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC62108D289F49D3BDFEBDB5 /* The Girl Next Door.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -253,6 +236,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 2FU4363D9U;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -284,24 +268,7 @@
 				2715362A2446D4CB00EC1853 /* BootSplash.storyboard in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				27674D97240DA33B00450605 /* GoogleService-Info.plist in Resources */,
-				8682898120604D55B2787BC9 /* AntDesign.ttf in Resources */,
-				906620AEE3C54745AF5FFB8E /* Entypo.ttf in Resources */,
-				6AAB6E6ED7804064A6F64A67 /* EvilIcons.ttf in Resources */,
-				32C8A5DA7BB04B9590AB967E /* Feather.ttf in Resources */,
-				D1A138DE5A9E4B2DA29845C8 /* FontAwesome.ttf in Resources */,
-				382D34CBD99F401795127D0B /* FontAwesome5_Brands.ttf in Resources */,
-				0D7E40782ED843CF9E0D44E7 /* FontAwesome5_Regular.ttf in Resources */,
-				38047404AA534613A7195335 /* FontAwesome5_Solid.ttf in Resources */,
-				45F2A09826AC4095868E1914 /* Fontisto.ttf in Resources */,
-				23644277876B4F8FB8784C46 /* Foundation.ttf in Resources */,
-				C66F292EB8AA4241838883CB /* Ionicons.ttf in Resources */,
 				279C818E2447E5B400D87868 /* AppCenter-Config.plist in Resources */,
-				B4EA32E9E2194333A87D288C /* MaterialCommunityIcons.ttf in Resources */,
-				F1710DD0422646039F1CCFD1 /* MaterialIcons.ttf in Resources */,
-				2BF7086BC9BF4C208A9EEF03 /* Octicons.ttf in Resources */,
-				95C07775256945B597B2DF16 /* SimpleLineIcons.ttf in Resources */,
-				5A96A0EED15A4EE1B829930E /* Zocial.ttf in Resources */,
-				F58107FF26BB4AA8859F8EE6 /* The Girl Next Door.ttf in Resources */,
 				6BADEBB75F9E454BBB3ACD72 /* the girl next door.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -484,6 +451,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Reconnect/Reconnect.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 2FU4363D9U;
@@ -496,6 +465,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.connect.reconnect;
 				PRODUCT_NAME = Reconnect;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -507,6 +477,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Reconnect/Reconnect.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2FU4363D9U;
 				INFOPLIST_FILE = Reconnect/Info.plist;
@@ -518,6 +490,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.connect.reconnect;
 				PRODUCT_NAME = Reconnect;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
