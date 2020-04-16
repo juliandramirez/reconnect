@@ -94,7 +94,31 @@
         "./gradlew clean && ./gradlew assembleRelease"
       ],
       "focus": true
-    },    
+    }, 
+    {
+      "name": "Git Push - App",
+      "description": "Git Push - App",
+      "cwd": "[workspaceFolder]",
+      "commands": [   
+        "git add .",
+        "git commit -m 'automated push'",
+        "git push origin master"
+      ],
+      "focus": true
+    },      
+    {
+      "name": "Deploy Codepush - App",
+      "description": "Deploy Codepush - App",
+      "cwd": "[workspaceFolder]",
+      "commands": [   
+        "git add .",
+        "git commit -m 'codepush deploy update'",
+        "git push origin master",
+        "appcenter codepush release-react -a julianramirez/Reconnect-Android -d Production",
+        "appcenter codepush release-react -a julianramirez/Audiomark-iOS -d Production"
+      ],
+      "focus": true
+    }, 
     {
       "name": "Complete Clean",
       "description": "Complete Clean",

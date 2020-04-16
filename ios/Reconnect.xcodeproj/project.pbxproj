@@ -15,6 +15,7 @@
 		23644277876B4F8FB8784C46 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0B248EC2F5B481295DBDC1E /* Foundation.ttf */; };
 		2715362A2446D4CB00EC1853 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 271536292446D4CB00EC1853 /* BootSplash.storyboard */; };
 		27674D97240DA33B00450605 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27674D96240DA33B00450605 /* GoogleService-Info.plist */; };
+		279C818E2447E5B400D87868 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 279C818D2447E5B300D87868 /* AppCenter-Config.plist */; };
 		2BF7086BC9BF4C208A9EEF03 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E16A020EBF1B4CD382F81AD2 /* Octicons.ttf */; };
 		32C8A5DA7BB04B9590AB967E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2036A3B4C8CD420C8EF324E9 /* Feather.ttf */; };
 		38047404AA534613A7195335 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E4AB7E79DEE4913AD1230E3 /* FontAwesome5_Solid.ttf */; };
@@ -51,6 +52,7 @@
 		21520F199E83C0C4C77920DF /* libPods-Reconnect-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Reconnect-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		271536292446D4CB00EC1853 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Reconnect/BootSplash.storyboard; sourceTree = "<group>"; };
 		27674D96240DA33B00450605 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		279C818D2447E5B300D87868 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "Reconnect/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		27F72759243AE557001BE96A /* Reconnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Reconnect.entitlements; path = Reconnect/Reconnect.entitlements; sourceTree = "<group>"; };
 		377F88842C8A478C8C5EE3E0 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		42FECE244601D660A0E9EE29 /* Pods-Reconnect-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reconnect-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Reconnect-tvOS/Pods-Reconnect-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				279C818D2447E5B300D87868 /* AppCenter-Config.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -292,6 +295,7 @@
 				45F2A09826AC4095868E1914 /* Fontisto.ttf in Resources */,
 				23644277876B4F8FB8784C46 /* Foundation.ttf in Resources */,
 				C66F292EB8AA4241838883CB /* Ionicons.ttf in Resources */,
+				279C818E2447E5B400D87868 /* AppCenter-Config.plist in Resources */,
 				B4EA32E9E2194333A87D288C /* MaterialCommunityIcons.ttf in Resources */,
 				F1710DD0422646039F1CCFD1 /* MaterialIcons.ttf in Resources */,
 				2BF7086BC9BF4C208A9EEF03 /* Octicons.ttf in Resources */,
