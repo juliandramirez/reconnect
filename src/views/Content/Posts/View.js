@@ -41,7 +41,7 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
         actionLabel: 'EDIT POST',
         action: () => {
             Alert.alert('Edit Post', 'Do you want to edit this post?', [ {
-                    text: 'Edit',
+                    text: 'Confirm',
                     onPress: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
                 },
                 {

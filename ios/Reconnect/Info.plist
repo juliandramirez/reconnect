@@ -27,7 +27,7 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<true/>
+		<false/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -85,6 +85,8 @@
 	</array>
 	<key>CodePushDeploymentKey</key>
 	<string>68qkHAJLiiL8aMu2FgydvI5HhQOgnPKscbten</string>
+  <key>ITSAppUsesNonExemptEncryption</key>
+  <false/>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
