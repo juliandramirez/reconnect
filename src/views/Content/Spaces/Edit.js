@@ -31,7 +31,7 @@ const styles = EStyleSheet.create({
         },
         page: {
             flex: 0,
-            height: '466 rem',            
+            height: '446 rem',            
         },
 })
 

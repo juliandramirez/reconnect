@@ -98,15 +98,21 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
 
     /* Functions */
     function _submit() {
-        if (!submitting && reminderValue && shortName) {
-            setSubmitting(true)
+        if (!submitting) {
+            if (!shortName) {
+                showErrorMessage('Select a short name')
+            } else if (!reminderValue) {
+                showErrorMessage('Select an item for reminders')
+            } else {
+                setSubmitting(true)
 
-            try {
-                submit({ shortName, color, reminderValue })
-            } catch {
-                setSubmitting(false)
-                showErrorMessage('Server error. Please try again')
-            }         
+                try {
+                    submit({ shortName, color, reminderValue })
+                } catch {
+                    setSubmitting(false)
+                    showErrorMessage('Server error. Please try again')
+                }  
+            }       
         }        
     }
 
