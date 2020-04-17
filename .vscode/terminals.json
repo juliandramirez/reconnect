@@ -121,8 +121,8 @@
         "git add .",
         "git commit -m 'codepush deploy update'",
         "git push origin master",
-        "appcenter codepush release-react -a julianramirez/Reconnect-Android -d Production",
-        "appcenter codepush release-react -a julianramirez/Reconnect-iOS -d Production"
+        "appcenter codepush release-react -a julianramirez/Reconnect-Android -d Production -t 1.01",
+        "appcenter codepush release-react -a julianramirez/Reconnect-iOS -d Production -t 1.01"
       ],
       "focus": true
     }, 
