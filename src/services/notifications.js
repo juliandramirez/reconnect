@@ -20,10 +20,10 @@ const STORAGE_KEY_PREPEND = 'NOTIF-ID-'
 
 export const ReminderValues = {
     NoNeed: 'I don\'t need reminders',
-    EveryMorning: 'Every morning',
-    EveryNight: 'Every night',
     EveryWeek: 'Every week',
     EveryMonth: 'Every month',
+    EveryMorning: 'Every morning',
+    EveryNight: 'Every night',    
 }
 
 /* MARK: - Types */

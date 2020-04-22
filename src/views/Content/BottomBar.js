@@ -137,7 +137,7 @@ const BottomBar = ( { space } : { space: Space }) => {
                         </View>
 
                         <Text style={styles.modalThirdText}>
-                            * If the draft doesn't appear one minute after being sent, re-check the address. Speed of delivery varies depending on your email service provider
+                            * If the draft doesn't appear after one minute of being sent, re-check the address. Speed of delivery varies depending on your email service provider
                         </Text>
                     </View>
 
