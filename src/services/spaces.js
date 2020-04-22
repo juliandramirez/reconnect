@@ -20,13 +20,13 @@ import AuthManager from './auth'
 const COLLECTION_REF = firestore().collection(Constants.storageRefs.spaces)
 export const PushNotificationActions = {
     spaceJoined: 'joined',
-    postSent: 'post-ent'
+    postSent: 'post-sent'
 }
 
 /* MARK: - Types */
 
 export type SpaceConfiguration = {|
-    shortName?: ?string,
+    shortName: string,
     color: string,
     reminderValue: ReminderValue    
 |}

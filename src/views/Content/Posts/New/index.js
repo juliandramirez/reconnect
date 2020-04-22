@@ -13,6 +13,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 import { showSuccessMessage, showErrorMessage, stringNotEmpty } from 'Reconnect/src/lib/utils'
 import type { Attachment, Post } from 'Reconnect/src/services/posts'
 import SpacesManager from 'Reconnect/src/services/spaces'
+import DraftsManager from 'Reconnect/src/services/drafts'
 import PostsManager from 'Reconnect/src/services/posts'
 import NotificationsManager from 'Reconnect/src/services/notifications'
 
@@ -29,11 +30,12 @@ const NewPostView = () => {
     const route = useRoute()
 
     /* Properties */
-    const { space, editPost } = route.params    
+    const { draft, space, editPost } = route.params    
     const editMode = editPost != null
+    const initialContent = editMode ? editPost.content : draft ? draft.content : ''
 
     /* State */
-    const [content, setContent] = useState<string>(editPost?.content ?? '')
+    const [content, setContent] = useState<string>(initialContent)
     const [publishing, setPublishing] = useState<boolean>(false)
     const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>(null)
 
@@ -155,6 +157,10 @@ const NewPostView = () => {
                         attachments
                     })
                     SpacesManager.notifyUserPublishedNewPost(space)
+
+                    if (draft) {
+                        DraftsManager.deleteDraft(draft.id)
+                    }
                 }
 
                 navigation.goBack()

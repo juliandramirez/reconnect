@@ -192,8 +192,9 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
                             hostId: 'id',
                             invitationCode: 'code',
                             configuration: {
-                                color: color,
-                                shortName: shortName,
+                                color,
+                                //$FlowExpectedError: not null
+                                shortName,
                                 reminderValue: 'NoNeed'
                             }
                         }}/>                        

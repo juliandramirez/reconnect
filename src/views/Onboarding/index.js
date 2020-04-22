@@ -91,7 +91,7 @@ const Onboarding = () => {
 
     /* Functions */
     function _onIndexChanged(index) {
-        if (index == 3) {
+        if (index == 4) {
             setFinished(true)
             // swiper goes crazy here on state changes (re-renders)...
             wait(1).then(() => swiperRef.current.scrollBy(1, false))
@@ -147,6 +147,11 @@ const Onboarding = () => {
                 <OnboardingPage 
                     image={Theme.images.onboarding.notifications}
                     text={'\n' + 'set reminders to reconnect and get notified of new content' + '\n' } 
+                    />
+
+                <OnboardingPage 
+                    image={Theme.images.onboarding.mail}
+                    text={'\n' + 'use your email to write long letters' + '\n\n' + 'attach photos and videos in your phone'} 
                     />
             </Swiper>
 

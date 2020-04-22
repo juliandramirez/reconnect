@@ -19,10 +19,12 @@ const RemoteConstantsDefaults = {
 
 const Constants = {
     appUrl: 'https://reconnectapp.co/links/install',
+    draftMailDomain: 'drafts.reconnectapp.co',
     storageRefs: {
         users: __DEV__ ? 'dev-users' : 'users',
         spaces: __DEV__ ? 'dev-spaces' : 'spaces',
         posts: __DEV__ ? 'dev-posts' : 'posts',
+        drafts: __DEV__ ? 'dev-drafts' : 'drafts',
         attachments: __DEV__ ? 'dev-attachments' : 'attachments',
     },
     errorCodes: {

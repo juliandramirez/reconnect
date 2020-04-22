@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native'
 import { showInfoMessage } from 'Reconnect/src/lib/utils'
 import NotificationsManager from 'Reconnect/src/services/notifications'
 import SpacesManager, { PushNotificationActions } from 'Reconnect/src/services/spaces'
+import { PushNotificationActions as DraftPushNotificationActions } from 'Reconnect/src/services/drafts'
 import type { Space } from 'Reconnect/src/services/spaces'
 import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
@@ -65,6 +66,8 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => an
                         showInfoMessage(`You just received a new post!`)
                     } else if (data.action == PushNotificationActions.spaceJoined) {
                         showInfoMessage('Your invitation has been accepted!')
+                    } else if (data.action == DraftPushNotificationActions.draftReceived) {
+                        showInfoMessage(`Your draft is ready to use`)
                     }
                 }                       
             }
