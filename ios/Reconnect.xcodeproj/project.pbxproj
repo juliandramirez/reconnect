@@ -13,6 +13,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2715362A2446D4CB00EC1853 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 271536292446D4CB00EC1853 /* BootSplash.storyboard */; };
 		27674D97240DA33B00450605 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27674D96240DA33B00450605 /* GoogleService-Info.plist */; };
+		27760A472451F52D00BCD017 /* RNPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27760A462451F52D00BCD017 /* RNPlaceholder.swift */; };
+		27760A492451F5B900BCD017 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27760A482451F5B900BCD017 /* CloudKit.framework */; };
 		279C818E2447E5B400D87868 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 279C818D2447E5B300D87868 /* AppCenter-Config.plist */; };
 		5B39154C5891242B771848AB /* libPods-Reconnect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 730E86E88E59CAFF3456F91A /* libPods-Reconnect.a */; };
 		6BADEBB75F9E454BBB3ACD72 /* the girl next door.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCCDF9773F7547489EA38749 /* the girl next door.ttf */; };
@@ -35,6 +37,9 @@
 		21520F199E83C0C4C77920DF /* libPods-Reconnect-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Reconnect-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		271536292446D4CB00EC1853 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Reconnect/BootSplash.storyboard; sourceTree = "<group>"; };
 		27674D96240DA33B00450605 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		27760A452451F52C00BCD017 /* Reconnect-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Reconnect-Bridging-Header.h"; sourceTree = "<group>"; };
+		27760A462451F52D00BCD017 /* RNPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNPlaceholder.swift; sourceTree = "<group>"; };
+		27760A482451F5B900BCD017 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		279C818D2447E5B300D87868 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "Reconnect/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		27F72759243AE557001BE96A /* Reconnect.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Reconnect.entitlements; path = Reconnect/Reconnect.entitlements; sourceTree = "<group>"; };
 		377F88842C8A478C8C5EE3E0 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
@@ -73,6 +78,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B39154C5891242B771848AB /* libPods-Reconnect.a in Frameworks */,
+				27760A492451F5B900BCD017 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,6 +115,8 @@
 				279C818D2447E5B300D87868 /* AppCenter-Config.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				27760A462451F52D00BCD017 /* RNPlaceholder.swift */,
+				27760A452451F52C00BCD017 /* Reconnect-Bridging-Header.h */,
 			);
 			name = Reconnect;
 			sourceTree = "<group>";
@@ -116,6 +124,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				27760A482451F5B900BCD017 /* CloudKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				730E86E88E59CAFF3456F91A /* libPods-Reconnect.a */,
@@ -236,6 +245,7 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 2FU4363D9U;
+						LastSwiftMigration = 1140;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -427,6 +437,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				27760A472451F52D00BCD017 /* RNPlaceholder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,6 +461,7 @@
 			baseConfigurationReference = 6471DB0AF87BA8F026DDAACA /* Pods-Reconnect.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Reconnect/Reconnect.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -467,6 +479,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.connect.reconnect;
 				PRODUCT_NAME = Reconnect;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Reconnect-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -477,6 +492,7 @@
 			baseConfigurationReference = EF64608B88CFD4FC9495FFF2 /* Pods-Reconnect.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Reconnect/Reconnect.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -493,6 +509,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.connect.reconnect;
 				PRODUCT_NAME = Reconnect;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Reconnect-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -17,6 +17,7 @@ import AuthManager from 'Reconnect/src/services/auth'
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import AnalyticsManager from 'Reconnect/src/lib/analytics'
 import Constants from 'Reconnect/src/Constants'
+import runMigrations from 'Reconnect/src/lib/migrations'
 
 import Loading from 'Reconnect/src/lib/Loading'
 import Onboarding from './views/Onboarding'
@@ -41,6 +42,7 @@ const App = () => {
                 CrashReportManager.init(),
                 AnalyticsManager.init()
             ])
+            .then(runMigrations)
             .then(() => {
                 setInitializing(false)
             })

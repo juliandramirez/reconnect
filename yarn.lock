@@ -6614,6 +6614,11 @@ react-native-swiper@^1.6.0-nightly.5:
   dependencies:
     prop-types "^15.5.10"
 
+react-native-user-identity@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-user-identity/-/react-native-user-identity-1.2.1.tgz#00f2c4fe6008f5de2b6197734bcf4c7aa43d0f64"
+  integrity sha512-la9fdztdPMLLMxnBoESyC7jAthrf1Y9OIFSrf8W53ahGVSh3pJ/aTkSV2js6g739TToavuOzDj/M8pB2A2Xoow==
+
 react-native-vector-icons@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.6.0.tgz#66cf004918eb05d90778d64bd42077c1800d481b"

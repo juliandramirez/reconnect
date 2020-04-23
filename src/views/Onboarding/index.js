@@ -3,14 +3,14 @@
  */
 
 import React, { useState, useRef } from 'react'
-import { View, Text, Image, Dimensions } from 'react-native'
+import { View, Text, Image, Dimensions, Platform } from 'react-native'
 import { Button } from 'react-native-elements'
 import Swiper from 'react-native-swiper'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import { useNavigation } from '@react-navigation/native'
 
 import AuthServices from 'Reconnect/src/services/auth'
-import { wait } from 'Reconnect/src/lib/utils'
+import { wait, showErrorMessage, showInfoMessage } from 'Reconnect/src/lib/utils'
 import Theme from 'Reconnect/src/theme/Theme'
 import { useModalBackground } from 'Reconnect/src/lib/utils'
 
@@ -98,18 +98,35 @@ const Onboarding = () => {
         }
     }
 
-    function _nextPressed() {
+    async function _nextPressed() {
         if (!submitting) {
-            if (!finished) {
+            if(!finished) {
                 swiperRef.current.scrollBy(1, true)
             } else {            
                 setSubmitting(true)
-    
                 // swiper goes crazy here on state changes (re-renders)...
                 wait(1).then(() => swiperRef.current.scrollBy(1, false))
                 
-                AuthServices.signIn()
-                modalDismiss()
+                try {
+                    await AuthServices.signIn({
+                        androidAccountSelectionMessage: 'Reconnect uses an account name to identify you.\n\nThis doesn\'t give the application access to the account\n'
+                    })
+                    modalDismiss()
+                } catch(e) {
+                    if (e === 'no-uid-available') {
+                        if (Platform.OS === 'ios') {
+                            showInfoMessage('Configure an iCloud account in settings first')
+                        } else if (Platform.OS === 'android') {
+                            showErrorMessage('You need to select an account to start')
+                        }
+                    } else {
+                        showErrorMessage('Unexpected sign in error. Please try again.')
+                    }
+
+                    setSubmitting(false)
+                    // swiper goes crazy here on state changes (re-renders)...
+                    wait(1).then(() => swiperRef.current.scrollBy(1, false))
+                }                
             }   
         }     
     }

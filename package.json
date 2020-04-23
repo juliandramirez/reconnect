@@ -46,6 +46,7 @@
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.2.0",
     "react-native-swiper": "^1.6.0-nightly.5",
+    "react-native-user-identity": "^1.2.1",
     "react-native-vector-icons": "^6.6.0",
     "react-native-video": "^4.4.5",
     "uuid": "^7.0.3"

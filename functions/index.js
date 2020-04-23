@@ -7,11 +7,21 @@ const admin = require('firebase-admin')
 admin.initializeApp()
 
 
+exports.tokenFromUID = functions.https.onCall( async (data, context) => {    
+    const { uid } = data
+
+    try {
+        return await admin.auth().createCustomToken(uid)
+    }catch(error) {
+        console.log('Error creating custom token: ', error)
+        throw new functions.https.HttpsError('internal', error ? error.message : '')
+    }
+})
+
 const ANDROID_CHANNEL_ID = 'remote_posts'
 const PushNotificationActions = {
     draftReceived: 'draft-received',
 }
-
 
 exports.sendPushNotification = functions.https.onCall( (data, context) => {
 

@@ -5,6 +5,8 @@
 import React from 'react'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
+import functions from '@react-native-firebase/functions'
+import RNUserIdentity from 'react-native-user-identity'
 
 import AnalyticsManager from 'Reconnect/src/lib/analytics'
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
@@ -21,7 +23,7 @@ const COLLECTION_REF = firestore().collection(Constants.storageRefs.users)
 
 const AuthManager = {}
 
-AuthManager.init = (authListener: Function) : Function => {
+AuthManager.init = (authListener: Function) : Function => {    
     // transform firebase model to our model (just a user id for now)
     const listener = (user) => {
         authListener(user?.uid ?? null)
@@ -35,28 +37,40 @@ AuthManager.currentUserId = (): ?string => {
     return auth().currentUser?.uid ?? null
 }
 
-AuthManager.signIn = async () : Promise<string> => {
+AuthManager.signIn = async ({ androidAccountSelectionMessage } : { 
+    androidAccountSelectionMessage: string 
+        }) : Promise<string> => {
+    
+    // get uid for user...
+    const uid = await RNUserIdentity.getUserId({
+            androidAccountSelectionMessage,
+            androidAccountType: null
+        })
+    if (uid === null) {
+        throw 'no-uid-available'
+    }
+
+    // get firebase token based on uid and auth using that
     try {
-        const account = await auth().signInAnonymously()
-        const user = account.user
+        const tokenResponse = await functions().httpsCallable('tokenFromUID')({ uid })
+        const token = tokenResponse.data
+        const userCredential = await auth().signInWithCustomToken(token)
+
+        const user = userCredential.user
         
         // update notification token after sign in
         NotificationsManager.updateNotificationToken()
 
         CrashReportManager.setUserId(user.uid)
-        AnalyticsManager.logLogin('anonymous-auth')        
+        AnalyticsManager.logLogin('uid-auth')        
 
         return user.uid
     } catch (e) {        
-        switch (e.code) {
-            default:
-                CrashReportManager.report({ 
-                    message: `Error signing in to firebase`,
-                    cause: e
-                })
-                break
-        }
-        throw e
+        CrashReportManager.report({ 
+            message: `Error signing in to firebase: ` + (e.message ?? ''),
+            cause: e
+        })
+        throw 'internal-error'
     }
 }
 
