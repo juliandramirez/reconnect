@@ -14,6 +14,7 @@ import NotificationsManager from 'Reconnect/src/services/notifications'
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
 import Theme, { SkinProvider, useSkin } from 'Reconnect/src/theme/Theme'
 import AuthManager from 'Reconnect/src/services/auth'
+import SpacesManager from 'Reconnect/src/services/spaces'
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import AnalyticsManager from 'Reconnect/src/lib/analytics'
 import Constants from 'Reconnect/src/Constants'
@@ -32,10 +33,14 @@ const App = () => {
 
     /* Effects */
     useEffect(_init, [])    
-    useEffect(NotificationsManager.init, [])
 
     /* Functions */    
     function _init() { 
+        // we don't need to wait for these...
+        NotificationsManager.init()
+        SpacesManager.init()
+
+        // we need to wait for these...
         Promise.all([
                 initializeStyles(), 
                 Constants.init(), 

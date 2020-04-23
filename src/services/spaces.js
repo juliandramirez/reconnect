@@ -3,6 +3,7 @@
  */
 
 import firestore from '@react-native-firebase/firestore'
+import * as RNLocalize from 'react-native-localize'
 
 import type { DataMap } from 'Reconnect/src/lib/utils'
 import { stringNotEmpty } from 'Reconnect/src/lib/utils'
@@ -10,6 +11,7 @@ import type { ReminderValue } from 'Reconnect/src/services/notifications'
 import { ReminderValues } from 'Reconnect/src/services/notifications'
 import Constants from 'Reconnect/src/Constants'
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
+import AsyncStorage from '@react-native-community/async-storage'
 
 import NotificationsManager from './notifications'
 import AuthManager from './auth'
@@ -18,10 +20,13 @@ import AuthManager from './auth'
 /* MARK: - Constants */
 
 const COLLECTION_REF = firestore().collection(Constants.storageRefs.spaces)
+
 export const PushNotificationActions = {
     spaceJoined: 'joined',
     postSent: 'post-sent'
 }
+
+const TIMEZONE_STORAGE_KEY = 'TIMEZONE'
 
 /* MARK: - Types */
 
@@ -42,6 +47,28 @@ export type Space = {|
 /* MARK: - Services */
 
 const SpacesManager = {}
+
+SpacesManager.init = async () => {
+    const userId = AuthManager.currentUserId()
+    const currentTimezone = RNLocalize.getTimeZone()
+
+    // if it's first time just save the device timezone...
+    if (!userId) {        
+        await AsyncStorage.setItem(TIMEZONE_STORAGE_KEY, currentTimezone)
+    } else {        
+        const previousTimezone = await AsyncStorage.getItem(TIMEZONE_STORAGE_KEY)        
+        
+    // if timezone has changed, update the notification scheduling...
+        if (previousTimezone != currentTimezone) {
+            const userSpaces = await SpacesManager.getUserSpaces()
+            userSpaces.forEach(space => 
+                _configureLocalNotifications(space.id, space.configuration)
+            )        
+    
+            await AsyncStorage.setItem(TIMEZONE_STORAGE_KEY, currentTimezone)
+        }
+    }
+}
 
 SpacesManager.getSpaceWithInvitationCode = async (code: string) : Promise<?Space> => {
 
@@ -196,38 +223,47 @@ SpacesManager.subscribeToSpaceChanges = ({ spaceId, listener } : {
             )
 }
 
-SpacesManager.subscribeToUserSpacesChanges = (listener: (Array<Space>) => any): Function => { 
+SpacesManager.getUserSpaces = async () => {
     const userId = AuthManager.currentUserId()
     if (!userId) {
         throw Constants.errorCodes.unauthenticated
     }
 
-    // Firebase does not support or operations... we have to do 2 queries everytime something changes :(
+    const hostResults = await COLLECTION_REF.where('hostConfiguration.userId', '==', userId).get()
+    const guestResults = await COLLECTION_REF.where('guestConfiguration.userId', '==', userId).get()
+
+    const mergedResults = [...hostResults.docs, ...guestResults.docs]
+    // sort by created date
+    const sortedResults = mergedResults.sort((a, b) => {
+        // created is null for items that are just created...
+        if (a.data().created === null && b.data().created === null ) {
+            return 0
+        } else if (a.data().created === null) {
+            return -1
+        } else if (b.data().created === null) {
+            return 1
+        } else {
+            return a.data().created.toMillis() - b.data().created.toMillis()
+        }
+    })            
+
+    return sortedResults.map(spaceRef => 
+        _dataToSpaceObject(spaceRef.id, spaceRef.data())
+    )
+}
+
+SpacesManager.subscribeToUserSpacesChanges = (listener: (Array<Space>) => any): Function => { 
+    const userId = AuthManager.currentUserId()
+    if (!userId) {
+        throw Constants.errorCodes.unauthenticated
+    }
+    
     const updateListener = async () => {        
-        const hostResults = await COLLECTION_REF.where('hostConfiguration.userId', '==', userId).get()
-        const guestResults = await COLLECTION_REF.where('guestConfiguration.userId', '==', userId).get()
-
-        const mergedResults = [...hostResults.docs, ...guestResults.docs]
-
-        const sortedResults = mergedResults.sort((a, b) => {
-            // created is null for items that are just created...
-            if (a.data().created === null && b.data().created === null ) {
-                return 0
-            } else if (a.data().created === null) {
-                return -1
-            } else if (b.data().created === null) {
-                return 1
-            } else {
-                return a.data().created.toMillis() - b.data().created.toMillis()
-            }
-        })            
-
-        const spaces = sortedResults.map(spaceRef => 
-            _dataToSpaceObject(spaceRef.id, spaceRef.data())
-        )
+        const spaces = await SpacesManager.getUserSpaces()
         listener(spaces)        
     }
 
+    // Firebase does not support OR operations... we have to listen on 2 different properties and then join 2 queries :(
     const hostSpacesUnsubscribe = COLLECTION_REF
         .where('hostConfiguration.userId', '==', userId)
         .onSnapshot( 
