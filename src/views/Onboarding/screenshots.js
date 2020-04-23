@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useRef } from 'react'
-import { View, Text, Image, Dimensions, Platform } from 'react-native'
+import { View, Text, Image, Dimensions, Platform, StatusBar } from 'react-native'
 import { Button } from 'react-native-elements'
 import Swiper from 'react-native-swiper'
 import EStyleSheet from 'react-native-extended-stylesheet'
@@ -30,7 +30,7 @@ const styles = EStyleSheet.create({
         textAlign: 'center',
         lineHeight: '30 rem',
         fontWeight: 'normal',
-        color: '#777',
+        color: '#333',
         fontFamily: 'courier'        
     },
 
@@ -64,13 +64,13 @@ const styles = EStyleSheet.create({
         marginHorizontal: '20 rem',
     },
     subtitle: {
-        fontSize: '15 rem',
-        letterSpacing: '0.5 rem',
+        fontSize: '19 rem',
+        letterSpacing: '1.5 rem',
         textTransform: 'uppercase',
         textAlign: 'center',
-        lineHeight: '22 rem',
-        fontWeight: 'normal',
-        color: '#666',
+        //lineHeight: '22 rem',
+        fontWeight: 'bold',
+        color: '#333',
     },
     button: {
         marginHorizontal: '20 rem',
@@ -78,83 +78,40 @@ const styles = EStyleSheet.create({
 })
 
 const Onboarding = () => {
-
-    /* Hooks */
-    const modalDismiss = useModalBackground('snow')    
-
-    /* State */
-    const [finished, setFinished] = useState<boolean>(false)
-    const [submitting, setSubmitting] = useState<boolean>(false)
-
     /* Refs */
     //$FlowExpectedError: not null
     const swiperRef = useRef<typeof Swiper>(null)
 
-    /* Functions */
-    function _onIndexChanged(index) {
-        if (index == 4) {
-            setFinished(true)
-        }
-    }
-
-    async function _nextPressed() {
-        if (!submitting) {
-            if(!finished) {
-                swiperRef.current.scrollBy(1, true)
-            } else {            
-                setSubmitting(true)
-                
-                try {
-                    await AuthServices.signIn({
-                        androidAccountSelectionMessage: 'Reconnect uses an account name to identify you.\n\nThis doesn\'t give the application access to the account\n'
-                    })
-                    modalDismiss()
-                } catch(e) {
-                    if (e === 'no-uid-available') {
-                        if (Platform.OS === 'ios') {
-                            showInfoMessage('Configure an iCloud account in settings first')
-                        } else if (Platform.OS === 'android') {
-                            showErrorMessage('You need to select an account to start')
-                        }
-                    } else {
-                        showErrorMessage('Unexpected sign in error. Please try again.')
-                    }
-
-                    setSubmitting(false)
-                }                
-            }   
-        }     
-    }
-
     /* Render */
     return (        
-        <View style={styles.container}>
-            <View style={styles.heading}>
-                <Text style={styles.headingText}>
-                    Re: connect
-                </Text>
-            </View>
-            
+        <View style={styles.container}> 
+            <StatusBar hidden={true} />
             {/* $FlowExpectedError: wtf */}
-            <Swiper onIndexChanged={_onIndexChanged} loop={false} ref={ ref => swiperRef.current = ref}>
-
-                <View style={styles.firstScreenContainer}>
-                    <Text style={styles.firstMessage}>
-                        {'Get closer to the people you care about' + '\n\n' + 'rediscover the power of words'}
-                    </Text>
-                </View>
+            <Swiper loop={false} ref={ ref => swiperRef.current = ref}>
+                <>
+                    <View style={styles.heading}>
+                        <Text style={styles.headingText}>
+                            Re: connect
+                        </Text>
+                    </View>
+                    <View style={styles.firstScreenContainer}>
+                        <Text style={styles.firstMessage}>
+                            {'Get closer to the people you care about' + '\n\n' + 'rediscover the power of words'}
+                        </Text>
+                    </View>
+                </>
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.post}
-                    text='create a history of letters with your close ones' />
+                    text={'\ncreate a history of letters with your close ones'} />
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.spaces}
-                    text={'multiple spaces' + '\n' + 'a space for each relationship'} />
+                    text={'\nmultiple spaces' + '\n\n' + 'a space for each relationship'} />
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.notifications}
-                    text={'\n ' + 'set reminders to reconnect and get notified of new content' + ' \n' } 
+                    text={'\n ' + 'set reminders to reconnect \n\n get notified of new content' + '' } 
                     />
 
                 <OnboardingPage 
@@ -162,9 +119,6 @@ const Onboarding = () => {
                     text={'\n' + 'use your email to write long letters' + '\n\n' + 'attach photos and videos in your phone'} 
                     />
             </Swiper>
-
-            <Button title={finished? 'START!' : 'NEXT'} onPress={_nextPressed} loading={submitting}
-                    buttonStyle={{...styles.button, ...Theme.palette.button}} />
         </View>
     )
 }
