@@ -43,8 +43,7 @@ AuthManager.signIn = async ({ androidAccountSelectionMessage } : {
     
     // get uid for user...
     const uid = await RNUserIdentity.getUserId({
-            androidAccountSelectionMessage,
-            androidAccountType: null
+            androidAccountSelectionMessage
         })
     if (uid === null) {
         throw 'no-uid-available'
