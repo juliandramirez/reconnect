@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react'
-import { View, Modal, Text, TouchableOpacity, Clipboard } from 'react-native'
+import { View, Modal, Text, TouchableOpacity, Clipboard, Platform } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -185,7 +185,7 @@ const BottomBar = ( { space } : { space: Space }) => {
 
             <View style={{flex:1, flexGrow:1, alignItems: 'flex-end'}}>
                 <Button onPress={ () => setModalShown(!modalShown) } type='clear' style={{ marginRight: 12 }} icon={
-                    <MaterialIcons style={{ paddingHorizontal: 8 }} color={highlightColor} name='important-devices' size={30}/>
+                    <MaterialIcons style={{ paddingHorizontal: Platform.OS === 'ios' ? 0 : 8 }} color={highlightColor} name='important-devices' size={30}/>
                 }/>
             </View>
         </View>        
