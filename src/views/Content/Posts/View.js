@@ -38,9 +38,9 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
     const configuration = userIsAuthor ? {
         headerColor: Theme.colors.appBackground,
         authorLabel: 'You',
-        actionLabel: 'EDIT POST',
+        actionLabel: 'EDIT LETTER',
         action: () => {
-            Alert.alert('Edit Post', 'Do you want to edit this post?', [ {
+            Alert.alert('Edit Letter', 'Do you want to edit this letter?', [ {
                     text: 'Confirm',
                     onPress: () => navigation.navigate( NavigationRoutes.NewPost, { space, editPost: post } )
                 },
@@ -55,7 +55,7 @@ function usePostConfiguration({ space, post } : { space: Space, post: Post }) : 
     } : {
         headerColor: space.configuration?.color ?? 'white',
         authorLabel: space.configuration?.shortName ?? 'Them',
-        actionLabel: 'READ POST',
+        actionLabel: 'READ LETTER',
         action: () => navigation.navigate( NavigationRoutes.PostDetail, { post, space } )        
     }
 

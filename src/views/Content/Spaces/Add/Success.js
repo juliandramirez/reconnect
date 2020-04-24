@@ -138,13 +138,13 @@ const AddSpaceSuccess = () => {
                                         NOTIFICATIONS ENABLED
                                     </Text>
                                     <Text style={{ ...styles.text }}>
-                                        You will be sent a notification when the other person writes a post
+                                        You will be sent a notification when the other person writes a letter
                                     </Text>
                                 </View>
                             :
                                 <TouchableOpacity onPress={_enableNotifications} style={ styles.section }>
                                     <Text style={ styles.text }>
-                                        (OPTIONAL) If you want to be notified when the other person writes a post
+                                        (OPTIONAL) If you want to be notified when the other person writes a letter
                                     </Text>
                                     <Button title='ENABLE NOTIFICATIONS' type='clear'
                                         buttonStyle={ Theme.palette.clearButton }                     

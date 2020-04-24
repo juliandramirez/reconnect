@@ -47,10 +47,10 @@ const NewPostView = () => {
 
     useLayoutEffect( () => {
         navigation.setOptions({
-            headerTitle: editMode ? 'Edit Post' : 
+            headerTitle: editMode ? 'Edit Letter' : 
                 space.configuration?.shortName ? 
                     `To: ${Platform.OS == 'ios' ? space.configuration.shortName.substring(0, 6) : space.configuration.shortName}` 
-                : 'New Post',
+                : 'New Letter',
             headerRight: () => (
                 <Button title={editMode ? 'SAVE' : 'PUBLISH'} type='clear' 
                     loading={publishing}
@@ -119,10 +119,10 @@ const NewPostView = () => {
                     cancelButton: 'Don\'t dismiss',
                     continueButton: 'Dismiss changes'
                 } : {
-                    title: 'Post wasn\'t published',
-                    message: 'Dismiss post without publishing?',
+                    title: 'Letter wasn\'t published',
+                    message: 'Dismiss letter without publishing?',
                     cancelButton: 'Don\'t dismiss',
-                    continueButton: 'Dismiss Post'
+                    continueButton: 'Dismiss Letter'
                 }
     
                 Alert.alert(alertMessages.title, alertMessages.message, [{
@@ -164,9 +164,9 @@ const NewPostView = () => {
                 }
 
                 navigation.goBack()
-                showSuccessMessage('Post published')                
+                showSuccessMessage('Letter published')                
             } catch {
-                showErrorMessage('Post could not be published')
+                showErrorMessage('Letter could not be published')
                 setPublishing(false) 
             }
         }  
@@ -187,7 +187,7 @@ const NewPostView = () => {
                     },
                     error: (e) => {
                         if (e != 'upload-cancelled') {
-                            showErrorMessage('Post could not be published')                      
+                            showErrorMessage('Letter could not be published')                      
                         }                        
                         setPublishing(false)
                         setUploadModalProps(null)
@@ -195,7 +195,7 @@ const NewPostView = () => {
                 })
             }
         } else {
-            showErrorMessage('Can not publish an empty post')
+            showErrorMessage('Can not publish an empty letter')
         }     
     }
 

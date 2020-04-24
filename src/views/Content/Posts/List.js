@@ -275,7 +275,7 @@ const PostList = ({ space } : { space: Space }) => {
             :
                 <View style={styles.emptyMessageContainer}>
                     <Text style={styles.emptyMessage}>
-                        Nothing here{'\n'}You should write the first post
+                        Nothing here{'\n'}You should write the first letter
                     </Text>
                 </View>
         } 

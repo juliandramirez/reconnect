@@ -63,7 +63,7 @@ const SpaceListContainer = ( { onSelectSpace } : { onSelectSpace: (string) => an
                 }
                 else {                    
                     if (data.action == PushNotificationActions.postSent) {                        
-                        showInfoMessage(`You just received a new post!`)
+                        showInfoMessage(`You just received a new letter!`)
                     } else if (data.action == PushNotificationActions.spaceJoined) {
                         showInfoMessage('Your invitation has been accepted!')
                     } else if (data.action == DraftPushNotificationActions.draftReceived) {
