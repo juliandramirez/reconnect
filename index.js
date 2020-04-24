@@ -23,8 +23,12 @@ function HeadlessCheck({ isHeadless }) {
       // App has been launched in the background by iOS push notification remote service, ignore
         return null
     } else {
-        const CpApp = codePush(codePushOptions)(App)
-        return <CpApp />
+        if (__DEV__) {
+            return <App />
+        } else {
+            const CpApp = codePush(codePushOptions)(App)
+            return <CpApp />
+        }        
     }
 }
 

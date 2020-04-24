@@ -30,16 +30,18 @@
         android:screenOrientation="portrait"
         android:launchMode="singleTask"
         android:exported="true">
+        <!-- MOVE BACK TO THE SPLASH ACTIVITY IF NOT WORKING WITH FIREBASE IN APP MESSAGES ... THEY NEED THE APP TO BE THE LAUNCHER ACTIVITY ... AND 2 LAUNCHER ACTIVITIES MEANS FUNKY BEHAVIOUR IN ANDROID ... FUCK ANDROID -->
+        <intent-filter>
+          <action android:name="android.intent.action.MAIN" />
+          <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
       </activity>
 
       <activity
         android:name="com.zoontek.rnbootsplash.RNBootSplashActivity"
         android:theme="@style/BootTheme"
         android:launchMode="singleTask">
-        <intent-filter>
-          <action android:name="android.intent.action.MAIN" />
-          <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+
       </activity>
 
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />      

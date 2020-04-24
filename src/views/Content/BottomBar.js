@@ -185,7 +185,7 @@ const BottomBar = ( { space } : { space: Space }) => {
 
             <View style={{flex:1, flexGrow:1, alignItems: 'flex-end'}}>
                 <Button onPress={ () => setModalShown(!modalShown) } type='clear' style={{ marginRight: 12 }} icon={
-                    <MaterialIcons color={highlightColor} name='important-devices' size={30}/>
+                    <MaterialIcons style={{ paddingHorizontal: 8 }} color={highlightColor} name='important-devices' size={30}/>
                 }/>
             </View>
         </View>        

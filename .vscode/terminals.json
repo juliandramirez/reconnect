@@ -81,7 +81,34 @@
       "cwd": "[workspaceFolder]",
       "commands": ["yarn react-native run-android --variant=release"],
       "focus": true
-    },    
+    },
+    {
+      "name": "iOS - Start Logs",
+      "description": "iOS - Start Logs",
+      "cwd": "[workspaceFolder]",
+      "commands":[
+        "yarn react-native log-ios"
+      ], 
+      "focus": true
+    },  
+    {
+      "name": "Android - Start Logs",
+      "description": "Android - Start Logs",
+      "cwd": "[workspaceFolder]",
+      "commands":[
+        "yarn react-native log-android"
+      ], 
+      "focus": true
+    },
+    {
+      "name": "Android - Start In App Messaging Test Logs",
+      "description": "Android - Start In App Messaging Test Logs",
+      "cwd": "[workspaceFolder]",
+      "commands":[
+        "adb logcat FIAM.Headless:I -s"
+      ], 
+      "focus": true
+    },     
     {
       "name": "Android - Show Dev Menu",
       "description": "Android - Show Dev Menu",
