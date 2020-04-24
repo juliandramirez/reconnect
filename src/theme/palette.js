@@ -24,7 +24,8 @@ const palette = EStyleSheet.create({
     },
     h6: {
         fontSize: '16 rem',
-        fontWeight: 'normal'
+        fontWeight: 'normal',
+        lineHeight: '20 rem'
     },    
 })
 

@@ -141,8 +141,8 @@
       "focus": true
     },      
     {
-      "name": "Deploy Codepush - App",
-      "description": "Deploy Codepush - App",
+      "name": "Deploy Codepush - App (Careful)",
+      "description": "Deploy Codepush - App (Releases to all versions, change must be compatible with all versions)",
       "cwd": "[workspaceFolder]",
       "commands": [   
         "git add .",
