@@ -13,6 +13,7 @@ import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import Constants from 'Reconnect/src/Constants'
 
 import NotificationsManager from './notifications'
+import SpacesManager from './spaces'
 
 
 /* MARK: - Constants */
@@ -62,6 +63,15 @@ AuthManager.signIn = async ({ androidAccountSelectionMessage } : {
 
         CrashReportManager.setUserId(user.uid)
         AnalyticsManager.logLogin('uid-auth')        
+
+        // if user has previous spaces (app reinstall perhaps? ask notification permissions and recompute notifications)        
+        const userSpaces = await SpacesManager.getUserSpaces()
+        if (userSpaces.length > 0) {
+            await NotificationsManager.requestPermissions()                
+            userSpaces.forEach(space => 
+                SpacesManager.configureLocalNotifications(space.id, space.configuration)
+            )
+        }        
 
         return user.uid
     } catch (e) {        

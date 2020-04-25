@@ -62,7 +62,7 @@ SpacesManager.init = async () => {
         if (previousTimezone != currentTimezone) {
             const userSpaces = await SpacesManager.getUserSpaces()
             userSpaces.forEach(space => 
-                _configureLocalNotifications(space.id, space.configuration)
+                SpacesManager.configureLocalNotifications(space.id, space.configuration)
             )        
     
             await AsyncStorage.setItem(TIMEZONE_STORAGE_KEY, currentTimezone)
@@ -112,7 +112,7 @@ SpacesManager.createSpace = async (configuration : SpaceConfiguration) : Promise
     }
 
     // configure local notifications
-    _configureLocalNotifications(space.id, space.configuration)
+    SpacesManager.configureLocalNotifications(space.id, space.configuration)
 
     return space
 }
@@ -141,7 +141,7 @@ SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfigura
     }
 
     // configure local notifications
-    _configureLocalNotifications(updatedSpace.id, updatedSpace.configuration)
+    SpacesManager.configureLocalNotifications(updatedSpace.id, updatedSpace.configuration)
 
     // send push notification to host
     NotificationsManager.sendRemoteNotification({
@@ -189,7 +189,7 @@ SpacesManager.editSpaceConfiguration = async ({ id, configuration } : { id: stri
     }
 
     // configure local notifications
-    _configureLocalNotifications(id, configuration)
+    SpacesManager.configureLocalNotifications(id, configuration)
 }
 
 SpacesManager.getNumberOfUserSpaces = async () : Promise<number> => {
@@ -327,9 +327,7 @@ SpacesManager.notifyUserPublishedNewPost = (space: Space) => {
     }
 }
 
-/* MARK: - Helper Functions */
-
-async function _configureLocalNotifications(id: string, configuration: SpaceConfiguration) {
+SpacesManager.configureLocalNotifications = (id: string, configuration: SpaceConfiguration) => {
     
     const reminderValue = configuration.reminderValue
     const writeTo = stringNotEmpty(configuration.shortName) ? `to ${configuration.shortName ?? ''}` : ''
@@ -342,6 +340,8 @@ async function _configureLocalNotifications(id: string, configuration: SpaceConf
         reminderValue
     })
 }
+
+/* MARK: - Helper Functions */
 
 async function _computeInvitationCode(): Promise<string> {
     const spaces = await COLLECTION_REF.get()
