@@ -100,7 +100,7 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
     function _submit() {
         if (!submitting) {
             if (!shortName) {
-                showErrorMessage('Select a short name')
+                showErrorMessage('Select a nickname for him/her')
             } else if (!reminderValue) {
                 showErrorMessage('Select an item for reminders')
             } else {
@@ -152,7 +152,7 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
                 <View style={ styles.basicInfoContainer }>
 
                     <View style={ styles.basicInfoField }>
-                        <Text style={ styles.fieldText }>Short Name for this space</Text>
+                        <Text style={ styles.fieldText }>Nickname for him/her</Text>
                         <Input 
                             inputContainerStyle={{ marginHorizontal: -10 }}
                             placeholder="e.g. 'Dad', 'big Bro', 'BFF'"   

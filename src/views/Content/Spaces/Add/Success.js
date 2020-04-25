@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { View, Text, Linking, TouchableOpacity, BackHandler } from 'react-native'
+import { View, Text, Linking, TouchableOpacity, BackHandler, Alert, Platform } from 'react-native'
 import { Button } from 'react-native-elements'
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
@@ -79,8 +79,34 @@ const AddSpaceSuccess = () => {
 
     /* Functions */
     function _goToSpace() {
-        modalDismiss()
-        navigation.navigate( NavigationRoutes.Main, { selectedSpaceId: space.id } )
+        const doGoToSpace = () => {
+            modalDismiss()
+            navigation.navigate( NavigationRoutes.Main, { selectedSpaceId: space.id } )
+        }
+
+        if (Platform.OS === 'ios') {
+            if (notificationPermissions !== 'enabled' && !notificationsWereEnabled) {
+                Alert.alert('Letter notifications disabled', 'Are you sure you don\'t want to get notified when you receive a letter?', [
+                        {
+                            text: 'Go back to enable them',
+                            onPress: () => {},
+                            style: 'cancel'
+                        },
+                        {
+                            text: 'I don\'t want notifications',
+                            onPress: doGoToSpace,
+                            style: 'default'
+                        }            
+                    ],
+                    {
+                        cancelable: false
+                    },
+                )
+            }
+        } else {
+            doGoToSpace()
+        }
+        
     }
 
     function _sendInstructions() {

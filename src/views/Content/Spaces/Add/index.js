@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useRef } from 'react'
-import { View, Text, BackHandler } from 'react-native'
+import { View, Text, BackHandler, TouchableOpacity, Keyboard } from 'react-native'
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 
@@ -112,7 +112,7 @@ const AddSpace = () => {
 
     /* Render */
     return (
-        <View style={ styles.container }>
+        <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss} style={ styles.container }>
 
             <View style={ styles.titleContainer }>
                 <Text style={ Theme.palette.title }>
@@ -129,12 +129,12 @@ const AddSpace = () => {
                     /> 
                 : 
                     <Page2 
-                        submitLabel='CREATE' submit={_submitPage2} 
+                        submitLabel={ spaceRef.current != null ? 'ADD ME TO THIS SPACE' : 'CREATE NEW SPACE'} submit={_submitPage2} 
                         cancelLabel={ dismissable ? 'CANCEL' : 'BACK' } cancelOrBack={ dismissable ? _cancel : _back }
                     /> 
             }
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
