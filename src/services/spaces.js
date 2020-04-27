@@ -317,8 +317,8 @@ SpacesManager.notifyUserPublishedNewPost = (space: Space) => {
     if (recipientId) {
         NotificationsManager.sendRemoteNotification({
             userId: recipientId,
-            title: 'New post received',
-            message: 'You just received a post from someone special',
+            title: 'New letter received',
+            message: 'You just received a letter from someone special',
             extra: {
                 spaceId: space.id,
                 action: PushNotificationActions.postSent
