@@ -43,8 +43,6 @@ Constants.init = async () => {
     })    
     await remoteConfig().setDefaults(RemoteConstantsDefaults) 
     await remoteConfig().fetchAndActivate()
-
-    console.log('REMOTE PROPERTIES: ' + JSON.stringify(remoteConfig().getAll()))
 }
 
 Constants.getRemoteConstant = (key: string) => {

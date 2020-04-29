@@ -103,7 +103,7 @@ const Onboarding = () => {
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.post}
-                    text={'\ncreate a history of letters with your close ones'} />
+                    text={'exchange letters with your close ones\n\ncreate invaluable memories'} />
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.spaces}
@@ -117,6 +117,11 @@ const Onboarding = () => {
                 <OnboardingPage 
                     image={Theme.images.onboarding.mail}
                     text={'\n' + 'use your email to write long letters' + '\n\n' + 'attach photos and videos in your phone'} 
+                    />
+
+                <OnboardingPage 
+                    image={Theme.images.onboarding.handwriting}
+                    text={'go for a walk\nget inspired\n\nhandwrite a letter\n\n' + '\nphotograph and send'} 
                     />
             </Swiper>
         </View>

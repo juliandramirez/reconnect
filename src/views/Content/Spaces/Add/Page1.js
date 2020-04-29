@@ -15,7 +15,7 @@ import type { Space } from 'Reconnect/src/services/spaces'
 
 const styles = EStyleSheet.create({
     container: {              
-        marginTop: '30 rem',
+        marginTop: '20 rem',
         marginBottom: '20 rem',
     },
         spaceTypeCard: {

@@ -11,7 +11,9 @@ import { HeaderBackButton } from '@react-navigation/stack'
 
 import Theme from 'Reconnect/src/theme/Theme'
 import { showSuccessMessage, showErrorMessage, stringNotEmpty } from 'Reconnect/src/lib/utils'
-import type { Attachment, Post } from 'Reconnect/src/services/posts'
+import type { Attachment, Post, PostInput } from 'Reconnect/src/services/posts'
+import type { Draft } from 'Reconnect/src/services/drafts'
+import type { Space } from 'Reconnect/src/services/spaces'
 import SpacesManager from 'Reconnect/src/services/spaces'
 import DraftsManager from 'Reconnect/src/services/drafts'
 import PostsManager from 'Reconnect/src/services/posts'
@@ -30,9 +32,18 @@ const NewPostView = () => {
     const route = useRoute()
 
     /* Properties */
-    const { draft, space, editPost } = route.params    
+    const { space, draft, editPost, postInput } : { 
+        space: Space,
+        draft?: Draft,        
+        editPost?: Post,
+        postInput?: PostInput
+    } = route.params    
+
     const editMode = editPost != null
-    const initialContent = editMode ? editPost.content : draft ? draft.content : ''
+    //$FlowExpectedError: Not null
+    const initialContent = editMode ? editPost.content : draft ? draft.content : postInput ? postInput.content : ''
+    //$FlowExpectedError: Not null
+    const initialAttachments = editMode ? editPost.attachments : postInput ? postInput.photos : []
 
     /* State */
     const [content, setContent] = useState<string>(initialContent)
@@ -42,13 +53,14 @@ const NewPostView = () => {
     /* Variables */
     //$FlowExpectedError: not null
     const textRef = useRef<TextInput>()    
-    const attachmentsRef = useRef<Array<Attachment>>(editPost?.attachments ?? [])
+    const attachmentsRef = useRef<Array<Attachment>>(initialAttachments)
     const previousAttachmentsRef = useRef<Array<Attachment>>(editPost?.attachments ?? [])
 
     useLayoutEffect( () => {
         navigation.setOptions({
             headerTitle: editMode ? 'Edit Letter' : 
-                space.configuration?.shortName ? 
+                space.configuration?.shortName ?
+                //$FlowExpectedError: Not null 
                     `To: ${Platform.OS == 'ios' ? space.configuration.shortName.substring(0, 6) : space.configuration.shortName}` 
                 : 'New Letter',
             headerRight: () => (
@@ -110,6 +122,7 @@ const NewPostView = () => {
                 (!editMode && stringNotEmpty(content)) || 
                 (editMode && editPost?.content != content) ||
                 _newAttachments().length > 0 || 
+                //$FlowExpectedError: Not null
                 (editMode && attachmentsRef.current.length < editPost.attachments.length) 
             ) {  
                 
@@ -145,7 +158,8 @@ const NewPostView = () => {
         const doSendPost = async (attachments) => {            
             try { 
                 if (editMode) {                    
-                    await PostsManager.editPost({                        
+                    await PostsManager.editPost({ 
+                        //$FlowExpectedError: Not null                       
                         id: editPost.id, 
                         content,
                         attachments
@@ -235,7 +249,7 @@ const NewPostView = () => {
                         addingAttachmentListener={_addingAttachment}
                         clearAttachmentsListener={_clearAttachments} 
                         attachmentListener={_attachmentsUpdated}
-                        previousAttachments={previousAttachmentsRef.current}
+                        previousAttachments={attachmentsRef.current}
                     />
                 </View>
                 

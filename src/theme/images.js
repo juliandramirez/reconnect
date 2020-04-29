@@ -10,6 +10,7 @@ const images = {
         controls: require('Reconnect/assets/img/onboarding-controls.png'),
         notifications: require('Reconnect/assets/img/onboarding-notifications.png'),
         mail: require('Reconnect/assets/img/onboarding-mail.png'),
+        handwriting: require('Reconnect/assets/img/onboarding-handwriting.png'),
     }
 }
 

@@ -54,21 +54,21 @@ const AddAttachments = ({ clearAttachmentsListener, previousAttachments, addingA
 
     // WE NEED AN INTERMEDIATE STEP...MIXED CONTENT IS BUGGY AS HELL :(
         Alert.alert('Media type', 'What type of media would you like to add?', [ {
-                text: 'Image',
-                onPress: () => showImagePicker('image')
-            },
-            {
-                text: 'Video',
-                onPress: () => showImagePicker('video')
-            },
-            {
                 text: 'Cancel',
                 style: 'cancel',
                 onPress: () => {
                     setAdding(false)
                     addingAttachmentListener(false)
                 }
-            }
+            },
+            {
+                text: 'Image',
+                onPress: () => showImagePicker('image')
+            },
+            {
+                text: 'Video',
+                onPress: () => showImagePicker('video')
+            }            
         ], {
             cancelable: true,
             onDismiss: () => { 
@@ -135,7 +135,7 @@ const AddAttachments = ({ clearAttachmentsListener, previousAttachments, addingA
                         text: 'No',
                         style: 'cancel'                        
                     }, {
-                        text: 'Yes',
+                        text: 'Remove media',
                         onPress: doClear
                     }
                 ], {

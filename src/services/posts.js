@@ -23,12 +23,18 @@ const COLLECTION_REF = firestore().collection(Constants.storageRefs.posts)
 /* MARK: - Types */
 
 export type Moment = Object // flow and typescript do not bide well
+
 export type Post = {|
     id: string,
     content: string,
     authorId: string,
     created: Moment,
     attachments: Array<Attachment>
+|}
+
+export type PostInput = {|
+    content: string,
+    photos: Array<Attachment>
 |}
 
 export type Attachment = {|
@@ -93,8 +99,10 @@ PostsManager.uploadAttachments = ({ spaceId, attachments, progressListener } : {
         attachments.map((attachment, index) => {
             // each progress listener reports to the 'global' progress listener
             const attachmentProgressListener = !progressListener ? null : (progress) => {
-                progressArray[index] = progress                
-                signalProgressChange()
+                if (progress) {
+                    progressArray[index] = progress                
+                    signalProgressChange()
+                }                
             }
 
             // get each cancel hook reference

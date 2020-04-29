@@ -126,7 +126,7 @@ async function _processEmailMessage(fields, isDev) {
     const DRAFTS_COLLECTION_REF = admin.firestore().collection(DRAFTS_COLLECTION_ID)
     const USERS_COLLECTION_REF = admin.firestore().collection(USERS_COLLECTION_ID)
 
-    const content = fields.text    
+    const content = fields.text.trim()
     const from = fields.from   
 
     // address = <formattedId>+<invitationCode><hostDigit>@<domain>

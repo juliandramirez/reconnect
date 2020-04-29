@@ -37,25 +37,36 @@ export function hideLoadingScreen() {
     RNBootSplash.hide()
 }
 
-export function goToSettingsAlert({ title, message, cancelButtonText, onCancel = () => {} } : 
-        { title: string, message: string, cancelButtonText: string, onCancel?: Function }) {
+export function goToSettingsAlert({ title, message, cancelButtonText, onCancel = () => {} } : { 
+        title: string, 
+        message: string, 
+        cancelButtonText: string, 
+        onCancel?: Function 
+    }): Promise<void> {
 
-    Alert.alert(title, message, [
+    return new Promise<void>( resolve => {
+        Alert.alert(title, message, [
+                {
+                    text: cancelButtonText,
+                    onPress: () => {
+                        onCancel()
+                        resolve()
+                    },
+                    style: 'cancel'
+                },
+                {
+                    text: 'Go to Settings',
+                    onPress: () => {
+                        Linking.openSettings().then(() => resolve())
+                    },
+                    style: 'default'
+                }            
+            ],
             {
-                text: cancelButtonText,
-                onPress: onCancel,
-                style: 'cancel'
+                cancelable: false
             },
-            {
-                text: 'Go to Settings',
-                onPress: Linking.openSettings,
-                style: 'default'
-            }            
-        ],
-        {
-            cancelable: false
-        },
-    )
+        )
+    })    
 }
 
 export function hideFlashMessage() {

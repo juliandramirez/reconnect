@@ -1456,6 +1456,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-6.4.0.tgz#712a7d2ea406f7f3d63fe2618f70f4f584b6d047"
   integrity sha512-Ko+jAF7jgNZnGu697RE+o4RUB1Rqsqfk6+p+K2xuGFlorWLHFYrpqWuKyMZ13jieMp+NGg2C19PWzUJ0ozcdNg==
 
+"@react-native-firebase/ml-vision@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/ml-vision/-/ml-vision-6.4.0.tgz#8b7809148e3beeda5c6af79d3395d35c15370a1a"
+  integrity sha512-AmiE4BUhDJUt6Vak666LsITeJC/VvMePaO8FSrOZUtYNx6AkchMSzz898VJw905hvN4NvGps9nI3GmGviUUWqQ==
+
 "@react-native-firebase/remote-config@^6.4.0":
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/remote-config/-/remote-config-6.4.0.tgz#40d4e5b535b405436c02b810d4c7f9ab30879161"
@@ -6624,10 +6629,10 @@ react-native-swiper@^1.6.0-nightly.5:
   dependencies:
     prop-types "^15.5.10"
 
-react-native-user-identity@^1.2.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-user-identity/-/react-native-user-identity-1.3.1.tgz#6a28272b4638ee3b0dcf6fdfa7789bd33a9f9509"
-  integrity sha512-k59SDaDZiXtt0wOehEKg37rYoznuX0hy9uw7YIRpj4d5eq+VySY3y2EmI5iw+f6YqooZx0UiwqaRLvfhA1qL0g==
+react-native-user-identity@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-user-identity/-/react-native-user-identity-1.3.2.tgz#a15a8438e4d982c45901d02e0554499e1b52f8c8"
+  integrity sha512-gv+upJXbf97yB3UxARYENMBit9S9hBzoRITVv6B1v4qqylAC8jN0bIJvfg13hzZiXYsDFIZQ9DBVaZe6bm55Vw==
 
 react-native-vector-icons@^6.6.0:
   version "6.6.0"
