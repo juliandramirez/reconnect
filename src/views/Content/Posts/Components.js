@@ -95,7 +95,7 @@ export const PostTextScrollable = ({ text } : { text: string }) => {
     return (
         <ScrollView alwaysBounceVertical={false} style={{marginBottom: '5%', flex: 1, }}>
             <View style={{ margin: '5%', flex: 1, }}>            
-                <Text style={{ flex: 1, fontSize: 13, fontFamily: 'the girl next door' }}>
+                <Text style={{ flex: 1, fontSize: 14, fontFamily: 'the girl next door' }}>
                     {text}
                 </Text>            
             </View> 
@@ -106,7 +106,7 @@ export const PostTextScrollable = ({ text } : { text: string }) => {
 export const PostText = ({ content, actionLabel } : { content: string, actionLabel: string }) => {
     return (
         <View style={{ margin: '5%'}}>
-            <Text numberOfLines={6} style={{ fontSize: 13, fontFamily: 'the girl next door' }}>                            
+            <Text numberOfLines={6} style={{ fontSize: 14, fontFamily: 'the girl next door' }}>                            
                 {content}
             </Text>
             <Text style={{ textAlign:'left', color: 'black', fontWeight: 'bold', fontSize: 12, letterSpacing: 0.5, marginTop: '5%' }}>

@@ -39,7 +39,7 @@ NotificationsManager.init = (): Function => {
     
     // 1. subscribe to token changes (on foreground)...
     const tokenRefreshUnsubscribe = messaging().onTokenRefresh( token => {
-        AuthManager.updateCurrentUserNotificationToken(token)
+        NotificationsManager.updateNotificationToken()
     })
 
     // 2. register for remote notifications (listener above is called)...

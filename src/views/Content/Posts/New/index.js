@@ -234,7 +234,7 @@ const NewPostView = () => {
                             flex: 1,                            
                             backgroundColor: 'white',
                             paddingHorizontal: '5%',
-                            fontSize: 13, 
+                            fontSize: 14, 
                             fontFamily: 'the girl next door', 
                             textAlignVertical: 'top'
                         }}                         
