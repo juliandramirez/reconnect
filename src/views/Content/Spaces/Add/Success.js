@@ -47,6 +47,9 @@ const styles = EStyleSheet.create({
                     marginBottom: '5 rem',
                     letterSpacing: 0.5
                 },
+                textNoButton: {
+                    paddingBottom: '10 rem',
+                },
                 button: {
                     height: '50 rem'
                 }
@@ -62,6 +65,7 @@ const AddSpaceSuccess = () => {
     /* State */
     const [sendCodePressed, setSendCodePressed] = useState<boolean>(false)
     const [notificationsWereEnabled, setNotificationsWereEnabled] = useState<boolean>(false)
+    const [inviteLater, setInviteLater] = useState<boolean>(false)
 
     /* Properties */
     const { space, isNewSpace, notificationPermissions } = route.params
@@ -111,9 +115,13 @@ const AddSpaceSuccess = () => {
         
     }
 
-    function _sendInstructions() {
-        shareInstallApp(space.invitationCode)
+    async function _sendInstructions() {
+        await shareInstallApp(space.invitationCode)
         setSendCodePressed(true)
+    }
+
+    function _inviteLater() {
+        setInviteLater(true)
     }
 
     async function _enableNotifications() {
@@ -145,15 +153,53 @@ const AddSpaceSuccess = () => {
                 <View style={{flex: 1, justifyContent: 'flex-start', marginVertical: 20}}>
                     {
                         isNewSpace ?                             
-                            <TouchableOpacity onPress={_sendInstructions} style={ styles.section }>                                
-                                <Text style={ styles.text }>
-                                    Now you just need to invite the other person to the space by sending them a private code
-                                </Text>
-                                <Button title='SEND CODE' type='clear' 
-                                    buttonStyle={ Theme.palette.clearButton }                     
-                                    titleStyle={ Theme.palette.clearButtonText } 
-                                    onPress={_sendInstructions}                    
-                                />
+                            <TouchableOpacity style={ styles.section }
+                                activeOpacity={ !inviteLater && sendCodePressed ? 0.2 : 1 }
+                                onPress={ () => { 
+                                    if (!inviteLater && sendCodePressed) {
+                                        _sendInstructions()
+                                    }
+                                }}
+                            > 
+                            {
+                                inviteLater ? <>                                    
+                                    <Text style={{ ...styles.text, ...styles.textNoButton }}>
+                                        {'All good, you can do it later\nGo to your new space and write the first letter'}
+                                    </Text>
+                                </> : <>
+                                    {
+                                        sendCodePressed ? <>
+                                            <Text style={ styles.text }>
+                                                Awesome, you can go now to your new space and write the first letter
+                                            </Text>
+                                            <Button title='SEND INVITATION AGAIN' type='clear' 
+                                                buttonStyle={ Theme.palette.clearButton }                     
+                                                onPress={_sendInstructions}                    
+                                            />
+                                        </> : <>
+                                            <Text style={ styles.text }>
+                                                Now you just need to invite the other person to the space by sending them a private code
+                                            </Text>
+                                            <View style={{flexDirection: 'row', alignContent: 'stretch'}}>
+                                                <View style={{flex: 1}}>
+                                                    <Button title='INVITE NOW' type='clear' 
+                                                        buttonStyle={{ ...Theme.palette.clearButton, padding: 0 } }                     
+                                                        titleStyle={{ fontWeight: 'bold' }}
+                                                        onPress={_sendInstructions}                    
+                                                    />
+                                                </View>
+                                                <View style={{flex: 1}}>
+                                                    <Button title='INVITE LATER' type='clear' 
+                                                        buttonStyle={{ ...Theme.palette.clearButton, padding: 0 } }                     
+                                                        
+                                                        onPress={_inviteLater}                    
+                                                    />
+                                                </View>
+                                            </View>
+                                        </>
+                                    }
+                                </>
+                            }
                             </TouchableOpacity>                                                          
                         : 
                             <></>
@@ -165,7 +211,7 @@ const AddSpaceSuccess = () => {
                                     <Text style={{ ...styles.text, textAlign: 'center', fontWeight: 'bold' }}>
                                         NOTIFICATIONS ENABLED
                                     </Text>
-                                    <Text style={{ ...styles.text }}>
+                                    <Text style={{ ...styles.text, ...styles.textNoButton }}>
                                         You will be sent a notification when the other person writes a letter
                                     </Text>
                                 </View>
@@ -176,7 +222,7 @@ const AddSpaceSuccess = () => {
                                     </Text>
                                     <Button title='ENABLE NOTIFICATIONS' type='clear'
                                         buttonStyle={ Theme.palette.clearButton }                     
-                                        titleStyle={ Theme.palette.clearButtonText }
+                                        titleStyle={{ fontWeight: 'bold' }}
                                         onPress={_enableNotifications}
                                     />
                                 </TouchableOpacity>
@@ -187,7 +233,7 @@ const AddSpaceSuccess = () => {
                 <View style={{flex: 0}}>
                     <Button title='GO TO YOUR NEW SPACE' 
                         buttonStyle={{ ...Theme.palette.button, ...styles.button }}  
-                        disabled={!sendCodePressed && isNewSpace}                   
+                        disabled={(!sendCodePressed && !inviteLater) && isNewSpace}                   
                         onPress={_goToSpace} />
                 </View>
             </View>

@@ -132,7 +132,7 @@ const AddAttachments = ({ clearAttachmentsListener, previousAttachments, addingA
 
         if (previousAttachments.length > 0) {
             Alert.alert('Remove all media', 'Are you sure you want to remove ALL media attached to this letter?', [{
-                        text: 'No',
+                        text: 'Cancel',
                         style: 'cancel'                        
                     }, {
                         text: 'Remove media',

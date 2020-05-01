@@ -111,7 +111,7 @@ const Onboarding = () => {
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.notifications}
-                    text={'\n ' + 'set reminders to reconnect \n\n get notified of new content' + '' } 
+                    text={'\n ' + 'set reminders to reconnect \n\n get notified of new letters' + '' } 
                     />
 
                 <OnboardingPage 

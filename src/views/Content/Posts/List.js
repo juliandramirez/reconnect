@@ -217,7 +217,7 @@ const PostList = ({ space } : { space: Space }) => {
 
                     <View style={styles.waitingMessageContainer}>
                         <Text style={styles.waitingMessage}>...waiting for them to get here</Text>
-                        <Text style={styles.waitingAction}>SHARE CODE AGAIN</Text>
+                        <Text style={styles.waitingAction}>[ SEND INVITATION ]</Text>
                     </View>
                 </TouchableOpacity>   
             : 

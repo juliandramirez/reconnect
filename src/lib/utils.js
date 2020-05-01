@@ -27,9 +27,9 @@ export function wait(milliseconds: number) {
     return new Promise<void>(resolve => setTimeout(resolve, milliseconds))
 }
 
-export function shareInstallApp(spaceInvitationCode: string) {
+export async function shareInstallApp(spaceInvitationCode: string) {
     const message = `1. Download app here: ${Constants.appUrl}\n2. Open the app and use the invitation code ${spaceInvitationCode}`
-    Share.share({ message })    
+    await Share.share({ message })    
 }
 
 /* MARK: - UI Utils */

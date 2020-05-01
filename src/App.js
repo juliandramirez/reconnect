@@ -9,6 +9,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import FlashMessage from 'react-native-flash-message'
 
+import { useCodePush } from 'Reconnect/src/lib/codepush'
 import { hideLoadingScreen } from 'Reconnect/src/lib/utils'
 import NotificationsManager from 'Reconnect/src/services/notifications'
 import { REM_SCALE } from 'Reconnect/src/theme/palette'
@@ -31,11 +32,11 @@ const App = () => {
     /* State */
     const [initializing, setInitializing] = useState<boolean>(true)
 
-    /* Effects */
-    useEffect(_init, [])    
+    /* Hooks */
+    useCodePush(_init) 
 
     /* Functions */    
-    function _init() { 
+    function _init() {         
         // we don't need to wait for these...
         NotificationsManager.init()
         SpacesManager.init()
