@@ -102,6 +102,8 @@ const AddSpaceSuccess = () => {
                         cancelable: false
                     },
                 )
+            } else {
+                doGoToSpace()
             }
         } else {
             doGoToSpace()
