@@ -9,6 +9,13 @@
       "focus": true
     },
     {
+      "name": "Patch packages",
+      "description": "Patch packages",
+      "cwd": "[workspaceFolder]",
+      "command": "yarn patch-package",
+      "focus": true
+    },    
+    {
       "name": "Deploy Firebase Functions",
       "description": "Deploy Firebase Functions",
       "cwd": "[workspaceFolder]",

@@ -1456,10 +1456,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-6.4.0.tgz#712a7d2ea406f7f3d63fe2618f70f4f584b6d047"
   integrity sha512-Ko+jAF7jgNZnGu697RE+o4RUB1Rqsqfk6+p+K2xuGFlorWLHFYrpqWuKyMZ13jieMp+NGg2C19PWzUJ0ozcdNg==
 
-"@react-native-firebase/ml-vision@^6.4.0":
-  version "6.7.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/ml-vision/-/ml-vision-6.7.1.tgz#c79e89299ed8d5c76825a0c57ea0f7d1091a8dd5"
-  integrity sha512-ktVg5DM1C4uuy13EnofrXoEcyzreeiIlXKDVx3AXrkJMf3vO1BVsMsXIAgGZaFPa05X3OXImraU2ceoOPuIrow==
+"@react-native-firebase/ml-vision@6.4.0":
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/ml-vision/-/ml-vision-6.4.0.tgz#8b7809148e3beeda5c6af79d3395d35c15370a1a"
+  integrity sha512-AmiE4BUhDJUt6Vak666LsITeJC/VvMePaO8FSrOZUtYNx6AkchMSzz898VJw905hvN4NvGps9nI3GmGviUUWqQ==
 
 "@react-native-firebase/remote-config@^6.4.0":
   version "6.4.0"

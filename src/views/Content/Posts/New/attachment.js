@@ -52,30 +52,34 @@ const AddAttachments = ({ clearAttachmentsListener, previousAttachments, addingA
         setAdding(true)
         addingAttachmentListener(true)
 
-    // WE NEED AN INTERMEDIATE STEP...MIXED CONTENT IS BUGGY AS HELL :(
-        Alert.alert('Media type', 'What type of media would you like to add?', [ {
-                text: 'Cancel',
-                style: 'cancel',
-                onPress: () => {
+        if (Platform.OS === 'ios') {
+            showImagePicker('mixed')
+        } else {
+        // WE NEED AN INTERMEDIATE STEP...MIXED CONTENT IS NOT OFFICIALY SUPPORTD BY ANDROID
+            Alert.alert('Media type', 'What type of media would you like to add?', [ {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => {
+                        setAdding(false)
+                        addingAttachmentListener(false)
+                    }
+                },
+                {
+                    text: 'Image',
+                    onPress: () => showImagePicker('image')
+                },
+                {
+                    text: 'Video',
+                    onPress: () => showImagePicker('video')
+                }            
+            ], {
+                cancelable: true,
+                onDismiss: () => { 
                     setAdding(false)
                     addingAttachmentListener(false)
                 }
-            },
-            {
-                text: 'Image',
-                onPress: () => showImagePicker('image')
-            },
-            {
-                text: 'Video',
-                onPress: () => showImagePicker('video')
-            }            
-        ], {
-            cancelable: true,
-            onDismiss: () => { 
-                setAdding(false)
-                addingAttachmentListener(false)
-            }
-        }) 
+            }) 
+        }    
     }
 
     async function _onSelectedMedia(response) {
@@ -90,6 +94,8 @@ const AddAttachments = ({ clearAttachmentsListener, previousAttachments, addingA
                     message: 'To attach media you must enable media permissions in settings', 
                     cancelButtonText: 'I don\'t want attachments'
                 })
+            } else if (response.error == 'Video is not supported in image mode') {
+                showErrorMessage('Invalid image')
             } else {
                 showErrorMessage('Selected media can not be attached')            
             }            
