@@ -137,8 +137,8 @@ android {
         applicationId "com.reconnect"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "1.3.5"
+        versionCode 10
+        versionName "1.3.6"
         
         multiDexEnabled true
     }
