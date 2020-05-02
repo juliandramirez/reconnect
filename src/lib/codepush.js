@@ -43,7 +43,7 @@ export function useCodePush(initialize?: Function){
             const changeAppStateListener = state => {
                 if (state === 'active' && !isCodePushSyncingRef.current) {
                     const installOptions = {
-                        installMode: CodePush.InstallMode.IMMEDIATE,                    
+                        installMode: CodePush.InstallMode.ON_NEXT_RESTART,                    
                         mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE
                     } 
     
@@ -75,7 +75,7 @@ export function useCodePush(initialize?: Function){
                 resolve()
             } else {
                 const installOptions = {
-                    installMode: CodePush.InstallMode.ON_NEXT_RESTART,
+                    installMode: CodePush.InstallMode.IMMEDIATE,
                     mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE
                 }
 
