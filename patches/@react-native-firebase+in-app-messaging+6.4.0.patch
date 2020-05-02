@@ -1,0 +1,13 @@
+diff --git a/node_modules/@react-native-firebase/in-app-messaging/RNFBInAppMessaging.podspec b/node_modules/@react-native-firebase/in-app-messaging/RNFBInAppMessaging.podspec
+index 93b6c9b..467dc3a 100644
+--- a/node_modules/@react-native-firebase/in-app-messaging/RNFBInAppMessaging.podspec
++++ b/node_modules/@react-native-firebase/in-app-messaging/RNFBInAppMessaging.podspec
+@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
+ 
+   # Firebase dependencies
+   s.dependency          'Firebase/Core', firebase_sdk_version
+-  s.dependency          'Firebase/InAppMessaging', firebase_sdk_version
++  s.dependency          'Firebase/InAppMessagingDisplay', firebase_sdk_version
+ 
+   if defined?($RNFirebaseAsStaticFramework)
+     Pod::UI.puts "#{s.name}: Using overridden static_framework value of '#{$RNFirebaseAsStaticFramework}'"
