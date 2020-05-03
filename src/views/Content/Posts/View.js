@@ -160,5 +160,16 @@ const PostView = ({ post, space } : { post: Post, space: Space } ) => {
 
 //$FlowExpectedError: not typed
 export default React.memo(PostView, (prevProps, nextProps) => {
-    return prevProps.post?.id == nextProps.post?.id    
+    const prevPost = prevProps.post
+    const nextPost = nextProps.post
+
+    const equalAttachments = 
+        prevPost.attachments.length == nextPost.attachments.length &&
+        prevPost.attachments.reduce((accum, item, index) => 
+            accum && item.url == nextPost.attachments[index].url, true)
+            
+    const contentIsEqual = prevPost.content == nextPost.content && equalAttachments
+
+    // space, post.author and  post.created do not change over time, no need check them...
+    return prevPost.id == nextPost.id && contentIsEqual
 })

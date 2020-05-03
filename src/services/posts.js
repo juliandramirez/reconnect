@@ -226,7 +226,7 @@ function _dataToPostObject(id: string, data: DataMap): Post {
         content: data.content,
         authorId: data.authorId,
         created: moment(createdMillis).utcOffset(offset),
-        attachments: (data.attachments:Array<Attachment>)
+        attachments: ((data.attachments ?? []):Array<Attachment>)
     }
 }
 
