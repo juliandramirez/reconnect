@@ -49,7 +49,7 @@ const App = () => {
                 AnalyticsManager.init()
             ])
             .then(runMigrations)
-            .then(() => {
+            .finally(() => {
                 setInitializing(false)
             })
     }

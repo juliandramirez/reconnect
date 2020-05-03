@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Image, Text, View, TouchableOpacity, FlatList, Alert } from 'react-native'
+import { Image, Text, View, TouchableOpacity, FlatList, Alert, ActivityIndicator } from 'react-native'
 import { Button } from 'react-native-elements'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import Zocial from 'react-native-vector-icons/Zocial'
@@ -135,6 +135,18 @@ const PostList = ({ space } : { space: Space }) => {
     /* Variables */
     const listRef = useRef()
 
+    /* Logic needed to detect end of list srrolling */
+    const postsSizeRef = useRef<number>(0)
+    const [lastItemIsViewable, setLastItemIsViewable] = useState<boolean>(false)    
+    const onViewableItemsChangedRef = useRef(({ viewableItems, changed }) => {
+        const viewable = viewableItems.map(item => item.index).includes(postsSizeRef.current - 1)
+        setLastItemIsViewable(viewable)
+
+// TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE       
+// console.log('POSTS RENDERED: ' + Date.now())
+
+    })
+    
     /* Effects */         
 /*  
    IMPORTANT: _init has to be recomputed when the space changes because 
@@ -147,17 +159,22 @@ const PostList = ({ space } : { space: Space }) => {
     function _init() {  
     // every time space changes reset to defaults the values...
         setPosts([])
+        postsSizeRef.current = 0
         setDraft(null)
         setInitializing(true)
         setWaitingForGuest(space.guestId == null)
 
-        const spaceChangesUnsubscribe = PostsManager.subscribeToChanges({ spaceId: space.id, listener: updatedPosts => {
-                setInitializing(false)
-                setPosts(updatedPosts)                    
+// TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE POSTS    
+// console.log('RENDER STARTED: ' + Date.now())        
 
-                if (listRef.current) {
-                    listRef.current.scrollToOffset({ offset: 0, animated: true })
-                }
+        const spaceChangesUnsubscribe = PostsManager.subscribeToChanges({ spaceId: space.id, listener: updatedPosts => {
+
+// TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE POSTS   
+// console.log(`LOADED ${updatedPosts.length} POSTS: ` + Date.now() )
+
+                setInitializing(false)
+                setPosts(updatedPosts) 
+                postsSizeRef.current = updatedPosts.length
             }
         })
 
@@ -196,6 +213,7 @@ const PostList = ({ space } : { space: Space }) => {
     }
     
     /* Render */
+    
     return initializing  ? <Loading /> : ( <>
 
         {/* WAITING FOR */}
@@ -267,9 +285,19 @@ const PostList = ({ space } : { space: Space }) => {
                 <View style={styles.postsContainer}>
                     <FlatList
                         data={posts}
-                        renderItem={ ({item}) => <PostView post={item} space={space}/> }
+                        renderItem={ ({ item }) => <PostView post={item} space={space}/> }
                         keyExtractor={ item => item.id }
                         ref={ ref => listRef.current = ref }
+
+                    // half default values...
+                        initialNumToRender={5}
+                        maxToRenderPerBatch={5}
+                        updateCellsBatchingPeriod={100}
+                        windowSize={11}
+
+                        onViewableItemsChanged={onViewableItemsChangedRef.current}
+                        onEndReachedThreshold={0.5}
+                        ListFooterComponent={ lastItemIsViewable ? <></> : <ActivityIndicator size='small' color='darkgrey' /> }
                     />
                 </View>
             :

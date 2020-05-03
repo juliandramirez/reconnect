@@ -45,6 +45,9 @@ const Container = () => {
 
     function _spaceChanged(spaceId: string) {
         if (spaceId != space?.id) { 
+        // set as null while it loads
+            setSpace(null)
+
         // unsubscribe
             if (unsubscribeRef.current) {
                 unsubscribeRef.current()

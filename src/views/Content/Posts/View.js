@@ -158,4 +158,7 @@ const PostView = ({ post, space } : { post: Post, space: Space } ) => {
     ) 
 }
 
-export default PostView
+//$FlowExpectedError: not typed
+export default React.memo(PostView, (prevProps, nextProps) => {
+    return prevProps.post?.id == nextProps.post?.id    
+})
