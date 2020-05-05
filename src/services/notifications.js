@@ -176,7 +176,7 @@ function _notificationScheduleParams(reminderValue: ReminderValue) {
             break
         case 'EveryMonth':
             // 8 pm every month, starting next sunday
-            nextTime = moment().startOf('week').add(1, 'weeks').add(20, 'hours').toDate()
+            nextTime = moment().startOf('week').add(4, 'weeks').add(20, 'hours').toDate()
             repeatInterval = 'month'
             break
     }    
