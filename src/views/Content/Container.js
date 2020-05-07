@@ -59,6 +59,7 @@ const Container = () => {
 
                 // listen to this properties...
                     const spaceChanged = 
+                        spaceRef.current?.id !== updatedSpace.id ||
                         spaceRef.current?.hostId !== updatedSpace.hostId ||
                         spaceRef.current?.guestId !== updatedSpace.guestId ||
                         spaceRef.current?.configuration?.shortName !== updatedSpace.configuration?.shortName ||

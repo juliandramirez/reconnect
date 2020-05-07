@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment'
 
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
+import AnalyticsManager from 'Reconnect/src/lib/analytics'
 import type { StringMap, DataMap } from 'Reconnect/src/lib/utils'
 import Constants, { RemoteConstants } from 'Reconnect/src/Constants'
 
@@ -51,11 +52,24 @@ export type UploadPromise<T> = {
 
 export type PostError = 'upload-failed' | 'upload-cancelled'
 
+export type PostSource = 'email' | 'handwritten' | 'device'
+
 /* MARK: - Services */
 
 const PostsManager = {}
 
-PostsManager.addPost = async ({ spaceId, content, attachments } : { 
+PostsManager.getNumberOfUserPosts = async () : Promise<number> => {
+    const userId = AuthManager.currentUserId()
+    if (!userId) {
+        throw Constants.errorCodes.unauthenticated
+    }
+
+    const results = await COLLECTION_REF.where('authorId', '==', userId).get()
+    return results.size
+}
+
+PostsManager.addPost = async ({ source, spaceId, content, attachments } : { 
+            source: PostSource,
             spaceId: string, 
             content: string, 
             attachments?: Array<Attachment>
@@ -74,6 +88,20 @@ PostsManager.addPost = async ({ spaceId, content, attachments } : {
         content,        
         attachments
     })  
+
+    const numberOfImages = attachments ? attachments.filter(item => item.type == 'image').length : 0
+    const numberOfVideos = attachments ? attachments.filter(item => item.type == 'video').length : 0
+
+    AnalyticsManager.logEvent('post', {
+        source,
+        spaceId,
+        authorId: userId,
+        words: content.split(' ').length,
+        numberOfAttachments: numberOfImages + numberOfVideos,
+        numberOfVideos,
+        numberOfImages,        
+    })
+    AnalyticsManager.updateNumberOfPosts()
 }
 
 PostsManager.uploadAttachments = ({ spaceId, attachments, progressListener } : { 

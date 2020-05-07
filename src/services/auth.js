@@ -111,7 +111,7 @@ async function _setUpUser() {
     // update notification token after sign in
     NotificationsManager.updateNotificationToken()
 
-    CrashReportManager.setUserId(AuthManager.currentUserId())
+    CrashReportManager.logLogin()
     AnalyticsManager.logLogin('uid-auth')        
 
     // if user has previous spaces (app reinstall perhaps? ask notification permissions and recompute notifications)        

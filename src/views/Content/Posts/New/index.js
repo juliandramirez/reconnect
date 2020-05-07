@@ -11,7 +11,7 @@ import { HeaderBackButton } from '@react-navigation/stack'
 
 import Theme from 'Reconnect/src/theme/Theme'
 import { showSuccessMessage, showErrorMessage, stringNotEmpty } from 'Reconnect/src/lib/utils'
-import type { Attachment, Post, PostInput } from 'Reconnect/src/services/posts'
+import type { Attachment, Post, PostInput, PostSource } from 'Reconnect/src/services/posts'
 import type { Draft } from 'Reconnect/src/services/drafts'
 import type { Space } from 'Reconnect/src/services/spaces'
 import SpacesManager from 'Reconnect/src/services/spaces'
@@ -166,6 +166,7 @@ const NewPostView = () => {
                     })
                 } else {
                     await PostsManager.addPost({ 
+                        source: draft ? 'email' : postInput ? 'handwritten' : 'device',
                         spaceId: space.id, 
                         content, 
                         attachments

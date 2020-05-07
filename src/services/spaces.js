@@ -10,6 +10,7 @@ import { stringNotEmpty } from 'Reconnect/src/lib/utils'
 import type { ReminderValue } from 'Reconnect/src/services/notifications'
 import { ReminderValues } from 'Reconnect/src/services/notifications'
 import Constants from 'Reconnect/src/Constants'
+import AnalyticsManager from 'Reconnect/src/lib/analytics'
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import AsyncStorage from '@react-native-community/async-storage'
 
@@ -41,7 +42,8 @@ export type Space = {|
     invitationCode: string,
     hostId: string,
     guestId?: ?string,
-    configuration?: ?SpaceConfiguration
+    configuration?: ?SpaceConfiguration,
+    theirConfiguration?: ?SpaceConfiguration
 |}
 
 /* MARK: - Services */
@@ -114,6 +116,8 @@ SpacesManager.createSpace = async (configuration : SpaceConfiguration) : Promise
     // configure local notifications
     SpacesManager.configureLocalNotifications(space.id, space.configuration)
 
+    AnalyticsManager.updateNumberOfSpaces()
+
     return space
 }
 
@@ -136,8 +140,9 @@ SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfigura
         id: space.id,
         invitationCode: space.invitationCode,
         hostId: space.hostId,
+        theirConfiguration: space.theirConfiguration,
         guestId: userId,        
-        configuration       
+        configuration,               
     }
 
     // configure local notifications
@@ -153,6 +158,17 @@ SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfigura
             action: PushNotificationActions.spaceJoined
         }
     })
+
+    // log space created
+    AnalyticsManager.logEvent('space_configured', {
+        spaceId: updatedSpace.id,
+        hostId: updatedSpace.hostId,
+        hostReminderValue: updatedSpace.theirConfiguration?.reminderValue ?? null,
+        guestId: updatedSpace.guestId,
+        guestReminderValue: updatedSpace.configuration.reminderValue
+    })
+
+    AnalyticsManager.updateNumberOfSpaces()
 
     return updatedSpace
 }
@@ -355,15 +371,22 @@ async function _computeInvitationCode(): Promise<string> {
 }
 
 function _dataToSpaceObject(id: string, data: DataMap): Space {
+    
     const userId = AuthManager.currentUserId()
 
     let configurationData = null
+    let theirConfigurationData = null
+
     if (data.hostConfiguration.userId == userId) {
         configurationData = data.hostConfiguration
+        theirConfigurationData = data.guestConfiguration
     } else if (data.guestConfiguration?.userId == userId) {
         configurationData = data.guestConfiguration
+        theirConfigurationData = data.hostConfiguration
+    } else {
+        theirConfigurationData = data.hostConfiguration
     }
-
+    
     return {
         id,
         invitationCode: data.invitationCode,
@@ -373,7 +396,12 @@ function _dataToSpaceObject(id: string, data: DataMap): Space {
             shortName: configurationData.shortName,
             color: configurationData.color,
             reminderValue: configurationData.reminderValue
-        }
+        },
+        theirConfiguration: theirConfigurationData == null ? null : {
+            shortName: theirConfigurationData.shortName,
+            color: theirConfigurationData.color,
+            reminderValue: theirConfigurationData.reminderValue
+        },
     }
 }
 
