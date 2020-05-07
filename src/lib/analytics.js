@@ -14,7 +14,7 @@ import type { DataMap } from 'Reconnect/src/lib/utils'
 const AnalyticsManager = {}
 
 AnalyticsManager.init = async () => {
-    const analyticsEnabled = true //!__DEV__
+    const analyticsEnabled = !__DEV__
     await analytics().setAnalyticsCollectionEnabled(analyticsEnabled)  
     
     await _setUserProperties()
