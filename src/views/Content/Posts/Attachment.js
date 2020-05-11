@@ -15,7 +15,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 
 
-export const AttachmentThumbnail = ({ attachment, tappable } : { attachment: Attachment, tappable: boolean }) => {
+export const AttachmentThumbnail = ({ attachment } : { attachment: Attachment }) => {
 
     /* Hooks */
     const navigation = useNavigation()
@@ -46,14 +46,10 @@ export const AttachmentThumbnail = ({ attachment, tappable } : { attachment: Att
         )
     }
     
-    return tappable ? (      
+    return (      
         <TouchableOpacity activeOpacity={1} onPress={_onPress}>
             {_render()}
         </TouchableOpacity>
-    ) : (
-        <View>
-            {_render()}
-        </View>
     )
 }
 

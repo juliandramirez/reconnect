@@ -33,6 +33,15 @@ export async function shareInstallApp(spaceInvitationCode: string) {
 }
 
 /* MARK: - UI Utils */
+
+export function getHighlightColor(color: ?string): string {
+    if (!color) {
+        return '#444'
+    }
+    const index = Theme.colors.spaceColors.findIndex(val => val == color)
+    return index != -1 ? Theme.colors.highlightColors[index] : '#444'
+}
+
 export function hideLoadingScreen() {
     RNBootSplash.hide()
 }

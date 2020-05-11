@@ -22,7 +22,6 @@ import NotificationsManager from 'Reconnect/src/services/notifications'
 import type { UploadModalProps } from './upload'
 import UploadModal from './upload'
 import AddAttachments from './attachment'
-import { PostEnvelope } from './../Components'
 
 
 const NewPostView = () => {
@@ -64,7 +63,7 @@ const NewPostView = () => {
                     `To: ${Platform.OS == 'ios' ? space.configuration.shortName.substring(0, 6) : space.configuration.shortName}` 
                 : 'New Letter',
             headerRight: () => (
-                <Button title={editMode ? 'SAVE' : 'PUBLISH'} type='clear' 
+                <Button title={editMode ? 'SAVE' : 'SEND'} type='clear' 
                     loading={publishing}
                     loadingProps={{color: 'darkgrey'}}
                     titleStyle={{color: 'black'}}                     
@@ -132,8 +131,8 @@ const NewPostView = () => {
                     cancelButton: 'Don\'t dismiss',
                     continueButton: 'Dismiss changes'
                 } : {
-                    title: 'Letter wasn\'t published',
-                    message: 'Dismiss letter without publishing?',
+                    title: 'Letter was not sent',
+                    message: 'Dismiss letter without sending?',
                     cancelButton: 'Don\'t dismiss',
                     continueButton: 'Dismiss Letter'
                 }
@@ -179,9 +178,9 @@ const NewPostView = () => {
                 }
 
                 navigation.goBack()
-                showSuccessMessage('Letter published')                
+                showSuccessMessage('Letter sent')                
             } catch {
-                showErrorMessage('Letter could not be published')
+                showErrorMessage('Letter could not be sent')
                 setPublishing(false) 
             }
         }  
@@ -202,7 +201,7 @@ const NewPostView = () => {
                     },
                     error: (e) => {
                         if (e != 'upload-cancelled') {
-                            showErrorMessage('Letter could not be published')                      
+                            showErrorMessage('Letter could not be sent')                      
                         }                        
                         setPublishing(false)
                         setUploadModalProps(null)
@@ -210,7 +209,7 @@ const NewPostView = () => {
                 })
             }
         } else {
-            showErrorMessage('Can not publish an empty letter')
+            showErrorMessage('Can not send an empty letter')
         }     
     }
 

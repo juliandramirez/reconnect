@@ -20,8 +20,8 @@ import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import AnalyticsManager from 'Reconnect/src/lib/analytics'
 import Constants from 'Reconnect/src/Constants'
 import runMigrations from 'Reconnect/src/lib/migrations'
-
 import Loading from 'Reconnect/src/lib/Loading'
+
 import Onboarding from './views/Onboarding'
 import Content from './views/Content'
 

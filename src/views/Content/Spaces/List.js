@@ -194,7 +194,7 @@ export const SpaceView = ({ space, isSelected, previewMode = false }
         backgroundColor: 'white'
     } : {
         title: space.configuration?.shortName ?? '',
-        borderWidth: previewMode ? 0.5 : isSelected ? 1 : 0,
+        borderWidth: previewMode ? 0.5 : isSelected ? 1.5 : 0,
         backgroundColor: space.configuration?.color ?? 'white'
     }
 
@@ -205,12 +205,12 @@ export const SpaceView = ({ space, isSelected, previewMode = false }
             title={props.title} 
             titleStyle={{
                 fontSize: 14,
-                color: '#444444',
+                color: '#333',
                 fontWeight: 'bold'
             }}
             containerStyle={{
                 borderWidth: props.borderWidth,
-                borderColor: 'black',                                       
+                borderColor: '#333',                                       
                 backgroundColor: 'white'
             }}                
             overlayContainerStyle={{

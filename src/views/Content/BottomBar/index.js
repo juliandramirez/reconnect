@@ -19,6 +19,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 import type { Space } from 'Reconnect/src/services/spaces'
 import type { PostInput } from 'Reconnect/src/services/posts'
 import { NavigationRoutes } from 'Reconnect/src/views/Content'
+import { getHighlightColor } from 'Reconnect/src/lib/utils'
 
 import EmailModal from './email-modal'
 import { useHandwrittenPost } from './handwritting'
@@ -44,6 +45,10 @@ const styles = EStyleSheet.create({
     rightIcon: {
         fontSize: 40,
         paddingRight: '8 rem'
+    },
+    leftIcon: {
+        fontSize: 36,
+        paddingLeft: '8 rem'
     },
 })
 
@@ -99,13 +104,7 @@ const BottomBar = ( { space } : { space: Space }) => {
     const [showEmptyModal, setShowEmptyModal] = useState<boolean>(false)
 
     /* Properties */
-    const highlightColor = 
-        Theme.colors.highlightColors[
-            Theme.colors.spaceColors.findIndex(val => 
-                //$FlowExpectedError: space configuration is not null here
-                val == space.configuration.color
-            )
-        ]        
+    const highlightColor = getHighlightColor(space.configuration?.color)
 
     /* Functions */
     function _resetModals() {
@@ -232,15 +231,16 @@ const BottomBar = ( { space } : { space: Space }) => {
         {_renderModal()}
 
         <View style={ styles.bottomContainer }>
-            <View style={{flex:1, flexGrow:1, alignItems: 'flex-start' }}>
-                { 
-                    __DEV__ ? 
-                        <TouchableOpacity onPress={AuthManager.signOut} 
-                            style={{ flex:1, flexGrow:1, width: '100%', height: '100%' }}                         
-                        /> 
-                    : 
-                        <></>
-                }
+            <View style={{flex:1, flexGrow:1, justifyContent: 'center', alignItems: 'flex-start' }}>
+                <Button type='clear'
+                    icon={
+                        <Iosicons style={{ paddingLeft: styles._leftIcon.paddingLeft }} 
+                            name='ios-help-circle-outline' size={styles._leftIcon.fontSize} 
+                            color={highlightColor}                             
+                        />
+                    }
+                    onPress={ () => navigation.navigate(NavigationRoutes.FAQ) }                    
+                />
             </View>            
 
             <View style={{ flex:1, flexGrow:1 }}>
@@ -255,8 +255,8 @@ const BottomBar = ( { space } : { space: Space }) => {
                 />
             </View>            
                     
-            <View style={{flex:1, flexGrow:1, alignItems: 'flex-end'}}>
-                <Button type='clear' 
+            <View style={{flex:1, flexGrow:1, alignItems: 'flex-end', justifyContent: 'center'}}>
+                <Button type='clear'
                     icon={
                         <Iosicons style={{ paddingRight: styles._rightIcon.paddingRight }} 
                             name='ios-crop' size={styles._rightIcon.fontSize} color={highlightColor}                             

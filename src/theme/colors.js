@@ -1,7 +1,10 @@
-
+/**
+ * @flow
+ */
 
 const colors = {
     appBackground: '#f7f7f7',
+    postsContainer: '#f7f7f7',
     contentSeparator: '#B2B2B2',
     contentBorders: '#ABADAF',
     spaceColors: [
@@ -20,7 +23,7 @@ const colors = {
         '#705e00',
         '#624500',
         '#425a13',        
-        '#14532c'
+        '#14532c',
     ],
     successNotification: '#407894',
     errorNotification: '#802814',

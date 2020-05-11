@@ -15,7 +15,7 @@ import Theme from 'Reconnect/src/theme/Theme'
 import { useModalBackground } from 'Reconnect/src/lib/utils'
 
 
-const NUMBER_OF_PAGES = 6
+const NUMBER_OF_PAGES = 7
 
 const styles = EStyleSheet.create({
     firstScreenContainer: {
@@ -147,8 +147,12 @@ const Onboarding = () => {
                 </View>
 
                 <OnboardingPage 
-                    image={Theme.images.onboarding.post}
-                    text={'exchange letters with your close ones\n\ncreate invaluable memories'} />
+                    image={Theme.images.onboarding.letters}
+                    text={'exchange letters with your close ones'} />
+
+                <OnboardingPage 
+                    image={Theme.images.onboarding.memories}
+                    text={'create invaluable memories\n'} />
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.spaces}

@@ -11,8 +11,9 @@ import Container from './Container'
 import AddSpace from './Spaces/Add'
 import EditSpace from './Spaces/Edit'
 import AddSpaceSuccess from './Spaces/Add/Success'
-import Post, { PostDetail } from './Posts/View'
+import PostDetail from './Posts/View/Detail'
 import NewPost from './Posts/New'
+import FAQ from './FAQ'
 import { AttachmentDetailView } from './Posts/Attachment'
 
 
@@ -23,7 +24,8 @@ export const NavigationRoutes = {
     NewPost: 'NewPost',
     AddSpace: 'AddSpace',
     EditSpace: 'EditSpace',
-    SpaceAdded: 'SpaceAdded'
+    SpaceAdded: 'SpaceAdded',
+    FAQ: 'FAQ'
 }
 
 
@@ -53,6 +55,11 @@ const RootStackScreen = () => (
         <Stack.Screen 
             name={ NavigationRoutes.AttachmentDetail } 
             component={ AttachmentDetailView } 
+        />
+
+        <Stack.Screen 
+            name={ NavigationRoutes.FAQ } 
+            component={ FAQ } 
         />
     </RootStack.Navigator>    
 )

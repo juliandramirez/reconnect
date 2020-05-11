@@ -1,16 +1,18 @@
-
+/**
+ * @flow
+ */
 
 const images = {
-    topPost: require('Reconnect/assets/img/top-trans-white.png'),
     videoPlaceholder: require('Reconnect/assets/img/video-placeholder.png'),
     waitingFor: require('Reconnect/assets/img/waiting-for.gif'),
+    stamp: require('Reconnect/assets/img/stamp.png'),
     onboarding: {
-        post: require('Reconnect/assets/img/onboarding-post.png'),
+        letters: require('Reconnect/assets/img/onboarding-letters.png'),
+        memories: require('Reconnect/assets/img/onboarding-memories.png'),
         spaces: require('Reconnect/assets/img/onboarding-spaces.png'),
-        controls: require('Reconnect/assets/img/onboarding-controls.png'),
         notifications: require('Reconnect/assets/img/onboarding-notifications.png'),
         mail: require('Reconnect/assets/img/onboarding-mail.png'),
-        handwriting: require('Reconnect/assets/img/onboarding-handwriting.png'),
+        handwriting: require('Reconnect/assets/img/onboarding-handwriting.png'),        
     }
 }
 

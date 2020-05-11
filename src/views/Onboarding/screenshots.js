@@ -102,8 +102,13 @@ const Onboarding = () => {
                 </>
 
                 <OnboardingPage 
-                    image={Theme.images.onboarding.post}
-                    text={'exchange letters with your close ones\n\ncreate invaluable memories'} />
+                    image={Theme.images.onboarding.letters}
+                    text={'exchange letters with your close ones'} />
+
+                <OnboardingPage 
+                    image={Theme.images.onboarding.memories}
+                    text={'create invaluable memories\n'} />
+
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.spaces}

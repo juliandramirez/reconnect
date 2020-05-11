@@ -2,12 +2,14 @@
  * @flow
  */
 
-import React, { useState, useEffect, useRef } from 'react'
+import * as React from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Image, Text, View, TouchableOpacity, FlatList, Alert, ActivityIndicator } from 'react-native'
 import { Button } from 'react-native-elements'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import Zocial from 'react-native-vector-icons/Zocial'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { useNavigation } from '@react-navigation/native'
 
 import type { Space } from 'Reconnect/src/services/spaces'
@@ -19,10 +21,9 @@ import DraftsManager from 'Reconnect/src/services/drafts'
 import AuthManager from 'Reconnect/src/services/auth'
 import Loading from 'Reconnect/src/lib/Loading'
 import Theme from 'Reconnect/src/theme/Theme'
-import { shareInstallApp, showInfoMessage } from 'Reconnect/src/lib/utils'
+import { shareInstallApp, showInfoMessage, getHighlightColor } from 'Reconnect/src/lib/utils'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
-
-import PostView from './View'
+import PostEnvelopeView from 'Reconnect/src/views/Content/Posts/View/Envelope'
 
 
 const styles = EStyleSheet.create({
@@ -72,13 +73,32 @@ const styles = EStyleSheet.create({
         notWaitingMessage: { 
             fontSize: '13 rem', 
             fontWeight: 'normal', 
-            color: '#000', 
+            color: '#444', 
             textAlign: 'center', 
             textTransform: 'uppercase' 
         },
-    postsContainer: {
-        marginTop: '5 rem',
-        flex: 1
+    scrollGuideContainer: {
+        flexDirection: 'row',
+        height: '35 rem',
+        borderBottomWidth: '0 rem',
+        borderColor: '#444'
+    },
+        scrollGuideMessage: {
+            fontSize: '14 rem', 
+            textAlign: 'center',
+            textTransform: 'uppercase',
+            color: '#444', 
+            fontWeight: 'bold'
+        },
+        scrollGuideBackToTop: { 
+            alignItems: 'center', 
+            width: '50 rem',
+            flex: 1,
+            justifyContent: 'center' 
+        },
+    postsContainer: {        
+        flex: 1, 
+        backgroundColor: Theme.colors.postsContainer       
     },
     draftContainer: {
         alignItems: 'center', 
@@ -131,16 +151,29 @@ const PostList = ({ space } : { space: Space }) => {
     const [draft, setDraft] = useState<?Draft>(null)
     const [initializing, setInitializing] = useState<boolean>(true)
     const [waitingForGuest, setWaitingForGuest] = useState<boolean>(space.guestId == null)
+    const [scrollGuide, setScrollGuide] = useState<?string>(null)
 
     /* Variables */
     const listRef = useRef()
 
-    /* Logic needed to detect end of list srrolling */
-    const postsSizeRef = useRef<number>(0)
+    /* Logic needed to detect end of list scrolling */
+    const postsRef = useRef<Array<Post>>([])
     const [lastItemIsViewable, setLastItemIsViewable] = useState<boolean>(false)    
     const onViewableItemsChangedRef = useRef(({ viewableItems, changed }) => {
-        const viewable = viewableItems.map(item => item.index).includes(postsSizeRef.current - 1)
-        setLastItemIsViewable(viewable)
+        const viewableItemIndexes = viewableItems.map(item => item.index)
+
+        // show scroll guide when the user has pased the first page...
+        const firstItemVisible = viewableItemIndexes.includes(0)
+        if (!firstItemVisible && viewableItemIndexes.length > 0) {  
+            // $FlowExpectedError: not null  
+            const postV = postsRef.current[viewableItemIndexes[viewableItemIndexes.length - 1]]
+            setScrollGuide(postV.created.format('MMMM YYYY'))
+        } else {
+            setScrollGuide(null)
+        }
+
+        const lastItemVisible = viewableItemIndexes.includes(postsRef.current.length - 1)
+        setLastItemIsViewable(lastItemVisible)
 
 // TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE       
 // console.log('POSTS RENDERED: ' + Date.now())
@@ -159,9 +192,10 @@ const PostList = ({ space } : { space: Space }) => {
     function _init() {  
     // every time space changes reset to defaults the values...
         setPosts([])
-        postsSizeRef.current = 0
+        postsRef.current = []
         setDraft(null)
         setInitializing(true)
+        setScrollGuide(null)
         setWaitingForGuest(space.guestId == null)
 
 // TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE POSTS    
@@ -174,7 +208,7 @@ const PostList = ({ space } : { space: Space }) => {
 
                 setInitializing(false)
                 setPosts(updatedPosts) 
-                postsSizeRef.current = updatedPosts.length
+                postsRef.current = updatedPosts
             }
         })
 
@@ -282,17 +316,45 @@ const PostList = ({ space } : { space: Space }) => {
         {/* POSTS */}
         {
             posts.length > 0 ?  
+            <>
+                {
+                    !waitingForGuest && scrollGuide ? 
+                        <View style={{                         
+                                ...styles.scrollGuideContainer,                                
+                                //$FlowExpectedError: not null
+                                backgroundColor: space.configuration.color 
+                            }}>
+                                <View style={{ flex: 1}} />
+                                <View style={{ flex: 1, justifyContent: 'center' }}>
+                                    <Text style={ styles.scrollGuideMessage }>
+                                        {scrollGuide}
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, alignItems: 'flex-end'}}>
+                                    <TouchableOpacity style={ styles.scrollGuideBackToTop }
+                                        // $FlowExpectedError: not null
+                                        onPress={() => listRef.current.scrollToIndex({ index: 0, animated: true })}>
+
+                                        <FontAwesome name='angle-double-up'
+                                            size={styles._scrollGuideMessage.fontSize * 2} color={'#444'}                             
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                        </View>
+                    : 
+                        <></>
+                }
                 <View style={styles.postsContainer}>
                     <FlatList
                         data={posts}
-                        renderItem={ ({ item }) => <PostView post={item} space={space}/> }
+                        renderItem={ ({ item }) => <PostListItem post={item} space={space}/> }
                         keyExtractor={ item => item.id }
                         ref={ ref => listRef.current = ref }
 
                     // half default values...
                         initialNumToRender={5}
                         maxToRenderPerBatch={5}
-                        updateCellsBatchingPeriod={100}
+                        updateCellsBatchingPeriod={50}
                         windowSize={11}
 
                         onViewableItemsChanged={onViewableItemsChangedRef.current}
@@ -300,6 +362,7 @@ const PostList = ({ space } : { space: Space }) => {
                         ListFooterComponent={ lastItemIsViewable ? <></> : <ActivityIndicator size='small' color='darkgrey' /> }
                     />
                 </View>
+            </>
             :
                 <View style={styles.emptyMessageContainer}>
                     <Text style={styles.emptyMessage}>
@@ -309,5 +372,20 @@ const PostList = ({ space } : { space: Space }) => {
         } 
     </>)
 }
+
+const PostListItem = React.memo(PostEnvelopeView, (prevProps, nextProps) => {
+    const prevPost = prevProps.post
+    const nextPost = nextProps.post
+
+    const equalAttachments = 
+        prevPost.attachments.length == nextPost.attachments.length &&
+        prevPost.attachments.reduce((accum, item, index) => 
+            accum && item.url == nextPost.attachments[index].url, true)
+            
+    const contentIsEqual = prevPost.content == nextPost.content && equalAttachments
+
+    // space, post.author and  post.created do not change over time, no need check them...
+    return prevPost.id == nextPost.id && contentIsEqual
+})
 
 export default PostList
