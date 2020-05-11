@@ -102,8 +102,7 @@ const FAQ = () => {
                         Are my letters private?
                     </Text>
                     <Text style={ styles.answer }>
-                        They are. Your letters are sent and received through an encrypted secure channel (SSL).{'\n'}{'\n'}
-                        Your content is stored in secured infrastructure in the cloud as well.{'\n'}
+                        They are. Your letters are sent and received through an encrypted secure channel (SSL) and your content is stored in secured infrastructure in the cloud.{'\n'}{'\n'}
                         No one accesses your content but you and the people in your shared spaces.
                     </Text>
                 </View>
@@ -117,7 +116,7 @@ const FAQ = () => {
                         Platform.OS == 'ios' ? 
                             <Text style={ styles.answer }>
                                 Your content is associated with the apple account configured in your device when you installed the app.{'\n'}
-                                Your content will always be there as long as you don't change your apple account.
+                                The content will be in the new device as long as you don't change your apple account.
                                 {'\n'}{'\n'}
                                 Deactivate your old device as soon as you can to prevent other people from accessing your letters.{'\n'}
                                 For more information refer to
@@ -141,10 +140,10 @@ const FAQ = () => {
                 
                 <View style={ styles.questionContainer }>
                     <Text style={ styles.question }>
-                        Will I ever be have to pay for using the app?
+                        Will I ever have to pay to use the app?
                     </Text>
                     <Text style={ styles.answer }>
-                        Paid premium features will be released in the future but you will always be able to access, send and receive your letters free of any charge.
+                        Paid premium features will be released in the future but you will always be able to access, send and receive your letters for free.
                     </Text>
                 </View>
 
@@ -153,7 +152,7 @@ const FAQ = () => {
                         Is the app available for {Platform.OS == 'ios' ? 'Android' : 'Apple'} devices?
                     </Text>
                     <Text style={ styles.answer }>
-                        Yes it is. When a user opens the invitation link you send, it redirects them to the appropriate app store
+                        Yes it is. When a user opens the invitation link you send when sharing a space, it redirects them to the appropriate app store
                     </Text>
                 </View>
 
