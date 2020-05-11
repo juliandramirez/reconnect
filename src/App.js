@@ -89,6 +89,8 @@ const MainUI = () => {
             setIsSignedIn(userId !== null && userId !== undefined)               
             hideLoadingScreen()
         }
+
+        authListener(AuthManager.currentUserId())
         return AuthManager.init(authListener)        
     }
 
