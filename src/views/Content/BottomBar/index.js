@@ -20,6 +20,7 @@ import type { Space } from 'Reconnect/src/services/spaces'
 import type { PostInput } from 'Reconnect/src/services/posts'
 import { NavigationRoutes } from 'Reconnect/src/views/Content'
 import { getHighlightColor } from 'Reconnect/src/lib/utils'
+import { showErrorMessage } from 'Reconnect/src/lib/utils'
 
 import EmailModal from './email-modal'
 import { useHandwrittenPost } from './handwritting'
@@ -108,6 +109,10 @@ const BottomBar = ( { space } : { space: Space }) => {
 
     /* Functions */
     function _resetModals() {
+        if (showEmptyModal) {
+            return
+        }
+
         setModalShown(false)
         setEmailModalShown(false)
         setShowEmptyModal(false)
@@ -124,13 +129,19 @@ const BottomBar = ( { space } : { space: Space }) => {
 
     async function _fromYourHandwriting() {  
         // need to do this because hiding the modal hides the alert dialog: https://github.com/facebook/react-native/pull/26839
-        setShowEmptyModal(true)              
-        const postInput = await startHandwrittenPost()               
-        if (postInput) {
-            navigation.navigate(NavigationRoutes.NewPost, { space, postInput })
-        }
-        
-        _resetModals() 
+        setShowEmptyModal(true)
+        try {
+            const postInput = await startHandwrittenPost()               
+            if (postInput) {
+                navigation.navigate(NavigationRoutes.NewPost, { space, postInput })
+            }
+        } catch(error) {
+            showErrorMessage('Check your internet connection')
+        } finally {
+            setModalShown(false)
+            setEmailModalShown(false)
+            setShowEmptyModal(false)
+        }          
     }
 
     /* Render */

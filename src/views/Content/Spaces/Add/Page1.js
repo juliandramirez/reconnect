@@ -89,7 +89,7 @@ const Page1 = ({ submit, cancel, dismissable }
                         submit(space)
                     }   
                 } catch {
-                    showErrorMessage('Invalid invitation code')                    
+                    showErrorMessage('Check your internet connection')                  
                     setSubmitting(false)
                 }             
             } else if (newSpace) {

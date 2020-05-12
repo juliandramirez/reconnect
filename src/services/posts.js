@@ -80,14 +80,17 @@ PostsManager.addPost = async ({ source, spaceId, content, attachments } : {
         throw Constants.errorCodes.unauthenticated
     }
 
-    await COLLECTION_REF.add({
-        spaceId,
-        authorId: userId,
-        authorUtcOffset: moment().utcOffset(),
-        created: firestore.FieldValue.serverTimestamp(),        
-        content,        
-        attachments
-    })  
+    await firestore().runTransaction(async transaction => {
+        const newDoc = COLLECTION_REF.doc()
+        await transaction.set(newDoc, {
+            spaceId,
+            authorId: userId,
+            authorUtcOffset: moment().utcOffset(),
+            created: firestore.FieldValue.serverTimestamp(),        
+            content,        
+            attachments
+        })
+    })
 
     const numberOfImages = attachments ? attachments.filter(item => item.type == 'image').length : 0
     const numberOfVideos = attachments ? attachments.filter(item => item.type == 'video').length : 0
@@ -238,9 +241,11 @@ PostsManager.editPost = async ({ id, content, attachments } : {
         throw Constants.errorCodes.unauthenticated
     }
 
-    await COLLECTION_REF.doc(id).update({ 
-        content,
-        attachments
+    await firestore().runTransaction(async transaction => {
+        await transaction.update(COLLECTION_REF.doc(id), { 
+            content,
+            attachments
+        })
     })
 }
 

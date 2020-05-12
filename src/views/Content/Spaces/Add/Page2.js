@@ -97,7 +97,7 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
         useState<?ReminderValue>(initialConfiguration ? initialConfiguration.reminderValue : null)
 
     /* Functions */
-    function _submit() {
+    async function _submit() {
         if (!submitting) {
             if (!shortName) {
                 showErrorMessage('Select a nickname for him/her')
@@ -107,10 +107,10 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
                 setSubmitting(true)
 
                 try {
-                    submit({ shortName, color, reminderValue })
-                } catch {
+                    await submit({ shortName, color, reminderValue })
+                } catch (error){
                     setSubmitting(false)
-                    showErrorMessage('Server error. Please try again')
+                    showErrorMessage('Check your internet connection')
                 }  
             }       
         }        
@@ -154,6 +154,7 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
                     <View style={ styles.basicInfoField }>
                         <Text style={ styles.fieldText }>Nickname for him/her</Text>
                         <Input 
+                            disabled={submitting}
                             inputContainerStyle={{ marginHorizontal: -10 }}
                             placeholder="e.g. 'Dad', 'big Bro', 'BFF'"   
                             placeholderTextColor='#ccc'
@@ -171,8 +172,10 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
                             Theme.colors.spaceColors.map( item => 
                                 <TouchableOpacity key={item} activeOpacity={1}
                                     onPress={() => {
-                                        setColor(item)
-                                        Keyboard.dismiss()
+                                        if (!submitting) {
+                                            setColor(item)
+                                            Keyboard.dismiss()
+                                        }                                        
                                     }}
                                     style={{ 
                                         aspectRatio: 1, 
@@ -207,6 +210,7 @@ const Page2 = ({ initialConfiguration = null, submitLabel, cancelLabel, submit, 
                         How often would you like to be reminded to write something to this person?
                     </Text>
                     <RNPickerSelect 
+                        disabled={submitting}
                         style={{
                             inputIOS: styles.remindersPickerIOS,
                             inputAndroid: styles.remindersPickerAndroid,

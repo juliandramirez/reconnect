@@ -119,7 +119,7 @@ const Onboarding = () => {
                             showErrorMessage('You need to select an account to start')
                         }
                     } else {
-                        showErrorMessage('Unexpected sign in error. Please try again.')
+                        showErrorMessage('Check your internet connection')
                     }
 
                     setSubmitting(false)
@@ -152,7 +152,7 @@ const Onboarding = () => {
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.memories}
-                    text={'create invaluable memories\n'} />
+                    text={'create invaluable memories'} />
 
                 <OnboardingPage 
                     image={Theme.images.onboarding.spaces}

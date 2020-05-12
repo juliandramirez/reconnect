@@ -78,7 +78,8 @@ SpacesManager.getSpaceWithInvitationCode = async (code: string) : Promise<?Space
         .where('invitationCode', '==', code)
         .where('waitingForGuest', '==', true)
 
-    const results = await ref.get()
+    // get with invitation code can never be from cache...
+    const results = await ref.get({ source: 'server' })
 
     if (results.size != 1) {
         return null
@@ -96,14 +97,17 @@ SpacesManager.createSpace = async (configuration : SpaceConfiguration) : Promise
 
     // create new space
     const invitationCode = await _computeInvitationCode()
-    const newSpaceRef = await COLLECTION_REF.add({
-        invitationCode,
-        waitingForGuest: true,
-        created: firestore.FieldValue.serverTimestamp(),
-        hostConfiguration: {
-            userId,            
-            ...configuration
-        }
+    const newSpaceRef = COLLECTION_REF.doc()
+    await firestore().runTransaction(async transaction => {        
+        await transaction.set(newSpaceRef, {
+            invitationCode,
+            waitingForGuest: true,
+            created: firestore.FieldValue.serverTimestamp(),
+            hostConfiguration: {
+                userId,            
+                ...configuration
+            }
+        })
     })
 
     const space = {
@@ -128,12 +132,14 @@ SpacesManager.attachToSpace = async (space: Space, configuration: SpaceConfigura
     }
 
     const spaceRef = COLLECTION_REF.doc(space.id)
-    await spaceRef.update({
-        waitingForGuest: false,
-        guestConfiguration: {
-            userId,
-            ...configuration
-        }
+    await firestore().runTransaction(async transaction => {
+        await transaction.update(spaceRef, {
+            waitingForGuest: false,
+            guestConfiguration: {
+                userId,
+                ...configuration
+            }
+        })
     })
 
     const updatedSpace = {
@@ -187,19 +193,23 @@ SpacesManager.editSpaceConfiguration = async ({ id, configuration } : { id: stri
 
     const space = _dataToSpaceObject(spaceDoc.id, spaceDoc.data())    
     if (userId == space.hostId) {
-        await spaceRef.update({
-            hostConfiguration: {
-                userId,
-                ...configuration
-            }
+        await firestore().runTransaction(async transaction => {
+            await transaction.update(spaceRef, {
+                hostConfiguration: {
+                    userId,
+                    ...configuration
+                }
+            })
         })
     } else if (userId == space.guestId) {
-        await spaceRef.update({
-            guestConfiguration: {
-                userId,
-                ...configuration
-            }
-        })        
+        await firestore().runTransaction(async transaction => {
+            await transaction.update(spaceRef, {
+                guestConfiguration: {
+                    userId,
+                    ...configuration
+                }
+            })
+        })    
     } else {
         throw Constants.errorCodes.unauthorized
     }

@@ -7,6 +7,8 @@ import { AppState } from 'react-native'
 import CodePush from 'react-native-code-push'
 
 
+const INSTALLATION_TIMEOUT = 5000
+
 /*
  * APP UPDATES
  *
@@ -92,6 +94,9 @@ export function useCodePush(initialize?: Function){
                     isCodePushSyncingRef.current = false
                     resolve()
                 })
+
+              // resolve after a given timeout
+                setTimeout(resolve, INSTALLATION_TIMEOUT)
             }
         })
     }

@@ -5,6 +5,8 @@
 import remoteConfig from '@react-native-firebase/remote-config'
 
 
+const ACTIVATION_TIMEOUT = 3000
+
 /* Configuration */
 
 export const RemoteConstants = {
@@ -42,7 +44,10 @@ Constants.init = async () => {
         isDeveloperModeEnabled: __DEV__
     })    
     await remoteConfig().setDefaults(RemoteConstantsDefaults) 
-    await remoteConfig().fetchAndActivate()
+    await Promise.race([
+        remoteConfig().fetchAndActivate(), 
+        new Promise(resolve => setTimeout(resolve, ACTIVATION_TIMEOUT))
+    ])
 }
 
 Constants.getRemoteConstant = (key: string) => {

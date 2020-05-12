@@ -79,7 +79,7 @@ const NewPostView = () => {
                 />                
             )
         })
-    }, [navigation, content, publishing] )
+    }, [navigation, content, publishing, uploadModalProps] )
 
     useFocusEffect( _androidBackHandler, [])
     function _androidBackHandler() {
@@ -180,7 +180,7 @@ const NewPostView = () => {
                 navigation.goBack()
                 showSuccessMessage('Letter sent')                
             } catch {
-                showErrorMessage('Letter could not be sent')
+                showErrorMessage('Check your internet connection')
                 setPublishing(false) 
             }
         }  
@@ -201,7 +201,7 @@ const NewPostView = () => {
                     },
                     error: (e) => {
                         if (e != 'upload-cancelled') {
-                            showErrorMessage('Letter could not be sent')                      
+                            showErrorMessage('Check your internet connection')
                         }                        
                         setPublishing(false)
                         setUploadModalProps(null)
@@ -238,7 +238,8 @@ const NewPostView = () => {
                             fontFamily: 'the girl next door', 
                             textAlignVertical: 'top'
                         }}                         
-                        value={content}                        
+                        value={content}  
+                        editable={!publishing}                     
                     />
                     
                 </View>

@@ -13,6 +13,7 @@ import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 import SpacesManager from 'Reconnect/src/services/spaces'
 import type { Space, SpaceConfiguration } from 'Reconnect/src/services/spaces'
 import Theme from 'Reconnect/src/theme/Theme'
+import { showErrorMessage } from 'Reconnect/src/lib/utils'
 
 import Page2 from './Add/Page2'
 
@@ -31,7 +32,7 @@ const styles = EStyleSheet.create({
         },
         page: {
             flex: 0,
-            height: '446 rem',            
+            height: '456 rem',            
         },
 })
 
@@ -48,7 +49,7 @@ const EditSpace = () => {
     /* Functions */    
     async function _submit( configuration: SpaceConfiguration) {
         await SpacesManager.editSpaceConfiguration({ id: space.id, configuration: configuration })
-        _cancel()
+        _cancel()               
     }
 
     function _cancel() {

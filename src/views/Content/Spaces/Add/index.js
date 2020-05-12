@@ -8,7 +8,7 @@ import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/nativ
 import EStyleSheet from 'react-native-extended-stylesheet'
 
 import NotificationsManager from 'Reconnect/src/services/notifications'
-import { showSuccessMessage } from 'Reconnect/src/lib/utils'
+import { showSuccessMessage, showErrorMessage } from 'Reconnect/src/lib/utils'
 import { useModalBackground } from 'Reconnect/src/lib/utils'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
 import SpacesManager from 'Reconnect/src/services/spaces'
@@ -33,7 +33,7 @@ const styles = EStyleSheet.create({
         },
         page: {
             flex: 0,
-            height: '446 rem',            
+            height: '456 rem',            
         },
 })
 

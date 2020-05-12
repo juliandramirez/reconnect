@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, SafeAreaView, StatusBar, Dimensions } from 'react-native'
+import { StyleSheet, SafeAreaView, StatusBar, Dimensions, Platform } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import EStyleSheet from 'react-native-extended-stylesheet'
@@ -55,8 +55,14 @@ const App = () => {
     }
 
     function initializeStyles() {
-        const { width } = Dimensions.get('window')
-    
+        const screen = Dimensions.get('screen')
+        const window = Dimensions.get('window')
+
+        const aspectRatio = screen.width / screen.height        
+        // account for android navigation bar height (on iOS the difference is 0)
+        const heightDifference = screen.height - window.height
+        const width = window.width - (heightDifference * aspectRatio)
+        
         EStyleSheet.build({
             $rem: width / REM_SCALE
         })

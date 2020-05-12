@@ -102,7 +102,7 @@ export function useHandwrittenPost(): () => Promise<?PostInput> {
         const PHOTO_SEPARATOR = '\n\n'
 
         const processedPhotosText = await Promise.all(
-            photos.map( (photo) => new Promise<string>( resolve => {
+            photos.map( (photo) => new Promise<string>( (resolve, reject) => {
                     vision().cloudDocumentTextRecognizerProcessImage(photo.url)
                     .then( processed => { 
 
@@ -118,6 +118,7 @@ export function useHandwrittenPost(): () => Promise<?PostInput> {
 
                         resolve(result.trim())
                     })
+                    .catch( error => reject(error))                    
                 })
             )
         )
