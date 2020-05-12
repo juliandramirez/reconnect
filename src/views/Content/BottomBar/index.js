@@ -270,7 +270,7 @@ const BottomBar = ( { space } : { space: Space }) => {
                 <Button type='clear'
                     icon={
                         <Iosicons style={{ paddingRight: styles._rightIcon.paddingRight }} 
-                            name='ios-crop' size={styles._rightIcon.fontSize} color={highlightColor}                             
+                            name='ios-cog' size={styles._rightIcon.fontSize} color={highlightColor}                             
                         />
                     }
                     onPress={ () => navigation.navigate(NavigationRoutes.EditSpace, { space: space }) }/>

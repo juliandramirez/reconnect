@@ -5,6 +5,7 @@
 import * as React from 'react'
 import { View, TouchableOpacity, Text, Image } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
+import LinearGradient from 'react-native-linear-gradient'
 
 import Theme from 'Reconnect/src/theme/Theme'
 import type { Post } from 'Reconnect/src/services/posts'
@@ -32,13 +33,13 @@ const styles = EStyleSheet.create({
                     fontSize: '14 rem', 
                     textTransform: 'uppercase', 
                     fontWeight: 'bold', 
-                    color: '#555',                     
+                    color: '#444',                     
                 },
                 subheading: { 
                     fontSize: '13 rem', 
                     paddingTop: '4 rem', 
                     fontWeight: 'normal', 
-                    color: '#555',                    
+                    color: '#444',                    
                     textTransform: 'uppercase',                     
                 },
             labelContainer: {
@@ -64,7 +65,7 @@ const styles = EStyleSheet.create({
                     },
                     imageContainer: { 
                         flexDirection: 'row',
-                        opacity: 0.4, 
+                        opacity: 0.66, 
                         marginLeft: '17 rem',
                     },
                         image: {
@@ -87,7 +88,7 @@ const styles = EStyleSheet.create({
         height: '100%',  
         position: 'absolute',        
         opacity: 0.5,
-        borderWidth: 0.25,
+        borderWidth: 0.5,
         borderStyle: 'solid',
         borderRadius: 1
     }   
@@ -97,7 +98,10 @@ const EnvelopeView = ({ post, space } : { post: Post, space: Space } ) => {
     
     /* Hooks */  
     const configuration = usePostConfiguration({ space, post })
-    const highlightColor = getHighlightColor(configuration.headerConfig.color)
+
+    /* Properties */  
+    const color = configuration.headerConfig.color
+    const highlightColor = getHighlightColor(color)
 
     /* Functions */  
     function _numberOfWords() {
@@ -138,7 +142,18 @@ const EnvelopeView = ({ post, space } : { post: Post, space: Space } ) => {
             onPress={ configuration.actionConfig.action } >
 
             {/* BACKGROUND */}
-            <View style={{ backgroundColor: configuration.headerConfig.color, ...styles.backgroundLayer, borderColor: highlightColor }}/>
+            <LinearGradient colors={[
+                '#fafafa',                 
+                color,                                                                            
+            ]} 
+                style={{ ...styles.backgroundLayer, 
+                    borderColor: highlightColor,
+                }}                
+                locations={[0, 0.66]}
+                useAngle={true}
+                angle={15} 
+                angleCenter={{ x: 0.33, y: 0.15 }}
+            />
 
             <View style={ styles.content }>        
 
@@ -170,7 +185,7 @@ const EnvelopeView = ({ post, space } : { post: Post, space: Space } ) => {
 
                         <View style={ styles.imageContainer }>
                             <Image resizeMode='contain' 
-                                style={ styles.image } 
+                                style={{ ...styles.image, tintColor: highlightColor }} 
                                 source={ Theme.images.stamp } 
                                 defaultSource={ Theme.images.stamp }                                    
                             />

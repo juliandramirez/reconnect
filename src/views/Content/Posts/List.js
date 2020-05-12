@@ -81,8 +81,7 @@ const styles = EStyleSheet.create({
     scrollGuideContainer: {
         flexDirection: 'row',
         height: '35 rem',
-        borderBottomWidth: '0 rem',
-        borderColor: '#444'
+        
     },
         scrollGuideMessage: {
             fontSize: '14 rem', 

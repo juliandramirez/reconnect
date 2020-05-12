@@ -36,7 +36,7 @@ export function usePostConfiguration({ space, post } : { space: Space, post: Pos
     const configuration = userIsAuthor ? {
         userIsAuthor,
         headerConfig: {
-            color: '#ddd',
+            color: '#f0efec',
             title: postDateText,
             subtitle: `From You @ ${post.created.format('h:mm a')}`
         },
