@@ -1,16 +1,18 @@
 diff --git a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModule.java b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModule.java
-index 48fb5c1..7dd7248 100644
+index 48fb5c1..80fa9dc 100644
 --- a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModule.java
 +++ b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModule.java
-@@ -481,6 +481,11 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
+@@ -481,6 +481,13 @@ public class ImagePickerModule extends ReactContextBaseJavaModule
      else
      {
        imageConfig = getResizedImage(reactContext, this.options, imageConfig, initialWidth, initialHeight, requestCode);
-+// ---- Fix for: https://github.com/react-native-community/react-native-image-picker/pull/1049
++      // ---- Fix for: https://github.com/react-native-community/react-native-image-picker/pull/1049
++      // some devices allow video anyways in photo only mode e.g Huawei Mate 20 Lite
 +      if (imageConfig == null) {
 +        responseHelper.invokeError(callback, "Video is not supported in image mode");
++        return;
 +      }
-+// ----
++      // ----
        if (imageConfig.resized == null)
        {
          removeUselessFiles(requestCode, imageConfig);
