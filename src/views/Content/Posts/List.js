@@ -20,6 +20,7 @@ import SpacesManager from 'Reconnect/src/services/spaces'
 import DraftsManager from 'Reconnect/src/services/drafts'
 import AuthManager from 'Reconnect/src/services/auth'
 import Loading from 'Reconnect/src/lib/Loading'
+import PerformanceManager from 'Reconnect/src/lib/performance'
 import Theme from 'Reconnect/src/theme/Theme'
 import { shareInstallApp, showInfoMessage, getHighlightColor } from 'Reconnect/src/lib/utils'
 import { NavigationRoutes } from 'Reconnect/src/views/Content/index'
@@ -157,6 +158,8 @@ const PostList = ({ space } : { space: Space }) => {
     const listRef = useRef()
 
     /* Logic needed to detect end of list scrolling */
+    const TRACE_ID = 'list-posts'
+    const traceRef = useRef<any>(null)
     const postsRef = useRef<Array<Post>>([])
     const [lastItemIsViewable, setLastItemIsViewable] = useState<boolean>(false)    
     const onViewableItemsChangedRef = useRef(({ viewableItems, changed }) => {
@@ -175,9 +178,11 @@ const PostList = ({ space } : { space: Space }) => {
         const lastItemVisible = viewableItemIndexes.includes(postsRef.current.length - 1)
         setLastItemIsViewable(lastItemVisible)
 
-// TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE       
-// console.log('POSTS RENDERED: ' + Date.now())
-
+    // trace...
+        if (traceRef.current) {
+            traceRef.current.stop()
+            traceRef.current = null
+        }
     })
     
     /* Effects */         
@@ -189,22 +194,29 @@ const PostList = ({ space } : { space: Space }) => {
     useEffect(_init, [space])
 
     /* Functions */
-    function _init() {  
+    function _init() {   
+
     // every time space changes reset to defaults the values...
         setPosts([])
         postsRef.current = []
+        traceRef.current = null
         setDraft(null)
         setInitializing(true)
         setScrollGuide(null)
         setWaitingForGuest(space.guestId == null)
 
-// TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE POSTS    
-// console.log('RENDER STARTED: ' + Date.now())        
-
+    // start trace...
+        PerformanceManager.startTrace(TRACE_ID).then(trace => traceRef.current = trace)
         const spaceChangesUnsubscribe = PostsManager.subscribeToChanges({ spaceId: space.id, listener: updatedPosts => {
 
-// TODO: USE FIREBASE PERF MODULE...MONITOR AND DECIDE WHEN TO PAGINATE POSTS   
-// console.log(`LOADED ${updatedPosts.length} POSTS: ` + Date.now() )
+                if (traceRef.current) {
+                    const numberOfPosts = updatedPosts.length
+                    traceRef.current.putMetric('numberOfPosts', numberOfPosts)
+
+                    if (numberOfPosts == 0) {
+                        traceRef.current.stop()
+                    }
+                }
 
                 setInitializing(false)
                 setPosts(updatedPosts) 

@@ -18,6 +18,7 @@ import AuthManager from 'Reconnect/src/services/auth'
 import SpacesManager from 'Reconnect/src/services/spaces'
 import CrashReportManager from 'Reconnect/src/lib/crashreports'
 import AnalyticsManager from 'Reconnect/src/lib/analytics'
+import PerformanceManager from 'Reconnect/src/lib/performance'
 import Constants from 'Reconnect/src/Constants'
 import runMigrations from 'Reconnect/src/lib/migrations'
 import Loading from 'Reconnect/src/lib/Loading'
@@ -46,6 +47,7 @@ const App = () => {
                 initializeStyles(), 
                 Constants.init(), 
                 CrashReportManager.init(),
+                PerformanceManager.init(),
                 AnalyticsManager.init()
             ])
             .then(runMigrations)
