@@ -87,7 +87,7 @@ const Onboarding = () => {
         <View style={styles.container}> 
             <StatusBar hidden={true} />
             {/* $FlowExpectedError: wtf */}
-            <Swiper loop={false} ref={ ref => swiperRef.current = ref}>
+            <Swiper loop={false} ref={ ref => swiperRef.current = ref} showsButtons={false} showsPagination={false}>
                 <>
                     <View style={styles.heading}>
                         <Text style={styles.headingText}>

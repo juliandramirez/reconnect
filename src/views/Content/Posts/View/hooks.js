@@ -16,7 +16,8 @@ type PostConfiguration = {|
     headerConfig: {|
         color: string,
         title: string,
-        subtitle: string
+        subtitle: string,
+        from: string,
     |},
     actionConfig: {|
         label: string,
@@ -31,14 +32,16 @@ export function usePostConfiguration({ space, post } : { space: Space, post: Pos
 
     /* Properties */
     const userIsAuthor = post.authorId == AuthManager.currentUserId()
-    const postDateText = post.created.format('dddd, MMM DD YYYY')
+    const title = `~~ ${post.title ?? 'untitled'} ~~`
+    const subtitle = `${post.created.format('dddd, MMM DD @ h:mm a')}`
 
     const configuration = userIsAuthor ? {
         userIsAuthor,
         headerConfig: {
-            color: '#f0efec',
-            title: postDateText,
-            subtitle: `From You @ ${post.created.format('h:mm a')}`
+            color: 'white',
+            title,
+            subtitle,
+            from: 'you'
         },
         actionConfig: {
             label: 'EDIT LETTER',
@@ -60,8 +63,9 @@ export function usePostConfiguration({ space, post } : { space: Space, post: Pos
         userIsAuthor,
         headerConfig: {
             color: space.configuration?.color ?? 'transparent',
-            title: postDateText,
-            subtitle: `From ${space.configuration?.shortName ?? 'Them'} @ ${post.created.format('h:mm a')}`
+            title,
+            subtitle,
+            from: space.configuration?.shortName ?? 'them'
         },
         actionConfig: {
             label: 'OPEN LETTER',

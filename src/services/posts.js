@@ -26,8 +26,9 @@ const COLLECTION_REF = firestore().collection(Constants.storageRefs.posts)
 export type Moment = Object // flow and typescript do not bide well
 
 export type Post = {|
-    id: string,
+    id: string,    
     content: string,
+    title: ?string,
     authorId: string,
     created: Moment,
     attachments: Array<Attachment>
@@ -68,10 +69,11 @@ PostsManager.getNumberOfUserPosts = async () : Promise<number> => {
     return results.size
 }
 
-PostsManager.addPost = async ({ source, spaceId, content, attachments } : { 
+PostsManager.addPost = async ({ source, spaceId, content, title, attachments } : { 
             source: PostSource,
             spaceId: string, 
             content: string, 
+            title: ?string,
             attachments?: Array<Attachment>
     }) => {
 
@@ -87,7 +89,8 @@ PostsManager.addPost = async ({ source, spaceId, content, attachments } : {
             authorId: userId,
             authorUtcOffset: moment().utcOffset(),
             created: firestore.FieldValue.serverTimestamp(),        
-            content,        
+            content,   
+            title,     
             attachments
         })
     })
@@ -230,9 +233,10 @@ PostsManager.subscribeToChanges = ( { spaceId, listener } : {
         )
 }
 
-PostsManager.editPost = async ({ id, content, attachments } : { 
+PostsManager.editPost = async ({ id, content, title, attachments } : { 
         id: string, 
         content: string,
+        title: ?string,
         attachments: Array<Attachment> 
     }) => {
 
@@ -244,6 +248,7 @@ PostsManager.editPost = async ({ id, content, attachments } : {
     await firestore().runTransaction(async transaction => {
         await transaction.update(COLLECTION_REF.doc(id), { 
             content,
+            title,
             attachments
         })
     })
@@ -257,6 +262,7 @@ function _dataToPostObject(id: string, data: DataMap): Post {
     return {
         id,
         content: data.content,
+        title: data.title ?? null,
         authorId: data.authorId,
         created: moment(createdMillis).utcOffset(offset),
         attachments: ((data.attachments ?? []):Array<Attachment>)

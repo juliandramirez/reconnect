@@ -163,8 +163,11 @@ const EnvelopeView = ({ post, space } : { post: Post, space: Space } ) => {
                         { configuration.headerConfig.title }
                     </Text>
                     <Text style={ styles.subheading }>
+                        <Text style={{ fontWeight: 'normal'}}>FROM:</Text> { configuration.headerConfig.from }
+                    </Text>                    
+                    <Text style={ styles.subheading }>
                         { configuration.headerConfig.subtitle }
-                    </Text>
+                    </Text>                    
                 </View>
 
                 {/* TEXT */}                    

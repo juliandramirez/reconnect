@@ -140,6 +140,18 @@ const FAQ = () => {
                 
                 <View style={ styles.questionContainer }>
                     <Text style={ styles.question }>
+                        How do I disable reminders without disabling app notifications?
+                    </Text>
+                    <Text style={ styles.answer }>
+                        Configure reminders using the option to the right in the bottom bar (<Iosicons 
+                            style={{  }} 
+                            name='ios-cog' size={ styles._answer.fontSize } color={'black'}                             
+                            /> option)
+                    </Text>
+                </View>
+
+                <View style={ styles.questionContainer }>
+                    <Text style={ styles.question }>
                         Will I ever have to pay to use the app?
                     </Text>
                     <Text style={ styles.answer }>

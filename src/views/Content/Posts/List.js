@@ -393,7 +393,7 @@ const PostListItem = React.memo(PostEnvelopeView, (prevProps, nextProps) => {
         prevPost.attachments.reduce((accum, item, index) => 
             accum && item.url == nextPost.attachments[index].url, true)
             
-    const contentIsEqual = prevPost.content == nextPost.content && equalAttachments
+    const contentIsEqual = prevPost.title == nextPost.title && prevPost.content == nextPost.content && equalAttachments
 
     // space, post.author and  post.created do not change over time, no need check them...
     return prevPost.id == nextPost.id && contentIsEqual

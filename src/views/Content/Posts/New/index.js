@@ -18,6 +18,7 @@ import SpacesManager from 'Reconnect/src/services/spaces'
 import DraftsManager from 'Reconnect/src/services/drafts'
 import PostsManager from 'Reconnect/src/services/posts'
 import NotificationsManager from 'Reconnect/src/services/notifications'
+import DialogInput from 'Reconnect/src/lib/DialogInput'
 
 import type { UploadModalProps } from './upload'
 import UploadModal from './upload'
@@ -42,12 +43,15 @@ const NewPostView = () => {
     //$FlowExpectedError: Not null
     const initialContent = editMode ? editPost.content : draft ? draft.content : postInput ? postInput.content : ''
     //$FlowExpectedError: Not null
-    const initialAttachments = editMode ? editPost.attachments : postInput ? postInput.photos : []
+    const initialTitle = editMode ? editPost.title : null
+    //$FlowExpectedError: Not null
+    const initialAttachments = editMode ? editPost.attachments : postInput ? postInput.photos : []    
 
     /* State */
     const [content, setContent] = useState<string>(initialContent)
     const [publishing, setPublishing] = useState<boolean>(false)
     const [uploadModalProps, setUploadModalProps] = useState<?UploadModalProps>(null)
+    const [titleDialogVisible, setTitleDialogVisible] = useState<boolean>(false)    
 
     /* Variables */
     //$FlowExpectedError: not null
@@ -67,7 +71,7 @@ const NewPostView = () => {
                     loading={publishing}
                     loadingProps={{color: 'darkgrey'}}
                     titleStyle={{color: 'black'}}                     
-                    onPress={_save}                    
+                    onPress={ _startSend }                    
                     containerStyle={{paddingRight: 8}}                    
                 />
             ),
@@ -153,7 +157,16 @@ const NewPostView = () => {
         }        
     }
 
-    function _save() {
+    function _startSend() {
+        if (stringNotEmpty(content)) {
+            setPublishing(true)
+            setTitleDialogVisible(true)
+        } else {
+            showErrorMessage('Can not send an empty letter')
+        } 
+    }
+    
+    function _save(title: ?string) {
         const doSendPost = async (attachments) => {            
             try { 
                 if (editMode) {                    
@@ -161,6 +174,7 @@ const NewPostView = () => {
                         //$FlowExpectedError: Not null                       
                         id: editPost.id, 
                         content,
+                        title: title ? title.trim() : null,
                         attachments
                     })
                 } else {
@@ -168,6 +182,7 @@ const NewPostView = () => {
                         source: draft ? 'email' : postInput ? 'handwritten' : 'device',
                         spaceId: space.id, 
                         content, 
+                        title: title ? title.trim() : null,
                         attachments
                     })
                     SpacesManager.notifyUserPublishedNewPost(space)
@@ -175,42 +190,37 @@ const NewPostView = () => {
                     if (draft) {
                         DraftsManager.deleteDraft(draft.id)
                     }
+
+                    showSuccessMessage('Letter sent')
                 }
 
-                navigation.goBack()
-                showSuccessMessage('Letter sent')                
+                navigation.goBack()                
             } catch {
                 showErrorMessage('Check your internet connection')
                 setPublishing(false) 
             }
         }  
 
-        if (stringNotEmpty(content)) {
-            setPublishing(true)            
-            
-            const newAttachments = _newAttachments()
-            if (newAttachments.length == 0) {      
-                doSendPost([...previousAttachmentsRef.current])
-            } else {                
-                setUploadModalProps({
-                    spaceId: space.id, 
-                    attachments: newAttachments,
-                    success: async (attachments) => { 
-                        setUploadModalProps(null)                    
-                        doSendPost([...previousAttachmentsRef.current, ...attachments])
-                    },
-                    error: (e) => {
-                        if (e != 'upload-cancelled') {
-                            showErrorMessage('Check your internet connection')
-                        }                        
-                        setPublishing(false)
-                        setUploadModalProps(null)
-                    },
-                })
-            }
-        } else {
-            showErrorMessage('Can not send an empty letter')
-        }     
+        const newAttachments = _newAttachments()
+        if (newAttachments.length == 0) {      
+            doSendPost([...previousAttachmentsRef.current])
+        } else {                
+            setUploadModalProps({
+                spaceId: space.id, 
+                attachments: newAttachments,
+                success: async (attachments) => { 
+                    setUploadModalProps(null)                    
+                    doSendPost([...previousAttachmentsRef.current, ...attachments])
+                },
+                error: (e) => {
+                    if (e != 'upload-cancelled') {
+                        showErrorMessage('Check your internet connection')
+                    }                        
+                    setPublishing(false)
+                    setUploadModalProps(null)
+                },
+            })
+        }    
     }
 
     /* Render */
@@ -219,6 +229,27 @@ const NewPostView = () => {
             <Modal animationType='fade' visible={uploadModalProps != null}>
                 <UploadModal {...uploadModalProps} />
             </Modal>  
+
+            <DialogInput isDialogVisible={titleDialogVisible}
+                title={ 'Title your letter'}
+                message={ 'Leave blank for untitled' }   
+
+                submitText={ editMode ? 'Save letter' : 'Send letter' }
+                cancelText={'Cancel'}
+
+                submitInput={ (inputText) => {                         
+                        setTitleDialogVisible(false)                            
+                        _save(inputText)   
+                    } 
+                }
+                closeDialog={ () => { 
+                        setTitleDialogVisible(false)
+                        setPublishing(false)
+                    }}                
+                initValueTextInput={initialTitle}
+                modalStyle={{backgroundColor: 'rgba(0,0,0,0.62)'}}>
+            </DialogInput>
+
             <>
                 {/* TEXT */}
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
