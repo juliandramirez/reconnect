@@ -1,7 +1,9 @@
 
 
 Reconnect App: Send letters between your loved ones 
+
 React Native + Realtime database + serverless functions (AWS & Firebase)
+
 Download here: https://reconnectapp.co/
 
 
